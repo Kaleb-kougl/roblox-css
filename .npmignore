@@ -1,0 +1,12 @@
+tests/
+docs/
+.vscode/
+*.tsbuildinfo
+test-runner.project.json
+CONTRIBUTING.md
+COPYING
+COPYING.LESSER
+rokit.toml
+include/
+out/
+

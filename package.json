@@ -1,0 +1,56 @@
+{
+  "name": "@rbxts/roblox-css",
+  "version": "0.1.0",
+  "description": "CSS-to-Roblox UI translation middleware — write web-style props, get native Roblox primitives",
+  "main": "out/init.lua",
+  "files": [
+    "out",
+    "default.project.json"
+  ],
+  "types": "out/index.d.ts",
+  "license": "LGPL-3.0-only",
+  "scripts": {
+    "build": "rbxtsc --type package",
+    "prepack": "mv COPYING .COPYING || true; mv COPYING.LESSER .COPYING.LESSER || true",
+    "postpack": "mv .COPYING COPYING || true; mv .COPYING.LESSER COPYING.LESSER || true"
+  },
+  "author": "Kaleb Kougl",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kaleb-kougl/roblox-css"
+  },
+  "keywords": [
+    "roblox",
+    "roblox-ts",
+    "rbxts",
+    "css",
+    "ui",
+    "react",
+    "middleware"
+  ],
+  "peerDependencies": {
+    "@rbxts/react": ">=17.0.0",
+    "@rbxts/ripple": ">=0.8.0",
+    "@rbxts/services": "*"
+  },
+  "peerDependenciesMeta": {
+    "@rbxts/ripple": {
+      "optional": true
+    },
+    "@rbxts/services": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@rbxts/compiler-types": "^3.0.0-types.0",
+    "@rbxts/react": "17.3.7-ts.1",
+    "@rbxts/react-roblox": "17.3.7-ts.1",
+    "@rbxts/ripple": "^0.8.0",
+    "@rbxts/services": "^1.6.0",
+    "@rbxts/types": "^1.0.914",
+    "@rbxts/jest": "^3.16.0-ts.1",
+    "@rbxts/jest-globals": "^3.16.0-ts.1",
+    "roblox-ts": "^3.0.0",
+    "typescript": "^5.5.3"
+  }
+}
