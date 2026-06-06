@@ -60,13 +60,47 @@ export function InlineText(props: InlineTextProps) {
 	}
 
 	// --- Images found: render a flex row with Text and Image segments ---
+	// Only pass layout/positioning props to the Box (Frame) container.
+	// Text-specific props (font, color, etc.) go to the Text children only.
 	const containerStyle: CSSProperties = {
 		display: "flex" as const,
 		flexDirection: "row" as const,
 		alignItems: "center" as const,
-		// Merge any container-level styles from the user
-		...(style ?? {}),
 	};
+
+	if (style) {
+		// Layout / positioning / sizing — safe for Frame
+		if (style.width !== undefined) containerStyle.width = style.width;
+		if (style.height !== undefined) containerStyle.height = style.height;
+		if (style.position !== undefined) containerStyle.position = style.position;
+		if (style.left !== undefined) containerStyle.left = style.left;
+		if (style.right !== undefined) containerStyle.right = style.right;
+		if (style.top !== undefined) containerStyle.top = style.top;
+		if (style.bottom !== undefined) containerStyle.bottom = style.bottom;
+		if (style.padding !== undefined) containerStyle.padding = style.padding;
+		if (style.paddingLeft !== undefined) containerStyle.paddingLeft = style.paddingLeft;
+		if (style.paddingRight !== undefined) containerStyle.paddingRight = style.paddingRight;
+		if (style.paddingTop !== undefined) containerStyle.paddingTop = style.paddingTop;
+		if (style.paddingBottom !== undefined) containerStyle.paddingBottom = style.paddingBottom;
+
+		if (style.gap !== undefined) containerStyle.gap = style.gap;
+		if (style.backgroundColor !== undefined) containerStyle.backgroundColor = style.backgroundColor;
+
+		if (style.background !== undefined) containerStyle.background = style.background;
+		if (style.opacity !== undefined) containerStyle.opacity = style.opacity;
+		if (style.borderRadius !== undefined) containerStyle.borderRadius = style.borderRadius;
+		if (style.border !== undefined) containerStyle.border = style.border;
+		if (style.zIndex !== undefined) containerStyle.zIndex = style.zIndex;
+		if (style.overflow !== undefined) containerStyle.overflow = style.overflow;
+		if (style.visibility !== undefined) containerStyle.visibility = style.visibility;
+		if (style.maxWidth !== undefined) containerStyle.maxWidth = style.maxWidth;
+		if (style.maxHeight !== undefined) containerStyle.maxHeight = style.maxHeight;
+		if (style.minWidth !== undefined) containerStyle.minWidth = style.minWidth;
+		if (style.minHeight !== undefined) containerStyle.minHeight = style.minHeight;
+		if (style.justifyContent !== undefined) containerStyle.justifyContent = style.justifyContent;
+		if (style.flexWrap !== undefined) containerStyle.flexWrap = style.flexWrap;
+		if (style.boxShadow !== undefined) containerStyle.boxShadow = style.boxShadow;
+	}
 
 	return (
 		<Box style={containerStyle}>

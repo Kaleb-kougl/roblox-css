@@ -64,15 +64,100 @@ local function InlineText(props)
 		})
 	end
 	-- --- Images found: render a flex row with Text and Image segments ---
-	local _object = {
+	-- Only pass layout/positioning props to the Box (Frame) container.
+	-- Text-specific props (font, color, etc.) go to the Text children only.
+	local containerStyle = {
 		display = "flex",
 		flexDirection = "row",
 		alignItems = "center",
 	}
-	for _k, _v in (style or {}) do
-		_object[_k] = _v
+	if style then
+		-- Layout / positioning / sizing — safe for Frame
+		if style.width ~= nil then
+			containerStyle.width = style.width
+		end
+		if style.height ~= nil then
+			containerStyle.height = style.height
+		end
+		if style.position ~= nil then
+			containerStyle.position = style.position
+		end
+		if style.left ~= nil then
+			containerStyle.left = style.left
+		end
+		if style.right ~= nil then
+			containerStyle.right = style.right
+		end
+		if style.top ~= nil then
+			containerStyle.top = style.top
+		end
+		if style.bottom ~= nil then
+			containerStyle.bottom = style.bottom
+		end
+		if style.padding ~= nil then
+			containerStyle.padding = style.padding
+		end
+		if style.paddingLeft ~= nil then
+			containerStyle.paddingLeft = style.paddingLeft
+		end
+		if style.paddingRight ~= nil then
+			containerStyle.paddingRight = style.paddingRight
+		end
+		if style.paddingTop ~= nil then
+			containerStyle.paddingTop = style.paddingTop
+		end
+		if style.paddingBottom ~= nil then
+			containerStyle.paddingBottom = style.paddingBottom
+		end
+		if style.gap ~= nil then
+			containerStyle.gap = style.gap
+		end
+		if style.backgroundColor ~= nil then
+			containerStyle.backgroundColor = style.backgroundColor
+		end
+		if style.background ~= nil then
+			containerStyle.background = style.background
+		end
+		if style.opacity ~= nil then
+			containerStyle.opacity = style.opacity
+		end
+		if style.borderRadius ~= nil then
+			containerStyle.borderRadius = style.borderRadius
+		end
+		if style.border ~= nil then
+			containerStyle.border = style.border
+		end
+		if style.zIndex ~= nil then
+			containerStyle.zIndex = style.zIndex
+		end
+		if style.overflow ~= nil then
+			containerStyle.overflow = style.overflow
+		end
+		if style.visibility ~= nil then
+			containerStyle.visibility = style.visibility
+		end
+		if style.maxWidth ~= nil then
+			containerStyle.maxWidth = style.maxWidth
+		end
+		if style.maxHeight ~= nil then
+			containerStyle.maxHeight = style.maxHeight
+		end
+		if style.minWidth ~= nil then
+			containerStyle.minWidth = style.minWidth
+		end
+		if style.minHeight ~= nil then
+			containerStyle.minHeight = style.minHeight
+		end
+		if style.justifyContent ~= nil then
+			containerStyle.justifyContent = style.justifyContent
+		end
+		if style.flexWrap ~= nil then
+			containerStyle.flexWrap = style.flexWrap
+		end
+		if style.boxShadow ~= nil then
+			containerStyle.boxShadow = style.boxShadow
+		end
 	end
-	local containerStyle = _object
 	-- ▼ ReadonlyArray.map ▼
 	local _newValue = table.create(#segments)
 	local _callback = function(segment, i)
