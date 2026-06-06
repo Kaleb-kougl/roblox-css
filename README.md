@@ -131,7 +131,7 @@ Requires `@rbxts/ripple` peer dependency.
 | `color` | `TextColor3` + `TextTransparency` |
 | `opacity` | `BackgroundTransparency` / `ImageTransparency` |
 | `borderRadius` | `UICorner` |
-| `border` (shorthand) | `BorderSizePixel` + `BorderColor3` |
+| `border` (shorthand) | `BorderSizePixel` + `BorderColor3` (style keywords like `solid` are optional) |
 | `boxShadow` | 9-slice `ImageLabel` overlay |
 | `background: "linear-gradient(...)"` | `UIGradient` |
 

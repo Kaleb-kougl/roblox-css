@@ -1,0 +1,38 @@
+-- Compiled with roblox-ts v3.0.0
+local _jestGlobals = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("node_modules"):WaitForChild("@rbxts"):WaitForChild("jest-globals"):WaitForChild("src"))
+local _binding = _jestGlobals
+local describe = _binding.describe
+local expect = _binding.expect
+local it = _binding.it
+local robloxCSS = game:GetService("ReplicatedStorage"):WaitForChild("roblox-css")
+local uiStyles = robloxCSS:WaitForChild("styles")
+local transitionsModule = require(uiStyles:WaitForChild("transitions"))
+local transitions = transitionsModule.transitions
+describe("Transitions", function()
+	it("should export default standard transitions", function()
+		expect(transitions.default).toBeDefined()
+		expect(transitions.default.Time).toBeCloseTo(0.3, 5)
+		expect(transitions.default.EasingStyle).toBe(Enum.EasingStyle.Quad)
+	end)
+	it("should export pop transition", function()
+		expect(transitions.pop).toBeDefined()
+		expect(transitions.pop.Time).toBeCloseTo(0.25, 5)
+		expect(transitions.pop.EasingStyle).toBe(Enum.EasingStyle.Back)
+	end)
+	it("should export breathe transition", function()
+		expect(transitions.breathe).toBeDefined()
+		expect(transitions.breathe.Time).toBeCloseTo(2, 5)
+		expect(transitions.breathe.EasingStyle).toBe(Enum.EasingStyle.Sine)
+		expect(transitions.breathe.Reverses).toBe(true)
+	end)
+	it("should export snap transition", function()
+		expect(transitions.snap).toBeDefined()
+		expect(transitions.snap.Time).toBeCloseTo(0.1, 5)
+		expect(transitions.snap.EasingStyle).toBe(Enum.EasingStyle.Linear)
+	end)
+	it("should export shimmer transition", function()
+		expect(transitions.shimmer).toBeDefined()
+		expect(transitions.shimmer.Time).toBeCloseTo(1, 5)
+		expect(transitions.shimmer.EasingStyle).toBe(Enum.EasingStyle.Linear)
+	end)
+end)

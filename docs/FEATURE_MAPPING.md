@@ -133,8 +133,8 @@ Modern web layout relies on Flexbox and Grid. We translate this into Roblox's `U
   * Formula: `BackgroundTransparency = 1 − opacity`.
 * **Border Radius (`borderRadius: "8px"` or `"50%"`):**
   * *Implementation:* Injects a `<uicorner>` child.
-* **Borders (`border: "2px solid black"`):**
-  * *Implementation:* Injects a `<uistroke>` child with `Thickness={2}` and `Color={Color3.new(0,0,0)}`.
+* **Borders (`border: "2px solid black"` or `border: "2px black"`):**
+  * *Implementation:* Injects a `<uistroke>` child with `Thickness={2}` and `Color={Color3.new(0,0,0)}`. Note that CSS style keywords like `solid` are optional; if omitted, the border still renders visibly by default.
 * **Object Fit (`objectFit: "cover" | "contain" | "fill"`):**
   * *Implementation:* Maps directly to `ScaleType` on ImageLabels.
 * **Aspect Ratio (`aspectRatio: 1.5`):**

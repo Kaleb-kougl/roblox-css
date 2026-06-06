@@ -295,7 +295,7 @@ function buildStroke(border: string): React.Element {
 	if (rest !== undefined && (rest as string) !== "") {
 		const remaining = rest as string;
 		// Try to strip a leading style keyword (solid, dashed, dotted, double, groove, ridge, inset, outset, none)
-		const [_, afterStyle] = string.match(remaining, "^%s*%a+%s+(.+)$");
+		const [afterStyle] = string.match(remaining, "^%s*%a+%s+(.+)$");
 		const colorStr = afterStyle !== undefined ? (afterStyle as string) : remaining;
 		const parsed = parseColor(colorStr);
 		strokeProps.Color = parsed.color;
