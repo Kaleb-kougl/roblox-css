@@ -11,8 +11,8 @@
   "license": "LGPL-3.0-only",
   "scripts": {
     "build": "rbxtsc --type package",
-    "prepack": "mv COPYING .COPYING || true; mv COPYING.LESSER .COPYING.LESSER || true",
-    "postpack": "mv .COPYING COPYING || true; mv .COPYING.LESSER COPYING.LESSER || true"
+    "prepack": "mv out/tests .out-tests || true; mv COPYING .COPYING || true; mv COPYING.LESSER .COPYING.LESSER || true",
+    "postpack": "mv .out-tests out/tests || true; mv .COPYING COPYING || true; mv .COPYING.LESSER COPYING.LESSER || true"
   },
   "author": "Kaleb Kougl",
   "repository": {
