@@ -31,6 +31,7 @@ export interface CSSProperties {
 	bottom?: string | number;
 	left?: string | number;
 	zIndex?: number;
+	transformOrigin?: string;
 
 	// --- Layout ---
 	layoutOrder?: number;
@@ -44,10 +45,13 @@ export interface CSSProperties {
 	justifyContent?: "flex-start" | "center" | "flex-end" | "space-between" | "space-around";
 	alignItems?: "flex-start" | "center" | "flex-end" | "stretch";
 	gap?: string | number;
+	rowGap?: string | number;
+	columnGap?: string | number;
 
 	// --- Flex Item (per-child, injects UIFlexItem) ---
 	flexGrow?: number;
 	flexShrink?: number;
+	flex?: number | "auto" | "none";
 	alignSelf?: "auto" | "flex-start" | "flex-end" | "center" | "stretch";
 
 	// --- Grid Layout (Emulating UIGridLayout) ---
@@ -57,6 +61,7 @@ export interface CSSProperties {
 	// --- Aesthetics (FEATURE_MAPPING §4) ---
 	backgroundColor?: string;
 	background?: string;
+	backgroundImage?: string;
 	color?: string;
 	opacity?: number;
 	borderRadius?: string | number;
@@ -83,6 +88,8 @@ export interface CSSProperties {
 	textDecoration?: "none" | "underline" | "line-through";
 	textTransform?: "none" | "uppercase" | "lowercase" | "capitalize";
 	richText?: boolean;
+	textStroke?: string;
+	userSelect?: "none" | "auto" | "text";
 
 	// --- Interactivity (FEATURE_MAPPING §6) ---
 	pointerEvents?: "none" | "auto";
