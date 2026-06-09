@@ -278,7 +278,21 @@ function buildGridLayout(style: CSSProperties): React.Element {
  *   "2px solid red"      → Thickness: 2,  Color: Color3(1, 0, 0)
  *   "3px"                → Thickness: 3,  Color: default (no color set)
  */
-function buildStroke(border: string): React.Element {
+function buildStroke(border: string): React.Element | undefined {
+	let hasSpecifyingWord = false;
+	const specifyingWords = new Set(["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"]);
+
+	for (const [word] of string.gmatch(border, "%a+")) {
+		if (specifyingWords.has((word as string).lower())) {
+			hasSpecifyingWord = true;
+			break;
+		}
+	}
+
+	if (!hasSpecifyingWord) {
+		return undefined;
+	}
+
 	const strokeProps: Record<string, unknown> = {};
 
 	// Extract thickness: find first space-separated token (e.g., "1px", "2")
@@ -501,7 +515,10 @@ export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
 	}
 	// 7. border → inject <uistroke>
 	if (style.border !== undefined) {
-		children.push(buildStroke(style.border));
+		const stroke = buildStroke(style.border);
+		if (stroke !== undefined) {
+			children.push(stroke);
+		}
 	}
 	// 8. aspectRatio → inject <uiaspectratioconstraint>
 	if (style.aspectRatio !== undefined) {

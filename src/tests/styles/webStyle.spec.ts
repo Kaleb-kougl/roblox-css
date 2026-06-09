@@ -311,21 +311,16 @@ describe("webStyle", () => {
 			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
 		});
 
-		it("should handle just thickness", () => {
+		it("should return undefined for thickness only without specifying word", () => {
 			const result = webStyle({ border: "3px" });
 			const child = result.children.find((c) => c.type === "UIStroke");
-			expect(child).toBeDefined();
-			expect(child!.props.Thickness).toBe(3);
-			expect(child!.props.Color).toBeUndefined();
-			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
+			expect(child).toBeUndefined();
 		});
 
-		it("should handle missing components gracefully", () => {
+		it("should return undefined for empty string", () => {
 			const result = webStyle({ border: "" });
 			const child = result.children.find((c) => c.type === "UIStroke");
-			expect(child).toBeDefined();
-			expect(child!.props.Thickness).toBe(0);
-			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
+			expect(child).toBeUndefined();
 		});
 
 		it("should parse rgb() border color", () => {
@@ -374,6 +369,72 @@ describe("webStyle", () => {
 			expect(color.G).toBeCloseTo(0, 2);
 			expect(color.B).toBeCloseTo(0, 2);
 			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
+		});
+
+		it("should return undefined for missing specifying word with thickness and color", () => {
+			const result = webStyle({ border: "2px red" });
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeUndefined();
+		});
+
+		it("should successfully create UIStroke with specifying word only", () => {
+			const result = webStyle({ border: "solid" });
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
+		});
+
+		it("should parse thickness and specifying word without color", () => {
+			const result = webStyle({ border: "2px dashed" });
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			expect(child!.props.Thickness).toBe(2);
+			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
+		});
+
+		it("should parse color and specifying word without thickness", () => {
+			const result = webStyle({ border: "dotted #FF0000" });
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			const color = child!.props.Color as Color3;
+			expect(color.R).toBe(1);
+			expect(color.G).toBe(0);
+			expect(color.B).toBe(0);
+			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
+		});
+
+		it("should successfully parse regardless of argument order", () => {
+			const result1 = webStyle({ border: "2px solid red" });
+			const result2 = webStyle({ border: "red solid 2px" });
+			
+			const child1 = result1.children.find((c) => c.type === "UIStroke");
+			const child2 = result2.children.find((c) => c.type === "UIStroke");
+			
+			expect(child1).toBeDefined();
+			expect(child2).toBeDefined();
+			
+			expect(child1!.props.Thickness).toBe(2);
+			expect(child2!.props.Thickness).toBe(2);
+			
+			const color1 = child1!.props.Color as Color3;
+			const color2 = child2!.props.Color as Color3;
+			expect(color1.R).toBe(1);
+			expect(color2.R).toBe(1);
+		});
+
+		it("should handle specifying words case insensitively", () => {
+			const result1 = webStyle({ border: "2px SOLID #000" });
+			const result2 = webStyle({ border: "2px Dashed #000" });
+			
+			expect(result1.children.find((c) => c.type === "UIStroke")).toBeDefined();
+			expect(result2.children.find((c) => c.type === "UIStroke")).toBeDefined();
+		});
+
+		it("should identify specifying word with extraneous text", () => {
+			const result = webStyle({ border: "2px solid something-weird" });
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			expect(child!.props.Thickness).toBe(2);
 		});
 	});
 

@@ -256,6 +256,27 @@ end
 	 
 ]]
 local function buildStroke(border)
+	local hasSpecifyingWord = false
+	local specifyingWords = {
+		["solid"] = true,
+		["dashed"] = true,
+		["dotted"] = true,
+		["double"] = true,
+		["groove"] = true,
+		["ridge"] = true,
+		["inset"] = true,
+		["outset"] = true,
+	}
+	for word in string.gmatch(border, "%a+") do
+		local _arg0 = string.lower(word)
+		if specifyingWords[_arg0] ~= nil then
+			hasSpecifyingWord = true
+			break
+		end
+	end
+	if not hasSpecifyingWord then
+		return nil
+	end
 	local strokeProps = {}
 	-- Extract thickness: find first space-separated token (e.g., "1px", "2")
 	local thicknessStr, rest = string.match(border, "^(%S+)%s*(.*)$")
@@ -570,8 +591,10 @@ local function webStyle(style)
 	end
 	-- 7. border → inject <uistroke>
 	if style.border ~= nil then
-		local _arg0 = buildStroke(style.border)
-		table.insert(children, _arg0)
+		local stroke = buildStroke(style.border)
+		if stroke ~= nil then
+			table.insert(children, stroke)
+		end
 	end
 	-- 8. aspectRatio → inject <uiaspectratioconstraint>
 	if style.aspectRatio ~= nil then

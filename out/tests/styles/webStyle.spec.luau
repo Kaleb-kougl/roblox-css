@@ -659,7 +659,7 @@ describe("webStyle", function()
 			expect(color.B).toBe(0)
 			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
 		end)
-		it("should handle just thickness", function()
+		it("should return undefined for thickness only without specifying word", function()
 			local result = webStyle({
 				border = "3px",
 			})
@@ -677,12 +677,9 @@ describe("webStyle", function()
 			end
 			-- ▲ ReadonlyArray.find ▲
 			local child = _result
-			expect(child).toBeDefined()
-			expect(child.props.Thickness).toBe(3)
-			expect(child.props.Color).toBeUndefined()
-			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
+			expect(child).toBeUndefined()
 		end)
-		it("should handle missing components gracefully", function()
+		it("should return undefined for empty string", function()
 			local result = webStyle({
 				border = "",
 			})
@@ -700,9 +697,7 @@ describe("webStyle", function()
 			end
 			-- ▲ ReadonlyArray.find ▲
 			local child = _result
-			expect(child).toBeDefined()
-			expect(child.props.Thickness).toBe(0)
-			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
+			expect(child).toBeUndefined()
 		end)
 		it("should parse rgb() border color", function()
 			local result = webStyle({
@@ -807,6 +802,195 @@ describe("webStyle", function()
 			expect(color.G).toBeCloseTo(0, 2)
 			expect(color.B).toBeCloseTo(0, 2)
 			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
+		end)
+		it("should return undefined for missing specifying word with thickness and color", function()
+			local result = webStyle({
+				border = "2px red",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child).toBeUndefined()
+		end)
+		it("should successfully create UIStroke with specifying word only", function()
+			local result = webStyle({
+				border = "solid",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child).toBeDefined()
+			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
+		end)
+		it("should parse thickness and specifying word without color", function()
+			local result = webStyle({
+				border = "2px dashed",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child).toBeDefined()
+			expect(child.props.Thickness).toBe(2)
+			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
+		end)
+		it("should parse color and specifying word without thickness", function()
+			local result = webStyle({
+				border = "dotted #FF0000",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child).toBeDefined()
+			local color = child.props.Color
+			expect(color.R).toBe(1)
+			expect(color.G).toBe(0)
+			expect(color.B).toBe(0)
+			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
+		end)
+		it("should successfully parse regardless of argument order", function()
+			local result1 = webStyle({
+				border = "2px solid red",
+			})
+			local result2 = webStyle({
+				border = "red solid 2px",
+			})
+			local _exp = result1.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child1 = _result
+			local _exp_1 = result2.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback_1 = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result_1
+			for _i, _v in _exp_1 do
+				if _callback_1(_v, _i - 1, _exp_1) == true then
+					_result_1 = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child2 = _result_1
+			expect(child1).toBeDefined()
+			expect(child2).toBeDefined()
+			expect(child1.props.Thickness).toBe(2)
+			expect(child2.props.Thickness).toBe(2)
+			local color1 = child1.props.Color
+			local color2 = child2.props.Color
+			expect(color1.R).toBe(1)
+			expect(color2.R).toBe(1)
+		end)
+		it("should handle specifying words case insensitively", function()
+			local result1 = webStyle({
+				border = "2px SOLID #000",
+			})
+			local result2 = webStyle({
+				border = "2px Dashed #000",
+			})
+			local _exp = result1.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			expect(_result).toBeDefined()
+			local _exp_1 = result2.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback_1 = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result_1
+			for _i, _v in _exp_1 do
+				if _callback_1(_v, _i - 1, _exp_1) == true then
+					_result_1 = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			expect(_result_1).toBeDefined()
+		end)
+		it("should identify specifying word with extraneous text", function()
+			local result = webStyle({
+				border = "2px solid something-weird",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child).toBeDefined()
+			expect(child.props.Thickness).toBe(2)
 		end)
 	end)
 	describe("8. aspectRatio → <uiaspectratioconstraint>", function()
