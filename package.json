@@ -1,6 +1,6 @@
 {
   "name": "@k9kbdev/roblox-css",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CSS-to-Roblox UI translation middleware — write web-style props, get native Roblox primitives",
   "main": "out/init.lua",
   "files": [
