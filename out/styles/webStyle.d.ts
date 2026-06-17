@@ -71,4 +71,4 @@ export declare const SHADOW_SLICE_CENTER: Rect;
  *   // result.props   → { Size: UDim2(...), BackgroundColor3: Color3(...) }
  *   // result.children → [ <uicorner CornerRadius={UDim(0, 8)} /> ]
  */
-export declare function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult>;
+export declare function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<WebStyleResult>;

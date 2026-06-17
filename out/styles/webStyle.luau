@@ -157,40 +157,82 @@ local SHADOW_SLICE_CENTER = Rect.new(47, 47, 450, 450)
 	 
 ]]
 local function buildListLayout(style)
-	local fillDirection = if style.flexDirection == "row" then Enum.FillDirection.Horizontal else Enum.FillDirection.Vertical
+	local flexDir = style.flexDirection
+	local fWrap = style.flexWrap
+	if style.flexFlow ~= nil then
+		local _flexFlow = style.flexFlow
+		local flowParts = if type(_flexFlow) == "string" then string.split(style.flexFlow, " ") else {}
+		for _, part in flowParts do
+			if part == "row" or part == "column" then
+				flexDir = flexDir or part
+			end
+			if part == "wrap" or part == "nowrap" then
+				fWrap = fWrap or part
+			end
+		end
+	end
+	local fillDirection = if flexDir == "row" then Enum.FillDirection.Horizontal else Enum.FillDirection.Vertical
 	local layoutProps = {
 		FillDirection = fillDirection,
 		SortOrder = Enum.SortOrder.LayoutOrder,
 	}
-	if style.flexWrap == "wrap" then
+	if fWrap == "wrap" then
 		layoutProps.Wraps = true
 	end
+	local _condition = style.placeContent ~= nil
+	if _condition then
+		local _placeContent = style.placeContent
+		_condition = type(_placeContent) == "string"
+	end
+	local pContent = if _condition then string.split(style.placeContent, " ") else nil
+	local _condition_1 = style.justifyContent
+	if _condition_1 == nil then
+		local _result
+		if pContent then
+			local _condition_2 = pContent[2]
+			if _condition_2 == nil then
+				_condition_2 = pContent[1]
+			end
+			_result = _condition_2
+		else
+			_result = nil
+		end
+		_condition_1 = _result
+	end
+	local resolvedJustifyContent = _condition_1
 	-- justifyContent → main-axis alignment
-	if style.justifyContent ~= nil then
-		if style.justifyContent == "space-between" or style.justifyContent == "space-around" then
-			local flexAlign = if style.justifyContent == "space-between" then Enum.UIFlexAlignment.SpaceBetween else Enum.UIFlexAlignment.SpaceAround
-			if style.flexDirection == "row" then
+	if resolvedJustifyContent ~= nil then
+		if resolvedJustifyContent == "space-between" or resolvedJustifyContent == "space-around" then
+			local flexAlign = if resolvedJustifyContent == "space-between" then Enum.UIFlexAlignment.SpaceBetween else Enum.UIFlexAlignment.SpaceAround
+			if flexDir == "row" then
 				layoutProps.HorizontalFlex = flexAlign
 			else
 				layoutProps.VerticalFlex = flexAlign
 			end
 		else
-			if style.flexDirection == "row" then
-				layoutProps.HorizontalAlignment = JUSTIFY_MAP[style.justifyContent] or Enum.HorizontalAlignment.Left
+			if flexDir == "row" then
+				layoutProps.HorizontalAlignment = JUSTIFY_MAP[resolvedJustifyContent] or Enum.HorizontalAlignment.Left
 			else
-				layoutProps.VerticalAlignment = ALIGN_MAP[style.justifyContent] or Enum.VerticalAlignment.Top
+				layoutProps.VerticalAlignment = ALIGN_MAP[resolvedJustifyContent] or Enum.VerticalAlignment.Top
 			end
 		end
 	end
+	local _condition_2 = style.placeItems ~= nil
+	if _condition_2 then
+		local _placeItems = style.placeItems
+		_condition_2 = type(_placeItems) == "string"
+	end
+	local pItems = if _condition_2 then string.split(style.placeItems, " ") else nil
+	local resolvedAlignItems = style.alignItems or (if pItems then pItems[1] else nil)
 	-- alignItems → cross-axis alignment
-	if style.alignItems ~= nil then
-		if style.alignItems == "stretch" then
+	if resolvedAlignItems ~= nil then
+		if resolvedAlignItems == "stretch" then
 			layoutProps.ItemLineAlignment = Enum.ItemLineAlignment.Stretch
 		else
-			if style.flexDirection == "row" then
-				layoutProps.VerticalAlignment = ALIGN_MAP[style.alignItems] or Enum.VerticalAlignment.Top
+			if flexDir == "row" then
+				layoutProps.VerticalAlignment = ALIGN_MAP[resolvedAlignItems] or Enum.VerticalAlignment.Top
 			else
-				layoutProps.HorizontalAlignment = JUSTIFY_MAP[style.alignItems] or Enum.HorizontalAlignment.Left
+				layoutProps.HorizontalAlignment = JUSTIFY_MAP[resolvedAlignItems] or Enum.HorizontalAlignment.Left
 			end
 		end
 	end
@@ -217,25 +259,77 @@ local function buildGridLayout(style)
 	local layoutProps = {
 		SortOrder = Enum.SortOrder.LayoutOrder,
 	}
-	local fillDirection = if style.flexDirection == "column" then Enum.FillDirection.Vertical else Enum.FillDirection.Horizontal
+	local flexDir = style.flexDirection
+	if style.flexFlow ~= nil then
+		local _flexFlow = style.flexFlow
+		local flowParts = if type(_flexFlow) == "string" then string.split(style.flexFlow, " ") else {}
+		for _, part in flowParts do
+			if part == "row" or part == "column" then
+				flexDir = flexDir or part
+			end
+		end
+	end
+	local fillDirection = if flexDir == "column" then Enum.FillDirection.Vertical else Enum.FillDirection.Horizontal
 	layoutProps.FillDirection = fillDirection
-	-- gap -> CellPadding
+	-- gap, rowGap, columnGap -> CellPadding
+	local gapX = UDim.new(0, 0)
+	local gapY = UDim.new(0, 0)
+	local hasGap = false
 	if style.gap ~= nil then
 		local _gap = style.gap
 		local gapParts = if type(_gap) == "string" then string.split(style.gap, " ") else { style.gap }
-		local gapX = parseDimension(gapParts[1]) or UDim.new(0, 0)
-		local gapY = if #gapParts > 1 then parseDimension(gapParts[2]) or gapX else gapX
+		gapX = parseDimension(gapParts[1]) or UDim.new(0, 0)
+		gapY = if #gapParts > 1 then parseDimension(gapParts[2]) or gapX else gapX
+		hasGap = true
+	end
+	if style.columnGap ~= nil then
+		gapX = parseDimension(style.columnGap) or UDim.new(0, 0)
+		hasGap = true
+	end
+	if style.rowGap ~= nil then
+		gapY = parseDimension(style.rowGap) or UDim.new(0, 0)
+		hasGap = true
+	end
+	if hasGap then
 		layoutProps.CellPadding = UDim2.new(gapX, gapY)
 	end
 	-- CellSize
 	local cellX = if style.gridTemplateColumns ~= nil then parseDimension(style.gridTemplateColumns) or UDim.new(0, 100) else UDim.new(0, 100)
 	local cellY = if style.gridTemplateRows ~= nil then parseDimension(style.gridTemplateRows) or UDim.new(0, 100) else UDim.new(0, 100)
 	layoutProps.CellSize = UDim2.new(cellX, cellY)
-	if style.justifyContent ~= nil then
-		layoutProps.HorizontalAlignment = JUSTIFY_MAP[style.justifyContent] or Enum.HorizontalAlignment.Left
+	local _condition = style.placeContent ~= nil
+	if _condition then
+		local _placeContent = style.placeContent
+		_condition = type(_placeContent) == "string"
 	end
-	if style.alignItems ~= nil then
-		layoutProps.VerticalAlignment = ALIGN_MAP[style.alignItems] or Enum.VerticalAlignment.Top
+	local pContent = if _condition then string.split(style.placeContent, " ") else nil
+	local _condition_1 = style.justifyContent
+	if _condition_1 == nil then
+		local _result
+		if pContent then
+			local _condition_2 = pContent[2]
+			if _condition_2 == nil then
+				_condition_2 = pContent[1]
+			end
+			_result = _condition_2
+		else
+			_result = nil
+		end
+		_condition_1 = _result
+	end
+	local resolvedJustifyContent = _condition_1
+	local _condition_2 = style.placeItems ~= nil
+	if _condition_2 then
+		local _placeItems = style.placeItems
+		_condition_2 = type(_placeItems) == "string"
+	end
+	local pItems = if _condition_2 then string.split(style.placeItems, " ") else nil
+	local resolvedAlignItems = style.alignItems or (if pItems then pItems[1] else nil)
+	if resolvedJustifyContent ~= nil then
+		layoutProps.HorizontalAlignment = JUSTIFY_MAP[resolvedJustifyContent] or Enum.HorizontalAlignment.Left
+	end
+	if resolvedAlignItems ~= nil then
+		layoutProps.VerticalAlignment = ALIGN_MAP[resolvedAlignItems] or Enum.VerticalAlignment.Top
 	end
 	layoutProps.key = "uigridlayout"
 	return React.createElement("uigridlayout", layoutProps)
@@ -255,7 +349,10 @@ end
 	 *   "3px"                → Thickness: 3,  Color: default (no color set)
 	 
 ]]
-local function buildStroke(border)
+local function buildStroke(border, isTextStroke)
+	if isTextStroke == nil then
+		isTextStroke = false
+	end
 	local hasSpecifyingWord = false
 	local specifyingWords = {
 		["solid"] = true,
@@ -267,15 +364,17 @@ local function buildStroke(border)
 		["inset"] = true,
 		["outset"] = true,
 	}
-	for word in string.gmatch(border, "%a+") do
-		local _arg0 = string.lower(word)
-		if specifyingWords[_arg0] ~= nil then
-			hasSpecifyingWord = true
-			break
+	if not isTextStroke then
+		for word in string.gmatch(border, "%a+") do
+			local _arg0 = string.lower(word)
+			if specifyingWords[_arg0] ~= nil then
+				hasSpecifyingWord = true
+				break
+			end
 		end
-	end
-	if not hasSpecifyingWord then
-		return nil
+		if not hasSpecifyingWord then
+			return nil
+		end
 	end
 	local strokeProps = {}
 	-- Extract thickness: find first space-separated token (e.g., "1px", "2")
@@ -296,8 +395,8 @@ local function buildStroke(border)
 		local parsed = parseColor(colorStr)
 		strokeProps.Color = parsed.color
 	end
-	strokeProps.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	strokeProps.key = "uistroke"
+	strokeProps.ApplyStrokeMode = if isTextStroke then Enum.ApplyStrokeMode.Contextual else Enum.ApplyStrokeMode.Border
+	strokeProps.key = if isTextStroke then "uitextstroke" else "uistroke"
 	return React.createElement("uistroke", strokeProps)
 end
 --[[
@@ -343,6 +442,85 @@ local function buildAbsolutePosition(style)
 		Position = UDim2.new(posX, posY),
 		AnchorPoint = Vector2.new(anchorX, anchorY),
 	}
+end
+--[[
+	*
+	 * Computes Roblox AnchorPoint (Vector2) from CSS transform-origin.
+	 *
+	 * CSS → Roblox mapping:
+	 *   "center"        → Vector2(0.5, 0.5)
+	 *   "top left"      → Vector2(0, 0)
+	 *   "100% 50%"      → Vector2(1, 0.5)
+	 
+]]
+local function parseTransformOrigin(origin)
+	local _exp = string.split(origin, " ")
+	-- ▼ ReadonlyArray.filter ▼
+	local _newValue = {}
+	local _callback = function(p)
+		return p ~= ""
+	end
+	local _length = 0
+	for _k, _v in _exp do
+		if _callback(_v, _k - 1, _exp) == true then
+			_length += 1
+			_newValue[_length] = _v
+		end
+	end
+	-- ▲ ReadonlyArray.filter ▲
+	local parts = _newValue
+	local x = 0.5
+	local y = 0.5
+	local parseVal = function(val)
+		if val == "left" then
+			return 0
+		end
+		if val == "right" then
+			return 1
+		end
+		if val == "top" then
+			return 0
+		end
+		if val == "bottom" then
+			return 1
+		end
+		if val == "center" then
+			return 0.5
+		end
+		local numStr = string.match(val, "^(%-?%d+%.?%d*)%%?$")
+		if numStr ~= nil then
+			local num = tonumber(numStr)
+			if num ~= nil then
+				local hasPercent = string.match(val, "%%$")
+				if hasPercent ~= nil then
+					return num / 100
+				end
+				return 0
+			end
+		end
+		return 0.5
+	end
+	if #parts == 2 then
+		local isYFirst = parts[1] == "top" or parts[1] == "bottom"
+		local isXSecond = parts[2] == "left" or parts[2] == "right"
+		if isYFirst or isXSecond then
+			y = parseVal(parts[1])
+			x = parseVal(parts[2])
+		else
+			x = parseVal(parts[1])
+			y = parseVal(parts[2])
+		end
+	elseif #parts == 1 then
+		local part = parts[1]
+		if part == "top" or part == "bottom" then
+			x = 0.5
+			y = parseVal(part)
+		else
+			x = parseVal(part)
+			y = 0.5
+		end
+	end
+	return Vector2.new(x, y)
 end
 --[[
 	*
@@ -433,7 +611,7 @@ end
 	 *   // result.children → [ <uicorner CornerRadius={UDim(0, 8)} /> ]
 	 
 ]]
-local function webStyle(style)
+local function webStyle(style, hostText)
 	local props = {}
 	local children = {}
 	-- Implementation order:
@@ -549,13 +727,26 @@ local function webStyle(style)
 	end
 	local hasGradient = style.background ~= nil and isGradientString(style.background)
 	-- 3. opacity → BackgroundTransparency (INVERTED)
-	-- if both backgroundColor transparent and opacity specified, opacity takes precedence
+	-- Combine with existing background transparency
 	if style.opacity ~= nil and not hasGradient then
-		props.BackgroundTransparency = 1 - style.opacity
+		if style.backgroundColor == nil then
+			-- CSS default background-color is 'transparent'. If opacity is applied without 
+			-- an explicit background color, the background should remain fully transparent.
+			props.BackgroundTransparency = 1
+		else
+			local _condition = (props.BackgroundTransparency)
+			if _condition == nil then
+				_condition = 0
+			end
+			local currentBgTrans = _condition
+			props.BackgroundTransparency = 1 - ((1 - currentBgTrans) * style.opacity)
+		end
 	end
 	-- 4. borderRadius → inject <uicorner>
 	if style.borderRadius ~= nil then
-		local radius = parseDimension(style.borderRadius)
+		local _borderRadius = style.borderRadius
+		local firstRadius = if type(_borderRadius) == "string" then string.split(style.borderRadius, " ")[1] else style.borderRadius
+		local radius = parseDimension(firstRadius)
 		local _arg0 = React.createElement("uicorner", {
 			key = "uicorner",
 			CornerRadius = radius,
@@ -563,15 +754,54 @@ local function webStyle(style)
 		table.insert(children, _arg0)
 	end
 	-- 5. padding → inject <uipadding>
-	if style.padding ~= nil or style.paddingTop ~= nil or style.paddingRight ~= nil or style.paddingBottom ~= nil or style.paddingLeft ~= nil then
+	if style.padding ~= nil or style.paddingTop ~= nil or style.paddingRight ~= nil or style.paddingBottom ~= nil or style.paddingLeft ~= nil or style.paddingInline ~= nil or style.paddingBlock ~= nil then
 		-- Start from shorthand, then let individual sides override
 		local base = if style.padding ~= nil then parsePadding(style.padding) else parsePadding(0)
+		-- Logical properties override base padding
+		local padInline = if style.paddingInline ~= nil then parsePadding(style.paddingInline) else nil
+		local padBlock = if style.paddingBlock ~= nil then parsePadding(style.paddingBlock) else nil
+		local _result = padBlock
+		if _result ~= nil then
+			_result = _result.top
+		end
+		local _condition = _result
+		if _condition == nil then
+			_condition = base.top
+		end
+		local baseTop = _condition
+		local _result_1 = padBlock
+		if _result_1 ~= nil then
+			_result_1 = _result_1.bottom
+		end
+		local _condition_1 = _result_1
+		if _condition_1 == nil then
+			_condition_1 = base.bottom
+		end
+		local baseBottom = _condition_1
+		local _result_2 = padInline
+		if _result_2 ~= nil then
+			_result_2 = _result_2.left
+		end
+		local _condition_2 = _result_2
+		if _condition_2 == nil then
+			_condition_2 = base.left
+		end
+		local baseLeft = _condition_2
+		local _result_3 = padInline
+		if _result_3 ~= nil then
+			_result_3 = _result_3.right
+		end
+		local _condition_3 = _result_3
+		if _condition_3 == nil then
+			_condition_3 = base.right
+		end
+		local baseRight = _condition_3
 		local _arg0 = React.createElement("uipadding", {
 			key = "uipadding",
-			PaddingTop = if style.paddingTop ~= nil then parseDimension(style.paddingTop) else base.top,
-			PaddingRight = if style.paddingRight ~= nil then parseDimension(style.paddingRight) else base.right,
-			PaddingBottom = if style.paddingBottom ~= nil then parseDimension(style.paddingBottom) else base.bottom,
-			PaddingLeft = if style.paddingLeft ~= nil then parseDimension(style.paddingLeft) else base.left,
+			PaddingTop = if style.paddingTop ~= nil then parseDimension(style.paddingTop) else baseTop,
+			PaddingRight = if style.paddingRight ~= nil then parseDimension(style.paddingRight) else baseRight,
+			PaddingBottom = if style.paddingBottom ~= nil then parseDimension(style.paddingBottom) else baseBottom,
+			PaddingLeft = if style.paddingLeft ~= nil then parseDimension(style.paddingLeft) else baseLeft,
 		})
 		table.insert(children, _arg0)
 	end
@@ -589,11 +819,47 @@ local function webStyle(style)
 	if style.visibility ~= nil then
 		props.Visible = style.visibility ~= "hidden"
 	end
-	-- 7. border → inject <uistroke>
-	if style.border ~= nil then
-		local stroke = buildStroke(style.border)
+	-- 7. border / outline → inject <uistroke>
+	local _condition = style.border
+	if _condition == nil then
+		_condition = style.outline
+	end
+	local activeBorder = _condition
+	if activeBorder ~= nil then
+		local stroke = buildStroke(activeBorder)
 		if stroke ~= nil then
 			table.insert(children, stroke)
+		end
+	end
+	-- textStroke → inject <uistroke> with Contextual mode
+	if style.textStroke ~= nil then
+		local stroke = buildStroke(style.textStroke, true)
+		if stroke ~= nil then
+			table.insert(children, stroke)
+		end
+	end
+	-- backgroundImage → inject <imagelabel> underlay
+	if style.backgroundImage ~= nil then
+		local url = string.match(style.backgroundImage, [[url%([\"']?(.-)[\"']?%)]])
+		if url ~= nil then
+			local cleanUrl = url
+			local bgScale = Enum.ScaleType.Stretch
+			if style.backgroundSize == "cover" then
+				bgScale = Enum.ScaleType.Crop
+			elseif style.backgroundSize == "contain" then
+				bgScale = Enum.ScaleType.Fit
+			end
+			local _arg0 = React.createElement("imagelabel", {
+				key = "uibackgroundimage",
+				Image = cleanUrl,
+				ZIndex = -1,
+				Size = UDim2.fromScale(1, 1),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromScale(0.5, 0.5),
+				BackgroundTransparency = 1,
+				ScaleType = bgScale,
+			})
+			table.insert(children, _arg0)
 		end
 	end
 	-- 8. aspectRatio → inject <uiaspectratioconstraint>
@@ -610,12 +876,20 @@ local function webStyle(style)
 		props.Position = abs.Position
 		props.AnchorPoint = abs.AnchorPoint
 	end
+	-- transformOrigin → overrides AnchorPoint
+	if style.transformOrigin ~= nil then
+		props.AnchorPoint = parseTransformOrigin(style.transformOrigin)
+	end
 	-- 10. zIndex → ZIndex
 	if style.zIndex ~= nil then
 		props.ZIndex = style.zIndex
 	end
-	if style.layoutOrder ~= nil then
-		props.LayoutOrder = style.layoutOrder
+	if style.order ~= nil or style.layoutOrder ~= nil then
+		local _condition_1 = style.order
+		if _condition_1 == nil then
+			_condition_1 = style.layoutOrder
+		end
+		props.LayoutOrder = _condition_1
 	end
 	if style.rotation ~= nil then
 		props.Rotation = style.rotation
@@ -690,16 +964,16 @@ local function webStyle(style)
 		props.RichText = true
 	end
 	if style.fontFamily ~= nil or style.fontWeight ~= nil or style.fontStyle ~= nil then
-		local _condition = style.fontFamily
-		if _condition == nil then
-			_condition = "BuilderSans"
-		end
-		local familyStr = _condition
-		local _condition_1 = FONT_FAMILY_MAP[familyStr]
+		local _condition_1 = style.fontFamily
 		if _condition_1 == nil then
-			_condition_1 = DEFAULT_FONT_FAMILY
+			_condition_1 = "BuilderSans"
 		end
-		local familyUri = _condition_1
+		local familyStr = _condition_1
+		local _condition_2 = FONT_FAMILY_MAP[familyStr]
+		if _condition_2 == nil then
+			_condition_2 = DEFAULT_FONT_FAMILY
+		end
+		local familyUri = _condition_2
 		local weightStr = if style.fontWeight ~= nil then tostring(style.fontWeight) else "normal"
 		local weightEnum = FONT_WEIGHT_MAP[weightStr] or Enum.FontWeight.Regular
 		local fontStyleEnum = if style.fontStyle == "italic" then Enum.FontStyle.Italic else Enum.FontStyle.Normal
@@ -734,24 +1008,32 @@ local function webStyle(style)
 		props.Interactable = false
 		props.Active = false
 	end
+	-- userSelect → TextSelectable
+	if style.userSelect ~= nil then
+		if style.userSelect == "text" or style.userSelect == "auto" then
+			props.TextSelectable = true
+		elseif style.userSelect == "none" then
+			props.TextSelectable = false
+		end
+	end
 	-- 15. boxShadow → inject <imagelabel>
 	if style.boxShadow ~= nil and style.boxShadow ~= "none" then
 		local shadowSize = SHADOW_SIZE_MAP[style.boxShadow] or UDim2.new(1, 20, 1, 20)
-		local _condition = SHADOW_OPACITY_MAP[style.boxShadow]
-		if _condition == nil then
-			_condition = 0.5
-		end
-		local shadowTransparency = _condition
-		local _condition_1 = SHADOW_OFFSET_MAP[style.boxShadow]
+		local _condition_1 = SHADOW_OPACITY_MAP[style.boxShadow]
 		if _condition_1 == nil then
-			_condition_1 = 6
+			_condition_1 = 0.5
 		end
-		local shadowOffset = _condition_1
-		local _condition_2 = SHADOW_SLICE_SCALE_MAP[style.boxShadow]
+		local shadowTransparency = _condition_1
+		local _condition_2 = SHADOW_OFFSET_MAP[style.boxShadow]
 		if _condition_2 == nil then
-			_condition_2 = 0.4
+			_condition_2 = 6
 		end
-		local sliceScale = _condition_2
+		local shadowOffset = _condition_2
+		local _condition_3 = SHADOW_SLICE_SCALE_MAP[style.boxShadow]
+		if _condition_3 == nil then
+			_condition_3 = 0.4
+		end
+		local sliceScale = _condition_3
 		local _arg0 = React.createElement("imagelabel", {
 			key = "box-shadow",
 			Image = SHADOW_ASSET_ID,
@@ -769,16 +1051,40 @@ local function webStyle(style)
 		table.insert(children, _arg0)
 	end
 	-- 16. flexGrow / flexShrink / alignSelf → inject <uiflexitem>
-	local _condition = style.flexGrow
-	if _condition == nil then
-		_condition = 0
-	end
-	local grow = _condition
-	local _condition_1 = style.flexShrink
+	local _condition_1 = style.flexGrow
 	if _condition_1 == nil then
 		_condition_1 = 0
 	end
-	local shrink = _condition_1
+	local grow = _condition_1
+	local _condition_2 = style.flexShrink
+	if _condition_2 == nil then
+		_condition_2 = 0
+	end
+	local shrink = _condition_2
+	if style.flex ~= nil then
+		if style.flex == "auto" then
+			grow = 1
+			shrink = 1
+		elseif style.flex == "none" then
+			grow = 0
+			shrink = 0
+		else
+			local _flex = style.flex
+			if type(_flex) == "number" then
+				grow = style.flex
+				shrink = style.flex
+			else
+				local _flex_1 = style.flex
+				if type(_flex_1) == "string" then
+					local parsed = tonumber(style.flex)
+					if parsed ~= nil then
+						grow = parsed
+						shrink = parsed
+					end
+				end
+			end
+		end
+	end
 	local hasFlexItem = grow > 0 or shrink > 0 or (style.alignSelf ~= nil and style.alignSelf ~= "auto")
 	if hasFlexItem then
 		if style.display == "grid" then
@@ -804,6 +1110,86 @@ local function webStyle(style)
 			end
 		end
 		local _arg0 = React.createElement("uiflexitem", flexProps)
+		table.insert(children, _arg0)
+	end
+	-- 17. textShadow → inject duplicate <textlabel> with black <uigradient>
+	if style.textShadow ~= nil and hostText ~= nil then
+		local _exp = string.split(style.textShadow, " ")
+		-- ▼ ReadonlyArray.filter ▼
+		local _newValue = {}
+		local _callback = function(p)
+			return p ~= ""
+		end
+		local _length = 0
+		for _k, _v in _exp do
+			if _callback(_v, _k - 1, _exp) == true then
+				_length += 1
+				_newValue[_length] = _v
+			end
+		end
+		-- ▲ ReadonlyArray.filter ▲
+		local parts = _newValue
+		local dimParts = {}
+		local colorParts = {}
+		for _, p in parts do
+			local _value = (string.match(p, "^%-?%d"))
+			if _value ~= 0 and _value == _value and _value ~= "" and _value then
+				table.insert(dimParts, p)
+			else
+				table.insert(colorParts, p)
+			end
+		end
+		local _condition_3 = dimParts[1]
+		if _condition_3 == nil then
+			_condition_3 = "0"
+		end
+		local xStr = _condition_3
+		local _condition_4 = dimParts[2]
+		if _condition_4 == nil then
+			_condition_4 = xStr
+		end
+		local yStr = _condition_4
+		local _result = parseDimension(xStr)
+		if _result ~= nil then
+			_result = _result.Offset
+		end
+		local _condition_5 = _result
+		if _condition_5 == nil then
+			_condition_5 = 0
+		end
+		local xOffset = _condition_5
+		local _result_1 = parseDimension(yStr)
+		if _result_1 ~= nil then
+			_result_1 = _result_1.Offset
+		end
+		local _condition_6 = _result_1
+		if _condition_6 == nil then
+			_condition_6 = 0
+		end
+		local yOffset = _condition_6
+		local colorStr = table.concat(colorParts, " ")
+		local shadowColor = if colorStr ~= "" then parseColor(colorStr) else parseColor("rgba(0,0,0,0.5)")
+		local _arg0 = React.createElement("textlabel", {
+			key = "textShadow",
+			Text = hostText,
+			Size = UDim2.new(1, 0, 1, 0),
+			Position = UDim2.new(0, xOffset, 0, yOffset),
+			BackgroundTransparency = 1,
+			TextTransparency = shadowColor.transparency,
+			TextColor3 = shadowColor.color,
+			ZIndex = -1,
+			TextSize = props.TextSize,
+			FontFace = props.FontFace,
+			TextXAlignment = props.TextXAlignment,
+			TextYAlignment = props.TextYAlignment,
+			TextWrapped = props.TextWrapped,
+			LineHeight = props.LineHeight,
+			TextTruncate = props.TextTruncate,
+			RichText = props.RichText,
+		}, React.createElement("uigradient", {
+			key = "shadowGradient",
+			Color = ColorSequence.new(Color3.new(0, 0, 0)),
+		}))
 		table.insert(children, _arg0)
 	end
 	return makeWebStyleResult(props, children)

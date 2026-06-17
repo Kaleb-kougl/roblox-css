@@ -23,13 +23,16 @@ import { Text } from "./Text";
 import { Image } from "./Image";
 import { parseInlineImages, containsRichTextTags } from "../utils/parseInlineImages";
 
-interface InlineTextProps {
+interface InlineTextProps extends React.PropsWithChildren {
 	Text?: string;
 	style?: CSSProperties;
 }
 
 export function InlineText(props: InlineTextProps) {
-	const text = props.Text ?? "";
+	let text = props.Text ?? "";
+	if (typeIs(props.children, "string") || typeIs(props.children, "number")) {
+		text = tostring(props.children);
+	}
 	const style = props.style;
 	const segments = parseInlineImages(text);
 
@@ -118,6 +121,7 @@ export function InlineText(props: InlineTextProps) {
 					if (style?.textAlign !== undefined) segmentStyle.textAlign = style.textAlign;
 					if (style?.textVerticalAlign !== undefined)
 						segmentStyle.textVerticalAlign = style.textVerticalAlign;
+					if (style?.opacity !== undefined) segmentStyle.opacity = style.opacity;
 
 					// Always enable richText for text segments so <b>, <font> etc work
 					segmentStyle.richText = true;
@@ -139,6 +143,7 @@ export function InlineText(props: InlineTextProps) {
 						style={{
 							width: segment.width,
 							height: segment.height,
+							opacity: style?.opacity,
 						}}
 					/>
 				);

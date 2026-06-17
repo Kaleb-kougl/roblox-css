@@ -1,0 +1,10 @@
+import React from "@rbxts/react";
+import { BoxProps } from "./Box";
+import { TextProps } from "./Text";
+import { InlineText } from "./InlineText";
+export declare const Div: React.ForwardRefExoticComponent<Omit<BoxProps, "ref"> & React.RefAttributes<Frame>>;
+export declare const Span: typeof InlineText;
+export declare const P: React.ForwardRefExoticComponent<Omit<TextProps, "ref"> & React.RefAttributes<TextLabel>>;
+export declare const H1: React.ForwardRefExoticComponent<Omit<TextProps, "ref"> & React.RefAttributes<TextLabel>>;
+export declare const H2: React.ForwardRefExoticComponent<Omit<TextProps, "ref"> & React.RefAttributes<TextLabel>>;
+export declare const H3: React.ForwardRefExoticComponent<Omit<TextProps, "ref"> & React.RefAttributes<TextLabel>>;

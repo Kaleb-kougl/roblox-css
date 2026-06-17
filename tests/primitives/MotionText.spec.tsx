@@ -264,4 +264,31 @@ describe("MotionText Component", () => {
 			root.unmount();
 		});
 	});
+
+	it("should pass through uppercase native Roblox properties from style to the Virtual DOM", () => {
+		const container = new Instance("Folder");
+		createdInstances.push(container);
+		const root = ReactRoblox.createRoot(container);
+
+		act(() => {
+			root.render(
+				createElement(MotionText, {
+					style: {
+						Position: new UDim2(0, 10, 0, 20),
+						TextTransparency: 0.5,
+					},
+				} as Record<string, unknown>)
+			);
+		});
+
+		const textLabel = container.FindFirstChildWhichIsA("TextLabel") as TextLabel;
+		expect(textLabel.Position).toBeDefined();
+		expect(textLabel.Position.X.Offset).toBe(10);
+		expect(textLabel.Position.Y.Offset).toBe(20);
+		expect(textLabel.TextTransparency).toBe(0.5);
+
+		act(() => {
+			root.unmount();
+		});
+	});
 });

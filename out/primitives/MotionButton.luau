@@ -11,7 +11,18 @@ local function buttonParser(style)
 	-- Previously this duplicated that logic with a different default font (SourceSansPro
 	-- vs BuilderSans), causing an inconsistency.
 	local parsed = webStyle(style)
-	return parsed.props
+	local result = parsed.props
+	-- Pass through Roblox-native properties (uppercase keys like Position, TextTransparency)
+	-- that webStyle doesn't handle, matching the default parser behavior.
+	for k, v in pairs(style) do
+		if type(k) == "string" and k ~= "_parsed" and result[k] == nil then
+			local firstChar = string.sub(k, 1, 1)
+			if firstChar >= "A" and firstChar <= "Z" then
+				result[k] = v
+			end
+		end
+	end
+	return result
 end
 --[[
 	*

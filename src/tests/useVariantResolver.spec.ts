@@ -30,7 +30,7 @@ const robloxCSS = game.GetService("ReplicatedStorage").WaitForChild("roblox-css"
 const primitivesFolder = robloxCSS.WaitForChild("primitives");
 const mod = require(primitivesFolder.WaitForChild("useVariantResolver") as ModuleScript) as {
 	useVariantResolver: (...args: unknown[]) => { animatedProps: Record<string, unknown>; staticProps: Record<string, unknown> };
-	isAnimatable?: (value: any) => boolean;
+	isAnimatable?: (value: unknown) => boolean;
 };
 
 const useVariantResolver = mod.useVariantResolver;
@@ -186,7 +186,7 @@ describe("useVariantResolver", () => {
 		const transparencyBinding = result.animatedProps.BackgroundTransparency;
 		expect(transparencyBinding).toBeDefined();
 		// Verify it behaves as a React binding by calling getValue()
-		const bindingObj = transparencyBinding as never as { getValue(): any };
+		const bindingObj = transparencyBinding as never as { getValue(): unknown };
 		expect(bindingObj.getValue()).toBe(0.5);
 		
 		act(() => { root.unmount(); });

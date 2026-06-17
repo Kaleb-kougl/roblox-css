@@ -6,7 +6,18 @@ local forwardRef = _react.forwardRef
 local webStyle = TS.import(script, script.Parent.Parent, "styles", "webStyle").webStyle
 local useVariantResolver = TS.import(script, script.Parent, "useVariantResolver").useVariantResolver
 local function textParser(style)
-	return webStyle(style).props
+	local result = webStyle(style).props
+	-- Pass through Roblox-native properties (uppercase keys like Position, TextTransparency)
+	-- that webStyle doesn't handle, matching the default parser behavior.
+	for k, v in pairs(style) do
+		if type(k) == "string" and k ~= "_parsed" and result[k] == nil then
+			local firstChar = string.sub(k, 1, 1)
+			if firstChar >= "A" and firstChar <= "Z" then
+				result[k] = v
+			end
+		end
+	end
+	return result
 end
 --[[
 	*

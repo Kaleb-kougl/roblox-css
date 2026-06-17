@@ -8,6 +8,12 @@
  * Reference: docs/FEATURE_MAPPING.md
  */
 
+export type FlexDirectionType = "row" | "column";
+export type FlexWrapType = "nowrap" | "wrap";
+export type JustifyContentType = "flex-start" | "center" | "flex-end" | "space-between" | "space-around";
+export type AlignItemsType = "flex-start" | "center" | "flex-end" | "stretch";
+export type BackgroundSizeType = "cover" | "contain" | "fill" | "100% 100%";
+
 export interface CSSProperties {
 	// --- Box Model & Sizing (FEATURE_MAPPING §2) ---
 	width?: string | number;
@@ -23,6 +29,8 @@ export interface CSSProperties {
 	paddingRight?: string | number;
 	paddingBottom?: string | number;
 	paddingLeft?: string | number;
+	paddingInline?: string | number;
+	paddingBlock?: string | number;
 
 	// --- Positioning ---
 	position?: "absolute" | "relative";
@@ -35,15 +43,19 @@ export interface CSSProperties {
 
 	// --- Layout ---
 	layoutOrder?: number;
+	order?: number;
 	rotation?: number;
 	autoSize?: "none" | "x" | "y" | "xy";
 
 	// --- Flexbox Layout (FEATURE_MAPPING §3) ---
 	display?: "flex" | "grid" | "none";
-	flexDirection?: "row" | "column";
-	flexWrap?: "nowrap" | "wrap";
-	justifyContent?: "flex-start" | "center" | "flex-end" | "space-between" | "space-around";
-	alignItems?: "flex-start" | "center" | "flex-end" | "stretch";
+	flexDirection?: FlexDirectionType;
+	flexWrap?: FlexWrapType;
+	flexFlow?: FlexDirectionType | FlexWrapType | `${FlexDirectionType} ${FlexWrapType}` | `${FlexWrapType} ${FlexDirectionType}` | string;
+	justifyContent?: JustifyContentType;
+	alignItems?: AlignItemsType;
+	placeItems?: AlignItemsType | JustifyContentType | `${AlignItemsType} ${JustifyContentType}` | string;
+	placeContent?: AlignItemsType | JustifyContentType | `${AlignItemsType} ${JustifyContentType}` | string;
 	gap?: string | number;
 	rowGap?: string | number;
 	columnGap?: string | number;
@@ -62,10 +74,12 @@ export interface CSSProperties {
 	backgroundColor?: string;
 	background?: string;
 	backgroundImage?: string;
+	backgroundSize?: BackgroundSizeType;
 	color?: string;
 	opacity?: number;
 	borderRadius?: string | number;
 	border?: string;
+	outline?: string;
 	boxShadow?: "none" | "sm" | "md" | "lg" | "xl" | "2xl";
 	overflow?: "hidden" | "visible";
 	objectFit?: "cover" | "contain" | "fill";
@@ -79,6 +93,7 @@ export interface CSSProperties {
 	fontFamily?: string;
 	fontWeight?: "normal" | "bold" | "black";
 	fontStyle?: "normal" | "italic";
+	textShadow?: string;
 	textAlign?: "left" | "center" | "right";
 	textVerticalAlign?: "top" | "center" | "bottom";
 	whiteSpace?: "normal" | "nowrap" | "pre-wrap" | "pre-line";

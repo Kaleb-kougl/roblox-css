@@ -31,7 +31,7 @@ const primitivesFolder = robloxCSS.WaitForChild("primitives");
 const stylesFolder = robloxCSS.WaitForChild("styles");
 
 const { usePercentageConstraints } = require(primitivesFolder.WaitForChild("usePercentageConstraints") as ModuleScript) as {
-	usePercentageConstraints: (style: any) => React.ReactNode;
+	usePercentageConstraints: (style: unknown) => React.ReactNode;
 };
 
 const { ParentSizeContext } = require(stylesFolder.WaitForChild("ParentSizeContext") as ModuleScript) as {
@@ -51,7 +51,7 @@ describe("usePercentageConstraints", () => {
 	});
 
 	it("should return undefined when called with undefined style", () => {
-		let result: any = "NOT_SET";
+		let result: unknown = "NOT_SET";
 		
 		const TestComponent = () => {
 			result = usePercentageConstraints(undefined);
@@ -72,7 +72,7 @@ describe("usePercentageConstraints", () => {
 	});
 
 	it("should return undefined when no ParentSizeContext is provided", () => {
-		let result: any = "NOT_SET";
+		let result: unknown = "NOT_SET";
 		
 		const TestComponent = () => {
 			result = usePercentageConstraints({ width: "50%" });
@@ -94,7 +94,7 @@ describe("usePercentageConstraints", () => {
 	});
 
 	it("should return undefined when constraint dimensions have zero Scale", () => {
-		let result: any = "NOT_SET";
+		let result: unknown = "NOT_SET";
 		const [parentSizeBinding] = React.createBinding(new Vector2(100, 100));
 
 		const TestComponent = () => {
@@ -120,7 +120,7 @@ describe("usePercentageConstraints", () => {
 	});
 
 	it("should return a uisizeconstraint element when a percentage constraint is present", () => {
-		let result: any = "NOT_SET";
+		let result: unknown = "NOT_SET";
 		const [parentSizeBinding] = React.createBinding(new Vector2(100, 100));
 
 		const TestComponent = () => {

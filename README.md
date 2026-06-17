@@ -74,6 +74,21 @@ Add `roblox-css` to your Rojo project file:
 | `<Input>` | `<input>` | `<textbox>` |
 | `<ScrollBox>` | `<div style="overflow:auto">` | `<scrollingframe>` |
 
+### HTML-Like Aliases
+
+For developers who prefer a more familiar web API, we export capitalized HTML element aliases that map directly to our base primitives.
+
+| Alias Component | Underlying Primitive | Default Styling |
+|:---|:---|:---|
+| `<Div>` | `<Box>` | None |
+| `<Span>` | `<InlineText>` | None |
+| `<P>` | `<Text>` | `fontSize: 16` |
+| `<H1>` | `<Text>` | `fontSize: 32, fontWeight: "bold"` |
+| `<H2>` | `<Text>` | `fontSize: 24, fontWeight: "bold"` |
+| `<H3>` | `<Text>` | `fontSize: 18, fontWeight: "bold"` |
+
+*Note: Due to TypeScript JSX constraints, you MUST use the capitalized versions (e.g. `<Div>` instead of `<div>`). Lowercase tags attempt to construct literal Roblox Instance classes that do not exist.*
+
 ### Motion Primitives
 
 Declarative, variant-driven animation (inspired by Framer Motion):
@@ -150,6 +165,7 @@ Requires `@rbxts/ripple` peer dependency.
 | `wordBreak` | Zero-width space injection |
 | `whiteSpace` | `TextWrapped` |
 | `textOverflow` | `TextTruncate` |
+| `richText` | `RichText` (auto-enabled if HTML tags detected) |
 
 ### Other
 | CSS Property | Roblox Mapping |

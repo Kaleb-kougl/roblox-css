@@ -361,6 +361,32 @@ describe("webStyle", function()
 			expect((child.props.PaddingRight).Scale).toBeCloseTo(0.15, 5)
 			expect((child.props.PaddingTop).Offset).toBe(0)
 		end)
+		it("should map paddingInline and paddingBlock logical properties", function()
+			local result = webStyle({
+				padding = "10px",
+				paddingInline = "20px 30px",
+				paddingBlock = "5px",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIPadding"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child).toBeDefined()
+			expect((child.props.PaddingTop).Offset).toBe(5)
+			expect((child.props.PaddingBottom).Offset).toBe(5)
+			expect((child.props.PaddingLeft).Offset).toBe(20)
+			expect((child.props.PaddingRight).Offset).toBe(30)
+		end)
 	end)
 	describe("6. display: 'flex' → <uilistlayout>", function()
 		it("should inject <uilistlayout> for flex display", function()
@@ -561,6 +587,195 @@ describe("webStyle", function()
 			local child = _result
 			expect(child.props.ItemLineAlignment).toBe(Enum.ItemLineAlignment.Stretch)
 		end)
+		it("should map flexFlow 'row wrap' correctly", function()
+			local result = webStyle({
+				display = "flex",
+				flexFlow = "row wrap",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child.props.FillDirection).toBe(Enum.FillDirection.Horizontal)
+			expect(child.props.Wraps).toBe(true)
+		end)
+		it("should map flexFlow 'column nowrap' correctly", function()
+			local result = webStyle({
+				display = "flex",
+				flexFlow = "column nowrap",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child.props.FillDirection).toBe(Enum.FillDirection.Vertical)
+			expect(child.props.Wraps).toBeUndefined()
+		end)
+		it("should map flexFlow 'column-reverse' fallback to column", function()
+			local result = webStyle({
+				display = "flex",
+				flexFlow = "column-reverse",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child.props.FillDirection).toBe(Enum.FillDirection.Vertical)
+		end)
+		it("should parse single values in flexFlow", function()
+			local result1 = webStyle({
+				display = "flex",
+				flexFlow = "row",
+			})
+			local _exp = result1.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child1 = _result
+			expect(child1.props.FillDirection).toBe(Enum.FillDirection.Horizontal)
+			local result2 = webStyle({
+				display = "flex",
+				flexFlow = "wrap",
+			})
+			local _exp_1 = result2.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback_1 = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result_1
+			for _i, _v in _exp_1 do
+				if _callback_1(_v, _i - 1, _exp_1) == true then
+					_result_1 = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child2 = _result_1
+			expect(child2.props.Wraps).toBe(true)
+		end)
+		it("should map placeContent to justifyContent", function()
+			local result = webStyle({
+				display = "flex",
+				placeContent = "center flex-end",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child.props.VerticalAlignment).toBe(Enum.VerticalAlignment.Bottom)
+		end)
+		it("should map placeItems to alignItems", function()
+			local result = webStyle({
+				display = "flex",
+				placeItems = "center stretch",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child.props.HorizontalAlignment).toBe(Enum.HorizontalAlignment.Center)
+		end)
+		it("should map justifyContent: 'space-around' to HorizontalFlex/VerticalFlex", function()
+			local resultRow = webStyle({
+				display = "flex",
+				flexDirection = "row",
+				justifyContent = "space-around",
+			})
+			local _exp = resultRow.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local childRow = _result
+			expect(childRow.props.HorizontalFlex).toBe(Enum.UIFlexAlignment.SpaceAround)
+			local resultCol = webStyle({
+				display = "flex",
+				flexDirection = "column",
+				justifyContent = "space-around",
+			})
+			local _exp_1 = resultCol.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback_1 = function(c)
+				return c.type == "UIListLayout"
+			end
+			local _result_1
+			for _i, _v in _exp_1 do
+				if _callback_1(_v, _i - 1, _exp_1) == true then
+					_result_1 = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local childCol = _result_1
+			expect(childCol.props.VerticalFlex).toBe(Enum.UIFlexAlignment.SpaceAround)
+		end)
 	end)
 	describe("6.5. display: 'grid' → <uigridlayout>", function()
 		it("should inject <uigridlayout> for grid display", function()
@@ -631,6 +846,117 @@ describe("webStyle", function()
 			expect(cellPadding.X.Offset).toBe(10)
 			expect(cellPadding.Y.Offset).toBe(20)
 		end)
+		it("should map rowGap and columnGap to CellPadding", function()
+			local result = webStyle({
+				display = "grid",
+				rowGap = "15px",
+				columnGap = "25px",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIGridLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			local cellPadding = child.props.CellPadding
+			expect(cellPadding.X.Offset).toBe(25)
+			expect(cellPadding.Y.Offset).toBe(15)
+		end)
+		it("should prioritize rowGap and columnGap over gap", function()
+			local result = webStyle({
+				display = "grid",
+				gap = "5px",
+				rowGap = "15px",
+				columnGap = "25px",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIGridLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			local cellPadding = child.props.CellPadding
+			expect(cellPadding.X.Offset).toBe(25)
+			expect(cellPadding.Y.Offset).toBe(15)
+		end)
+		it("should map justifyContent and alignItems for grid", function()
+			local result = webStyle({
+				display = "grid",
+				justifyContent = "center",
+				alignItems = "flex-end",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIGridLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child.props.HorizontalAlignment).toBe(Enum.HorizontalAlignment.Center)
+			expect(child.props.VerticalAlignment).toBe(Enum.VerticalAlignment.Bottom)
+		end)
+		it("should map flexDirection to FillDirection for grid (default row)", function()
+			local result1 = webStyle({
+				display = "grid",
+			})
+			local _exp = result1.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIGridLayout"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child1 = _result
+			expect(child1.props.FillDirection).toBe(Enum.FillDirection.Horizontal)
+			local result2 = webStyle({
+				display = "grid",
+				flexDirection = "column",
+			})
+			local _exp_1 = result2.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback_1 = function(c)
+				return c.type == "UIGridLayout"
+			end
+			local _result_1
+			for _i, _v in _exp_1 do
+				if _callback_1(_v, _i - 1, _exp_1) == true then
+					_result_1 = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child2 = _result_1
+			expect(child2.props.FillDirection).toBe(Enum.FillDirection.Vertical)
+		end)
 	end)
 	describe("7. border → <uistroke>", function()
 		it("should inject <uistroke> child with Thickness, Color, and Border mode", function()
@@ -657,6 +983,30 @@ describe("webStyle", function()
 			expect(color.R).toBe(0)
 			expect(color.G).toBe(1)
 			expect(color.B).toBe(0)
+			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
+		end)
+		it("should alias outline to border and produce UIStroke", function()
+			local result = webStyle({
+				outline = "2px solid blue",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIStroke"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local child = _result
+			expect(child).toBeDefined()
+			expect(child.props.Thickness).toBe(2)
+			local color = child.props.Color
+			expect(color.B).toBe(1)
 			expect(child.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border)
 		end)
 		it("should return undefined for thickness only without specifying word", function()
@@ -1140,7 +1490,99 @@ describe("webStyle", function()
 			expect(result.props.ZIndex).toBe(-5)
 		end)
 	end)
+	describe("transformOrigin → AnchorPoint", function()
+		it("should map 'center' to 0.5, 0.5", function()
+			local result = webStyle({
+				transformOrigin = "center",
+			})
+			local anchor = result.props.AnchorPoint
+			expect(anchor.X).toBe(0.5)
+			expect(anchor.Y).toBe(0.5)
+		end)
+		it("should map 'top left' to 0, 0", function()
+			local result = webStyle({
+				transformOrigin = "top left",
+			})
+			local anchor = result.props.AnchorPoint
+			expect(anchor.X).toBe(0)
+			expect(anchor.Y).toBe(0)
+		end)
+		it("should map 'bottom right' to 1, 1", function()
+			local result = webStyle({
+				transformOrigin = "bottom right",
+			})
+			local anchor = result.props.AnchorPoint
+			expect(anchor.X).toBe(1)
+			expect(anchor.Y).toBe(1)
+		end)
+		it("should map percentages like '100% 50%'", function()
+			local result = webStyle({
+				transformOrigin = "100% 50%",
+			})
+			local anchor = result.props.AnchorPoint
+			expect(anchor.X).toBe(1)
+			expect(anchor.Y).toBe(0.5)
+		end)
+		it("should handle single keyword 'top'", function()
+			local result = webStyle({
+				transformOrigin = "top",
+			})
+			local anchor = result.props.AnchorPoint
+			expect(anchor.X).toBe(0.5)
+			expect(anchor.Y).toBe(0)
+		end)
+		it("should override position: absolute's default AnchorPoint", function()
+			local result = webStyle({
+				position = "absolute",
+				top = 0,
+				left = 0,
+				transformOrigin = "center",
+			})
+			local anchor = result.props.AnchorPoint
+			expect(anchor.X).toBe(0.5)
+			expect(anchor.Y).toBe(0.5)
+		end)
+	end)
 	describe("11. Typography & Text Styling", function()
+		describe("userSelect → TextSelectable", function()
+			it("should map 'text' and 'auto' to true", function()
+				expect(webStyle({
+					userSelect = "text",
+				}).props.TextSelectable).toBe(true)
+				expect(webStyle({
+					userSelect = "auto",
+				}).props.TextSelectable).toBe(true)
+			end)
+			it("should map 'none' to false", function()
+				expect(webStyle({
+					userSelect = "none",
+				}).props.TextSelectable).toBe(false)
+			end)
+		end)
+		describe("textStroke → <uistroke>", function()
+			it("should map textStroke to Contextual uistroke", function()
+				local result = webStyle({
+					textStroke = "2px solid #ff0000",
+				})
+				local _exp = result.children
+				-- ▼ ReadonlyArray.find ▼
+				local _callback = function(c)
+					return c.type == "UIStroke" and c.props.ApplyStrokeMode == Enum.ApplyStrokeMode.Contextual
+				end
+				local _result
+				for _i, _v in _exp do
+					if _callback(_v, _i - 1, _exp) == true then
+						_result = _v
+						break
+					end
+				end
+				-- ▲ ReadonlyArray.find ▲
+				local stroke = _result
+				expect(stroke).toBeDefined()
+				expect(stroke.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Contextual)
+				expect(stroke.props.Thickness).toBe(2)
+			end)
+		end)
 		describe("color → TextColor3", function()
 			it("should parse hex colors to TextColor3", function()
 				local result = webStyle({
@@ -1151,6 +1593,12 @@ describe("webStyle", function()
 				expect(color.R).toBe(0)
 				expect(color.G).toBe(1)
 				expect(color.B).toBe(0)
+			end)
+			it("should map color 'transparent' to TextTransparency 1", function()
+				local result = webStyle({
+					color = "transparent",
+				})
+				expect(result.props.TextTransparency).toBe(1)
 			end)
 		end)
 		describe("fontSize → TextSize", function()
@@ -1309,6 +1757,116 @@ describe("webStyle", function()
 			local omittedResult = webStyle({})
 			expect(omittedResult.props.Interactable).toBeUndefined()
 			expect(omittedResult.props.Active).toBeUndefined()
+		end)
+	end)
+	describe("backgroundImage → <imagelabel>", function()
+		it("should inject imagelabel with Image property for unquoted URL", function()
+			local result = webStyle({
+				backgroundImage = "url(rbxassetid://12345)",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "ImageLabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local img = _result
+			expect(img).toBeDefined()
+			expect(img.props.Image).toBe("rbxassetid://12345")
+			expect(img.props.ZIndex).toBe(-1)
+			expect((img.props.Size).X.Scale).toBe(1)
+			expect((img.props.Size).Y.Scale).toBe(1)
+		end)
+		it("should inject imagelabel with Image property for double-quoted URL", function()
+			local result = webStyle({
+				backgroundImage = 'url(\"rbxassetid://12345\")',
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "ImageLabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local img = _result
+			expect(img).toBeDefined()
+			expect(img.props.Image).toBe("rbxassetid://12345")
+		end)
+		it("should inject imagelabel with Image property for single-quoted URL", function()
+			local result = webStyle({
+				backgroundImage = "url('rbxassetid://12345')",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "ImageLabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local img = _result
+			expect(img).toBeDefined()
+			expect(img.props.Image).toBe("rbxassetid://12345")
+		end)
+		it("should map backgroundSize 'cover' to Enum.ScaleType.Crop", function()
+			local result = webStyle({
+				backgroundImage = "url(rbxassetid://12345)",
+				backgroundSize = "cover",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "ImageLabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local img = _result
+			expect(img.props.ScaleType).toBe(Enum.ScaleType.Crop)
+		end)
+		it("should map backgroundSize 'contain' to Enum.ScaleType.Fit", function()
+			local result = webStyle({
+				backgroundImage = "url(rbxassetid://12345)",
+				backgroundSize = "contain",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "ImageLabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local img = _result
+			expect(img.props.ScaleType).toBe(Enum.ScaleType.Fit)
 		end)
 	end)
 	describe("15. boxShadow → <imagelabel>", function()
@@ -1531,6 +2089,19 @@ describe("webStyle", function()
 				layoutOrder = 0,
 			})
 			expect(result.props.LayoutOrder).toBe(0)
+		end)
+		it("should map order to LayoutOrder", function()
+			local result = webStyle({
+				order = 10,
+			})
+			expect(result.props.LayoutOrder).toBe(10)
+		end)
+		it("should prioritize order over layoutOrder", function()
+			local result = webStyle({
+				order = 15,
+				layoutOrder = 5,
+			})
+			expect(result.props.LayoutOrder).toBe(15)
 		end)
 	end)
 	describe("20. rotation → Rotation", function()
@@ -1871,6 +2442,93 @@ describe("webStyle", function()
 			local flexItem = _result
 			expect(flexItem).toBeUndefined()
 		end)
+		it("should parse flex: 1 to flexGrow 1 and flexShrink 1", function()
+			local result = webStyle({
+				flex = 1,
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIFlexItem"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local flexItem = _result
+			expect(flexItem).toBeDefined()
+			expect(flexItem.props.FlexMode).toBe(Enum.UIFlexMode.Custom)
+			expect(flexItem.props.GrowRatio).toBe(1)
+			expect(flexItem.props.ShrinkRatio).toBe(1)
+		end)
+		it("should parse flex: 'auto' to flexGrow 1 and flexShrink 1", function()
+			local result = webStyle({
+				flex = "auto",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIFlexItem"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local flexItem = _result
+			expect(flexItem).toBeDefined()
+			expect(flexItem.props.GrowRatio).toBe(1)
+			expect(flexItem.props.ShrinkRatio).toBe(1)
+		end)
+		it("should parse flex: 'none' to flexGrow 0 and flexShrink 0", function()
+			local result = webStyle({
+				flex = "none",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIFlexItem"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local flexItem = _result
+			expect(flexItem).toBeUndefined()
+		end)
+		it("should parse flex: '2' as number string", function()
+			local result = webStyle({
+				flex = "2",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIFlexItem"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local flexItem = _result
+			expect(flexItem).toBeDefined()
+			expect(flexItem.props.GrowRatio).toBe(2)
+			expect(flexItem.props.ShrinkRatio).toBe(2)
+		end)
 		it("should inject UIFlexItem with ItemLineAlignment for alignSelf 'center'", function()
 			local result = webStyle({
 				alignSelf = "center",
@@ -1963,6 +2621,70 @@ describe("webStyle", function()
 			})
 			expect(#result.children).toBe(1)
 			expect(result.children[1].type).toBe("UIFlexItem")
+		end)
+		it("should inject UIFlexItem and issue warning when flexGrow is used with display: 'grid'", function()
+			local result = webStyle({
+				display = "grid",
+				flexGrow = 1,
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIFlexItem"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local flexItem = _result
+			expect(flexItem).toBeDefined()
+			expect(flexItem.props.GrowRatio).toBe(1)
+		end)
+		it("should inject UIFlexItem with ItemLineAlignment.Start for alignSelf 'flex-start'", function()
+			local result = webStyle({
+				alignSelf = "flex-start",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIFlexItem"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local flexItem = _result
+			expect(flexItem).toBeDefined()
+			expect(flexItem.props.ItemLineAlignment).toBe(Enum.ItemLineAlignment.Start)
+		end)
+		it("should inject UIFlexItem with ItemLineAlignment.End for alignSelf 'flex-end'", function()
+			local result = webStyle({
+				alignSelf = "flex-end",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "UIFlexItem"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local flexItem = _result
+			expect(flexItem).toBeDefined()
+			expect(flexItem.props.ItemLineAlignment).toBe(Enum.ItemLineAlignment.End)
 		end)
 	end)
 	describe("29. background: linear-gradient() → <uigradient>", function()
@@ -2505,6 +3227,140 @@ describe("webStyle", function()
 			expect(result.props.Size).toBeUndefined()
 			expect(result.props.BackgroundColor3).toBeUndefined()
 			expect(#result.children).toBe(0)
+		end)
+	end)
+	describe("textShadow → <textlabel> duplicate", function()
+		it("should parse textShadow and output duplicate <textlabel> with gradient", function()
+			local result = webStyle({
+				textShadow = "3px 4px rgba(0, 0, 0, 0.5)",
+				fontSize = 24,
+			}, "Hello World")
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "textlabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local shadowChild = _result
+			expect(shadowChild).toBeDefined()
+			expect(shadowChild.props.Text).toBe("Hello World")
+			expect(shadowChild.props.ZIndex).toBe(-1)
+			expect(shadowChild.props.TextSize).toBe(24)
+			local pos = shadowChild.props.Position
+			expect(pos.X.Offset).toBe(3)
+			expect(pos.Y.Offset).toBe(4)
+			local textColor = shadowChild.props.TextColor3
+			expect(textColor.R).toBe(0)
+			expect(textColor.G).toBe(0)
+			expect(textColor.B).toBe(0)
+			expect(shadowChild.props.TextTransparency).toBeCloseTo(0.5, 5)
+			expect(shadowChild.props.BackgroundTransparency).toBe(1)
+			local gradientChild = (shadowChild.props.children)
+			expect(gradientChild).toBeDefined()
+			expect(gradientChild.type).toBe("uigradient")
+			expect(gradientChild.props.Color).toBeDefined()
+		end)
+		it("should parse textShadow without offset dimensions", function()
+			local result = webStyle({
+				textShadow = "#ff0000",
+			}, "No Offset")
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "textlabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local shadowChild = _result
+			expect(shadowChild).toBeDefined()
+			local pos = shadowChild.props.Position
+			expect(pos.X.Offset).toBe(0)
+			expect(pos.Y.Offset).toBe(0)
+			local textColor = shadowChild.props.TextColor3
+			expect(textColor.R).toBe(1)
+			expect(textColor.G).toBe(0)
+			expect(textColor.B).toBe(0)
+		end)
+		it("should parse negative dimensions in textShadow", function()
+			local result = webStyle({
+				textShadow = "-5px -2px #00ff00",
+			}, "Negative Offset")
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "textlabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local shadowChild = _result
+			expect(shadowChild).toBeDefined()
+			local pos = shadowChild.props.Position
+			expect(pos.X.Offset).toBe(-5)
+			expect(pos.Y.Offset).toBe(-2)
+		end)
+		it("should fall back to default shadow color if none provided", function()
+			local result = webStyle({
+				textShadow = "10px 10px",
+			}, "Default Color")
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "textlabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local shadowChild = _result
+			expect(shadowChild).toBeDefined()
+			local textColor = shadowChild.props.TextColor3
+			expect(textColor.R).toBe(0)
+			expect(textColor.G).toBe(0)
+			expect(textColor.B).toBe(0)
+			expect(shadowChild.props.TextTransparency).toBeCloseTo(0.5, 5)
+		end)
+		it("should not create textShadow if hostText is not provided", function()
+			local result = webStyle({
+				textShadow = "10px 10px #000",
+			})
+			local _exp = result.children
+			-- ▼ ReadonlyArray.find ▼
+			local _callback = function(c)
+				return c.type == "textlabel"
+			end
+			local _result
+			for _i, _v in _exp do
+				if _callback(_v, _i - 1, _exp) == true then
+					_result = _v
+					break
+				end
+			end
+			-- ▲ ReadonlyArray.find ▲
+			local shadowChild = _result
+			expect(shadowChild).toBeUndefined()
 		end)
 	end)
 end)

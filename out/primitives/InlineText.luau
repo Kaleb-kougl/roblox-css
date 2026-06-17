@@ -32,6 +32,15 @@ local function InlineText(props)
 		_condition = ""
 	end
 	local text = _condition
+	local _children = props.children
+	local _condition_1 = type(_children) == "string"
+	if not _condition_1 then
+		local _children_1 = props.children
+		_condition_1 = type(_children_1) == "number"
+	end
+	if _condition_1 then
+		text = tostring(props.children)
+	end
 	local style = props.style
 	local segments = parseInlineImages(text)
 	-- Check if any segment is an image
@@ -227,21 +236,28 @@ local function InlineText(props)
 			if _result_8 ~= nil then
 				segmentStyle.textVerticalAlign = style.textVerticalAlign
 			end
+			local _result_9 = style
+			if _result_9 ~= nil then
+				_result_9 = _result_9.opacity
+			end
+			if _result_9 ~= nil then
+				segmentStyle.opacity = style.opacity
+			end
 			-- Always enable richText for text segments so <b>, <font> etc work
 			segmentStyle.richText = true
 			-- Apply textTransform and textDecoration from parent style
-			local _result_9 = style
-			if _result_9 ~= nil then
-				_result_9 = _result_9.textTransform
-			end
-			if _result_9 ~= nil then
-				segmentStyle.textTransform = style.textTransform
-			end
 			local _result_10 = style
 			if _result_10 ~= nil then
-				_result_10 = _result_10.textDecoration
+				_result_10 = _result_10.textTransform
 			end
 			if _result_10 ~= nil then
+				segmentStyle.textTransform = style.textTransform
+			end
+			local _result_11 = style
+			if _result_11 ~= nil then
+				_result_11 = _result_11.textDecoration
+			end
+			if _result_11 ~= nil then
 				segmentStyle.textDecoration = style.textDecoration
 			end
 			return React.createElement(Text, {
@@ -251,14 +267,22 @@ local function InlineText(props)
 			})
 		end
 		-- Image segment
-		return React.createElement(Image, {
+		local _attributes = {
 			key = `img-{i}`,
 			src = segment.src,
-			style = {
-				width = segment.width,
-				height = segment.height,
-			},
-		})
+		}
+		local _object = {
+			width = segment.width,
+			height = segment.height,
+		}
+		local _left = "opacity"
+		local _result = style
+		if _result ~= nil then
+			_result = _result.opacity
+		end
+		_object[_left] = _result
+		_attributes.style = _object
+		return React.createElement(Image, _attributes)
 	end
 	for _k, _v in segments do
 		_newValue[_k] = _callback(_v, _k - 1, segments)

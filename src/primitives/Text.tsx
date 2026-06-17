@@ -81,10 +81,6 @@ export const Text = forwardRef<TextLabel, TextProps>((props, ref) => {
 
 	// 4. If a style object is provided, compile it and extract typography mappings
 	if (style) {
-		const parsed = webStyle(style);
-		parsedStyleProps = parsed.props as Record<string, unknown>;
-		parsedStyleChildren = parsed.children as React.Element[];
-
 		// Specialized string manipulation for wordBreak
 		if (style.wordBreak !== undefined) {
 			if (style.wordBreak === "break-all") {
@@ -122,6 +118,15 @@ export const Text = forwardRef<TextLabel, TextProps>((props, ref) => {
 					explicitProps.Text = `<s>${explicitProps.Text}</s>`;
 				}
 			}
+		}
+
+		const parsed = webStyle(style, typeIs(explicitProps.Text, "string") ? explicitProps.Text : undefined);
+		parsedStyleProps = parsed.props as Record<string, unknown>;
+		parsedStyleChildren = parsed.children as React.Element[];
+
+		if (style.opacity !== undefined) {
+			const currentTextTrans = (parsedStyleProps.TextTransparency as number | undefined) ?? 0;
+			parsedStyleProps.TextTransparency = 1 - ((1 - currentTextTrans) * style.opacity);
 		}
 	}
 

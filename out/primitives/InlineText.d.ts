@@ -17,7 +17,7 @@
  */
 import React from "@rbxts/react";
 import { CSSProperties } from "../styles/CSSTypes";
-interface InlineTextProps {
+interface InlineTextProps extends React.PropsWithChildren {
     Text?: string;
     style?: CSSProperties;
 }

@@ -263,4 +263,31 @@ describe("MotionButton Component", () => {
 			root.unmount();
 		});
 	});
+
+	it("should pass through uppercase native Roblox properties from style to the Virtual DOM", () => {
+		const container = new Instance("Folder");
+		createdInstances.push(container);
+		const root = ReactRoblox.createRoot(container);
+
+		act(() => {
+			root.render(
+				createElement(MotionButton, {
+					style: {
+						Position: new UDim2(0, 10, 0, 20),
+						TextTransparency: 0.5,
+					},
+				} as Record<string, unknown>)
+			);
+		});
+
+		const button = container.FindFirstChildWhichIsA("TextButton") as TextButton;
+		expect(button.Position).toBeDefined();
+		expect(button.Position.X.Offset).toBe(10);
+		expect(button.Position.Y.Offset).toBe(20);
+		expect(button.TextTransparency).toBe(0.5);
+
+		act(() => {
+			root.unmount();
+		});
+	});
 });

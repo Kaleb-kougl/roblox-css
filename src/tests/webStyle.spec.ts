@@ -18,7 +18,7 @@ type ReactElementStub = {
 };
 
 const webStyleModule = require(uiStyles.WaitForChild("webStyle") as ModuleScript) as {
-	webStyle: (style: Record<string, unknown>) => { props: Record<string, unknown>; children: ReactElementStub[] };
+	webStyle: (style: Record<string, unknown>, hostText?: string) => { props: Record<string, unknown>; children: ReactElementStub[] };
 };
 const webStyle = webStyleModule.webStyle;
 
@@ -200,6 +200,16 @@ describe("webStyle", () => {
 			expect((child!.props.PaddingRight as UDim).Scale).toBeCloseTo(0.15, 5);
 			expect((child!.props.PaddingTop as UDim).Offset).toBe(0);
 		});
+
+		it("should map paddingInline and paddingBlock logical properties", () => {
+			const result = webStyle({ padding: "10px", paddingInline: "20px 30px", paddingBlock: "5px" });
+			const child = result.children.find((c) => c.type === "UIPadding");
+			expect(child).toBeDefined();
+			expect((child!.props.PaddingTop as UDim).Offset).toBe(5);
+			expect((child!.props.PaddingBottom as UDim).Offset).toBe(5);
+			expect((child!.props.PaddingLeft as UDim).Offset).toBe(20);
+			expect((child!.props.PaddingRight as UDim).Offset).toBe(30);
+		});
 	});
 
 	describe("6. display: 'flex' → <uilistlayout>", () => {
@@ -271,6 +281,58 @@ describe("webStyle", () => {
 			const child = result.children.find((c) => c.type === "UIListLayout");
 			expect(child!.props.ItemLineAlignment).toBe(Enum.ItemLineAlignment.Stretch);
 		});
+
+		it("should map flexFlow 'row wrap' correctly", () => {
+			const result = webStyle({ display: "flex", flexFlow: "row wrap" });
+			const child = result.children.find((c) => c.type === "UIListLayout");
+			expect(child!.props.FillDirection).toBe(Enum.FillDirection.Horizontal);
+			expect(child!.props.Wraps).toBe(true);
+		});
+
+		it("should map flexFlow 'column nowrap' correctly", () => {
+			const result = webStyle({ display: "flex", flexFlow: "column nowrap" });
+			const child = result.children.find((c) => c.type === "UIListLayout");
+			expect(child!.props.FillDirection).toBe(Enum.FillDirection.Vertical);
+			expect(child!.props.Wraps).toBeUndefined();
+		});
+
+		it("should map flexFlow 'column-reverse' fallback to column", () => {
+			const result = webStyle({ display: "flex", flexFlow: "column-reverse" });
+			const child = result.children.find((c) => c.type === "UIListLayout");
+			expect(child!.props.FillDirection).toBe(Enum.FillDirection.Vertical);
+		});
+
+		it("should parse single values in flexFlow", () => {
+			const result1 = webStyle({ display: "flex", flexFlow: "row" });
+			const child1 = result1.children.find((c) => c.type === "UIListLayout");
+			expect(child1!.props.FillDirection).toBe(Enum.FillDirection.Horizontal);
+
+			const result2 = webStyle({ display: "flex", flexFlow: "wrap" });
+			const child2 = result2.children.find((c) => c.type === "UIListLayout");
+			expect(child2!.props.Wraps).toBe(true);
+		});
+
+		it("should map placeContent to justifyContent", () => {
+			const result = webStyle({ display: "flex", placeContent: "center flex-end" });
+			const child = result.children.find((c) => c.type === "UIListLayout");
+			expect(child!.props.VerticalAlignment).toBe(Enum.VerticalAlignment.Bottom);
+		});
+
+		it("should map placeItems to alignItems", () => {
+			const result = webStyle({ display: "flex", placeItems: "center stretch" });
+			const child = result.children.find((c) => c.type === "UIListLayout");
+			expect(child!.props.HorizontalAlignment).toBe(Enum.HorizontalAlignment.Center);
+		});
+
+		it("should map justifyContent: 'space-around' to HorizontalFlex/VerticalFlex", () => {
+			const resultRow = webStyle({ display: "flex", flexDirection: "row", justifyContent: "space-around" });
+			const childRow = resultRow.children.find((c) => c.type === "UIListLayout");
+			expect(childRow!.props.HorizontalFlex).toBe(Enum.UIFlexAlignment.SpaceAround);
+
+			const resultCol = webStyle({ display: "flex", flexDirection: "column", justifyContent: "space-around" });
+			const childCol = resultCol.children.find((c) => c.type === "UIListLayout");
+			expect(childCol!.props.VerticalFlex).toBe(Enum.UIFlexAlignment.SpaceAround);
+		});
 	});
 
 	describe("6.5. display: 'grid' → <uigridlayout>", () => {
@@ -296,6 +358,39 @@ describe("webStyle", () => {
 			expect(cellPadding.X.Offset).toBe(10);
 			expect(cellPadding.Y.Offset).toBe(20);
 		});
+
+		it("should map rowGap and columnGap to CellPadding", () => {
+			const result = webStyle({ display: "grid", rowGap: "15px", columnGap: "25px" });
+			const child = result.children.find((c) => c.type === "UIGridLayout");
+			const cellPadding = child!.props.CellPadding as UDim2;
+			expect(cellPadding.X.Offset).toBe(25);
+			expect(cellPadding.Y.Offset).toBe(15);
+		});
+
+		it("should prioritize rowGap and columnGap over gap", () => {
+			const result = webStyle({ display: "grid", gap: "5px", rowGap: "15px", columnGap: "25px" });
+			const child = result.children.find((c) => c.type === "UIGridLayout");
+			const cellPadding = child!.props.CellPadding as UDim2;
+			expect(cellPadding.X.Offset).toBe(25);
+			expect(cellPadding.Y.Offset).toBe(15);
+		});
+
+		it("should map justifyContent and alignItems for grid", () => {
+			const result = webStyle({ display: "grid", justifyContent: "center", alignItems: "flex-end" });
+			const child = result.children.find((c) => c.type === "UIGridLayout");
+			expect(child!.props.HorizontalAlignment).toBe(Enum.HorizontalAlignment.Center);
+			expect(child!.props.VerticalAlignment).toBe(Enum.VerticalAlignment.Bottom);
+		});
+
+		it("should map flexDirection to FillDirection for grid (default row)", () => {
+			const result1 = webStyle({ display: "grid" });
+			const child1 = result1.children.find((c) => c.type === "UIGridLayout");
+			expect(child1!.props.FillDirection).toBe(Enum.FillDirection.Horizontal);
+
+			const result2 = webStyle({ display: "grid", flexDirection: "column" });
+			const child2 = result2.children.find((c) => c.type === "UIGridLayout");
+			expect(child2!.props.FillDirection).toBe(Enum.FillDirection.Vertical);
+		});
 	});
 
 	describe("7. border → <uistroke>", () => {
@@ -308,6 +403,16 @@ describe("webStyle", () => {
 			expect(color.R).toBe(0);
 			expect(color.G).toBe(1);
 			expect(color.B).toBe(0);
+			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
+		});
+
+		it("should alias outline to border and produce UIStroke", () => {
+			const result = webStyle({ outline: "2px solid blue" });
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			expect(child!.props.Thickness).toBe(2);
+			const color = child!.props.Color as Color3;
+			expect(color.B).toBe(1);
 			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
 		});
 
@@ -515,7 +620,72 @@ describe("webStyle", () => {
 		});
 	});
 
+	describe("transformOrigin → AnchorPoint", () => {
+		it("should map 'center' to 0.5, 0.5", () => {
+			const result = webStyle({ transformOrigin: "center" });
+			const anchor = result.props.AnchorPoint as Vector2;
+			expect(anchor.X).toBe(0.5);
+			expect(anchor.Y).toBe(0.5);
+		});
+
+		it("should map 'top left' to 0, 0", () => {
+			const result = webStyle({ transformOrigin: "top left" });
+			const anchor = result.props.AnchorPoint as Vector2;
+			expect(anchor.X).toBe(0);
+			expect(anchor.Y).toBe(0);
+		});
+
+		it("should map 'bottom right' to 1, 1", () => {
+			const result = webStyle({ transformOrigin: "bottom right" });
+			const anchor = result.props.AnchorPoint as Vector2;
+			expect(anchor.X).toBe(1);
+			expect(anchor.Y).toBe(1);
+		});
+
+		it("should map percentages like '100% 50%'", () => {
+			const result = webStyle({ transformOrigin: "100% 50%" });
+			const anchor = result.props.AnchorPoint as Vector2;
+			expect(anchor.X).toBe(1);
+			expect(anchor.Y).toBe(0.5);
+		});
+
+		it("should handle single keyword 'top'", () => {
+			const result = webStyle({ transformOrigin: "top" });
+			const anchor = result.props.AnchorPoint as Vector2;
+			expect(anchor.X).toBe(0.5);
+			expect(anchor.Y).toBe(0);
+		});
+
+		it("should override position: absolute's default AnchorPoint", () => {
+			const result = webStyle({ position: "absolute", top: 0, left: 0, transformOrigin: "center" });
+			const anchor = result.props.AnchorPoint as Vector2;
+			expect(anchor.X).toBe(0.5);
+			expect(anchor.Y).toBe(0.5);
+		});
+	});
+
 	describe("11. Typography & Text Styling", () => {
+		describe("userSelect → TextSelectable", () => {
+			it("should map 'text' and 'auto' to true", () => {
+				expect(webStyle({ userSelect: "text" }).props.TextSelectable).toBe(true);
+				expect(webStyle({ userSelect: "auto" }).props.TextSelectable).toBe(true);
+			});
+
+			it("should map 'none' to false", () => {
+				expect(webStyle({ userSelect: "none" }).props.TextSelectable).toBe(false);
+			});
+		});
+
+		describe("textStroke → <uistroke>", () => {
+			it("should map textStroke to Contextual uistroke", () => {
+				const result = webStyle({ textStroke: "2px solid #ff0000" });
+				const stroke = result.children.find((c) => c.type === "UIStroke" && c.props.ApplyStrokeMode === Enum.ApplyStrokeMode.Contextual);
+				expect(stroke).toBeDefined();
+				expect(stroke!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Contextual);
+				expect(stroke!.props.Thickness).toBe(2);
+			});
+		});
+
 		describe("color → TextColor3", () => {
 			it("should parse hex colors to TextColor3", () => {
 				const result = webStyle({ color: "#00ff00" });
@@ -524,6 +694,11 @@ describe("webStyle", () => {
 				expect(color.R).toBe(0);
 				expect(color.G).toBe(1);
 				expect(color.B).toBe(0);
+			});
+
+			it("should map color 'transparent' to TextTransparency 1", () => {
+				const result = webStyle({ color: "transparent" });
+				expect(result.props.TextTransparency).toBe(1);
 			});
 		});
 
@@ -657,6 +832,44 @@ describe("webStyle", () => {
 		});
 	});
 
+	describe("backgroundImage → <imagelabel>", () => {
+		it("should inject imagelabel with Image property for unquoted URL", () => {
+			const result = webStyle({ backgroundImage: "url(rbxassetid://12345)" });
+			const img = result.children.find((c) => c.type === "ImageLabel");
+			expect(img).toBeDefined();
+			expect(img!.props.Image).toBe("rbxassetid://12345");
+			expect(img!.props.ZIndex).toBe(-1);
+			expect((img!.props.Size as UDim2).X.Scale).toBe(1);
+			expect((img!.props.Size as UDim2).Y.Scale).toBe(1);
+		});
+
+		it("should inject imagelabel with Image property for double-quoted URL", () => {
+			const result = webStyle({ backgroundImage: "url(\"rbxassetid://12345\")" });
+			const img = result.children.find((c) => c.type === "ImageLabel");
+			expect(img).toBeDefined();
+			expect(img!.props.Image).toBe("rbxassetid://12345");
+		});
+
+		it("should inject imagelabel with Image property for single-quoted URL", () => {
+			const result = webStyle({ backgroundImage: "url('rbxassetid://12345')" });
+			const img = result.children.find((c) => c.type === "ImageLabel");
+			expect(img).toBeDefined();
+			expect(img!.props.Image).toBe("rbxassetid://12345");
+		});
+
+		it("should map backgroundSize 'cover' to Enum.ScaleType.Crop", () => {
+			const result = webStyle({ backgroundImage: "url(rbxassetid://12345)", backgroundSize: "cover" });
+			const img = result.children.find((c) => c.type === "ImageLabel");
+			expect(img!.props.ScaleType).toBe(Enum.ScaleType.Crop);
+		});
+
+		it("should map backgroundSize 'contain' to Enum.ScaleType.Fit", () => {
+			const result = webStyle({ backgroundImage: "url(rbxassetid://12345)", backgroundSize: "contain" });
+			const img = result.children.find((c) => c.type === "ImageLabel");
+			expect(img!.props.ScaleType).toBe(Enum.ScaleType.Fit);
+		});
+	});
+
 	describe("15. boxShadow → <imagelabel>", () => {
 		it("should inject <imagelabel> with correct base properties", () => {
 			const result = webStyle({ boxShadow: "md" });
@@ -784,6 +997,16 @@ describe("webStyle", () => {
 		it("should handle zero layoutOrder", () => {
 			const result = webStyle({ layoutOrder: 0 });
 			expect(result.props.LayoutOrder).toBe(0);
+		});
+
+		it("should map order to LayoutOrder", () => {
+			const result = webStyle({ order: 10 });
+			expect(result.props.LayoutOrder).toBe(10);
+		});
+
+		it("should prioritize order over layoutOrder", () => {
+			const result = webStyle({ order: 15, layoutOrder: 5 });
+			expect(result.props.LayoutOrder).toBe(15);
 		});
 	});
 
@@ -1024,6 +1247,37 @@ describe("webStyle", () => {
 			expect(flexItem).toBeUndefined();
 		});
 
+		it("should parse flex: 1 to flexGrow 1 and flexShrink 1", () => {
+			const result = webStyle({ flex: 1 });
+			const flexItem = result.children.find((c) => c.type === "UIFlexItem");
+			expect(flexItem).toBeDefined();
+			expect(flexItem!.props.FlexMode).toBe(Enum.UIFlexMode.Custom);
+			expect(flexItem!.props.GrowRatio).toBe(1);
+			expect(flexItem!.props.ShrinkRatio).toBe(1);
+		});
+
+		it("should parse flex: 'auto' to flexGrow 1 and flexShrink 1", () => {
+			const result = webStyle({ flex: "auto" });
+			const flexItem = result.children.find((c) => c.type === "UIFlexItem");
+			expect(flexItem).toBeDefined();
+			expect(flexItem!.props.GrowRatio).toBe(1);
+			expect(flexItem!.props.ShrinkRatio).toBe(1);
+		});
+
+		it("should parse flex: 'none' to flexGrow 0 and flexShrink 0", () => {
+			const result = webStyle({ flex: "none" });
+			const flexItem = result.children.find((c) => c.type === "UIFlexItem");
+			expect(flexItem).toBeUndefined();
+		});
+
+		it("should parse flex: '2' as number string", () => {
+			const result = webStyle({ flex: "2" as unknown as number });
+			const flexItem = result.children.find((c) => c.type === "UIFlexItem");
+			expect(flexItem).toBeDefined();
+			expect(flexItem!.props.GrowRatio).toBe(2);
+			expect(flexItem!.props.ShrinkRatio).toBe(2);
+		});
+
 		it("should inject UIFlexItem with ItemLineAlignment for alignSelf 'center'", () => {
 			const result = webStyle({ alignSelf: "center" });
 			const flexItem = result.children.find((c) => c.type === "UIFlexItem");
@@ -1057,6 +1311,27 @@ describe("webStyle", () => {
 			const result = webStyle({ flexGrow: 1 });
 			expect(result.children.size()).toBe(1);
 			expect(result.children[0]!.type).toBe("UIFlexItem");
+		});
+
+		it("should inject UIFlexItem and issue warning when flexGrow is used with display: 'grid'", () => {
+			const result = webStyle({ display: "grid", flexGrow: 1 });
+			const flexItem = result.children.find((c) => c.type === "UIFlexItem");
+			expect(flexItem).toBeDefined();
+			expect(flexItem!.props.GrowRatio).toBe(1);
+		});
+
+		it("should inject UIFlexItem with ItemLineAlignment.Start for alignSelf 'flex-start'", () => {
+			const result = webStyle({ alignSelf: "flex-start" });
+			const flexItem = result.children.find((c) => c.type === "UIFlexItem");
+			expect(flexItem).toBeDefined();
+			expect(flexItem!.props.ItemLineAlignment).toBe(Enum.ItemLineAlignment.Start);
+		});
+
+		it("should inject UIFlexItem with ItemLineAlignment.End for alignSelf 'flex-end'", () => {
+			const result = webStyle({ alignSelf: "flex-end" });
+			const flexItem = result.children.find((c) => c.type === "UIFlexItem");
+			expect(flexItem).toBeDefined();
+			expect(flexItem!.props.ItemLineAlignment).toBe(Enum.ItemLineAlignment.End);
 		});
 	});
 
@@ -1325,6 +1600,82 @@ describe("webStyle", () => {
 			expect(result.props.Size).toBeUndefined();
 			expect(result.props.BackgroundColor3).toBeUndefined();
 			expect(result.children.size()).toBe(0);
+		});
+	});
+
+	describe("textShadow → <textlabel> duplicate", () => {
+		it("should parse textShadow and output duplicate <textlabel> with gradient", () => {
+			const result = webStyle({ textShadow: "3px 4px rgba(0, 0, 0, 0.5)", fontSize: 24 }, "Hello World");
+			
+			const shadowChild = result.children.find(c => c.type === "textlabel");
+			expect(shadowChild).toBeDefined();
+			expect(shadowChild!.props.Text).toBe("Hello World");
+			expect(shadowChild!.props.ZIndex).toBe(-1);
+			expect(shadowChild!.props.TextSize).toBe(24);
+			
+			const pos = shadowChild!.props.Position as UDim2;
+			expect(pos.X.Offset).toBe(3);
+			expect(pos.Y.Offset).toBe(4);
+			
+			const textColor = shadowChild!.props.TextColor3 as Color3;
+			expect(textColor.R).toBe(0);
+			expect(textColor.G).toBe(0);
+			expect(textColor.B).toBe(0);
+			
+			expect(shadowChild!.props.TextTransparency).toBeCloseTo(0.5, 5);
+			expect(shadowChild!.props.BackgroundTransparency).toBe(1);
+			
+			const gradientChild = (shadowChild!.props.children as ReactElementStub);
+			expect(gradientChild).toBeDefined();
+			expect(gradientChild.type).toBe("uigradient");
+			expect(gradientChild.props.Color).toBeDefined();
+		});
+
+		it("should parse textShadow without offset dimensions", () => {
+			const result = webStyle({ textShadow: "#ff0000" }, "No Offset");
+			const shadowChild = result.children.find(c => c.type === "textlabel");
+			
+			expect(shadowChild).toBeDefined();
+			
+			const pos = shadowChild!.props.Position as UDim2;
+			expect(pos.X.Offset).toBe(0);
+			expect(pos.Y.Offset).toBe(0);
+			
+			const textColor = shadowChild!.props.TextColor3 as Color3;
+			expect(textColor.R).toBe(1);
+			expect(textColor.G).toBe(0);
+			expect(textColor.B).toBe(0);
+		});
+
+		it("should parse negative dimensions in textShadow", () => {
+			const result = webStyle({ textShadow: "-5px -2px #00ff00" }, "Negative Offset");
+			const shadowChild = result.children.find(c => c.type === "textlabel");
+			
+			expect(shadowChild).toBeDefined();
+			
+			const pos = shadowChild!.props.Position as UDim2;
+			expect(pos.X.Offset).toBe(-5);
+			expect(pos.Y.Offset).toBe(-2);
+		});
+
+		it("should fall back to default shadow color if none provided", () => {
+			const result = webStyle({ textShadow: "10px 10px" }, "Default Color");
+			const shadowChild = result.children.find(c => c.type === "textlabel");
+			
+			expect(shadowChild).toBeDefined();
+			
+			const textColor = shadowChild!.props.TextColor3 as Color3;
+			expect(textColor.R).toBe(0);
+			expect(textColor.G).toBe(0);
+			expect(textColor.B).toBe(0);
+			expect(shadowChild!.props.TextTransparency).toBeCloseTo(0.5, 5);
+		});
+		
+		it("should not create textShadow if hostText is not provided", () => {
+			const result = webStyle({ textShadow: "10px 10px #000" });
+			const shadowChild = result.children.find(c => c.type === "textlabel");
+			
+			expect(shadowChild).toBeUndefined();
 		});
 	});
 });

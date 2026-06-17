@@ -1,5 +1,5 @@
 {
-  "name": "@rbxts/roblox-css",
+  "name": "@k9kbdev/roblox-css",
   "version": "0.1.0",
   "description": "CSS-to-Roblox UI translation middleware — write web-style props, get native Roblox primitives",
   "main": "out/init.lua",
@@ -12,12 +12,13 @@
   "scripts": {
     "build": "rbxtsc --type package",
     "prepack": "mv out/tests .out-tests || true; mv COPYING .COPYING || true; mv COPYING.LESSER .COPYING.LESSER || true",
-    "postpack": "mv .out-tests out/tests || true; mv .COPYING COPYING || true; mv .COPYING.LESSER COPYING.LESSER || true"
+    "postpack": "mv .out-tests out/tests || true; mv .COPYING COPYING || true; mv .COPYING.LESSER COPYING.LESSER || true",
+    "postinstall": "node postinstall.js"
   },
   "author": "Kaleb Kougl",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kaleb-kougl/roblox-css"
+    "url": "git+https://github.com/Kaleb-kougl/roblox-css.git"
   },
   "keywords": [
     "roblox",

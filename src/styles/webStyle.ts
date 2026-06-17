@@ -162,47 +162,64 @@ export const SHADOW_SLICE_CENTER = new Rect(47, 47, 450, 450);
  * Defaults to column (Vertical) when flexDirection is omitted.
  */
 function buildListLayout(style: CSSProperties): React.Element {
-	const fillDirection = style.flexDirection === "row" ? Enum.FillDirection.Horizontal : Enum.FillDirection.Vertical;
+	let flexDir = style.flexDirection;
+	let fWrap = style.flexWrap;
+
+	if (style.flexFlow !== undefined) {
+		const flowParts = typeIs(style.flexFlow, "string") ? style.flexFlow.split(" ") : [];
+		for (const part of flowParts) {
+			if (part === "row" || part === "column") flexDir = flexDir ?? (part as "row" | "column");
+			if (part === "wrap" || part === "nowrap") fWrap = fWrap ?? (part as "nowrap" | "wrap");
+		}
+	}
+
+	const fillDirection = flexDir === "row" ? Enum.FillDirection.Horizontal : Enum.FillDirection.Vertical;
 
 	const layoutProps: Record<string, unknown> = {
 		FillDirection: fillDirection,
 		SortOrder: Enum.SortOrder.LayoutOrder,
 	};
 
-	if (style.flexWrap === "wrap") {
+	if (fWrap === "wrap") {
 		layoutProps.Wraps = true;
 	}
 
+	const pContent = style.placeContent !== undefined && typeIs(style.placeContent, "string") ? style.placeContent.split(" ") : undefined;
+	const resolvedJustifyContent = style.justifyContent ?? (pContent ? (pContent[1] ?? pContent[0]) : undefined);
+
 	// justifyContent → main-axis alignment
-	if (style.justifyContent !== undefined) {
-		if (style.justifyContent === "space-between" || style.justifyContent === "space-around") {
+	if (resolvedJustifyContent !== undefined) {
+		if (resolvedJustifyContent === "space-between" || resolvedJustifyContent === "space-around") {
 			const flexAlign =
-				style.justifyContent === "space-between"
+				resolvedJustifyContent === "space-between"
 					? Enum.UIFlexAlignment.SpaceBetween
 					: Enum.UIFlexAlignment.SpaceAround;
-			if (style.flexDirection === "row") {
+			if (flexDir === "row") {
 				layoutProps.HorizontalFlex = flexAlign;
 			} else {
 				layoutProps.VerticalFlex = flexAlign;
 			}
 		} else {
-			if (style.flexDirection === "row") {
-				layoutProps.HorizontalAlignment = JUSTIFY_MAP[style.justifyContent] ?? Enum.HorizontalAlignment.Left;
+			if (flexDir === "row") {
+				layoutProps.HorizontalAlignment = JUSTIFY_MAP[resolvedJustifyContent] ?? Enum.HorizontalAlignment.Left;
 			} else {
-				layoutProps.VerticalAlignment = ALIGN_MAP[style.justifyContent] ?? Enum.VerticalAlignment.Top;
+				layoutProps.VerticalAlignment = ALIGN_MAP[resolvedJustifyContent] ?? Enum.VerticalAlignment.Top;
 			}
 		}
 	}
 
+	const pItems = style.placeItems !== undefined && typeIs(style.placeItems, "string") ? style.placeItems.split(" ") : undefined;
+	const resolvedAlignItems = style.alignItems ?? (pItems ? pItems[0] : undefined);
+
 	// alignItems → cross-axis alignment
-	if (style.alignItems !== undefined) {
-		if (style.alignItems === "stretch") {
+	if (resolvedAlignItems !== undefined) {
+		if (resolvedAlignItems === "stretch") {
 			layoutProps.ItemLineAlignment = Enum.ItemLineAlignment.Stretch;
 		} else {
-			if (style.flexDirection === "row") {
-				layoutProps.VerticalAlignment = ALIGN_MAP[style.alignItems] ?? Enum.VerticalAlignment.Top;
+			if (flexDir === "row") {
+				layoutProps.VerticalAlignment = ALIGN_MAP[resolvedAlignItems] ?? Enum.VerticalAlignment.Top;
 			} else {
-				layoutProps.HorizontalAlignment = JUSTIFY_MAP[style.alignItems] ?? Enum.HorizontalAlignment.Left;
+				layoutProps.HorizontalAlignment = JUSTIFY_MAP[resolvedAlignItems] ?? Enum.HorizontalAlignment.Left;
 			}
 		}
 	}
@@ -231,15 +248,41 @@ function buildGridLayout(style: CSSProperties): React.Element {
 		SortOrder: Enum.SortOrder.LayoutOrder,
 	};
 
+	let flexDir = style.flexDirection;
+	if (style.flexFlow !== undefined) {
+		const flowParts = typeIs(style.flexFlow, "string") ? style.flexFlow.split(" ") : [];
+		for (const part of flowParts) {
+			if (part === "row" || part === "column") flexDir = flexDir ?? (part as "row" | "column");
+		}
+	}
+
 	const fillDirection =
-		style.flexDirection === "column" ? Enum.FillDirection.Vertical : Enum.FillDirection.Horizontal; // default is row
+		flexDir === "column" ? Enum.FillDirection.Vertical : Enum.FillDirection.Horizontal; // default is row
 	layoutProps.FillDirection = fillDirection;
 
-	// gap -> CellPadding
+	// gap, rowGap, columnGap -> CellPadding
+	let gapX = new UDim(0, 0);
+	let gapY = new UDim(0, 0);
+	let hasGap = false;
+
 	if (style.gap !== undefined) {
 		const gapParts = typeIs(style.gap, "string") ? style.gap.split(" ") : [style.gap];
-		const gapX = parseDimension(gapParts[0]) ?? new UDim(0, 0);
-		const gapY = gapParts.size() > 1 ? parseDimension(gapParts[1]) ?? gapX : gapX;
+		gapX = parseDimension(gapParts[0]) ?? new UDim(0, 0);
+		gapY = gapParts.size() > 1 ? parseDimension(gapParts[1]) ?? gapX : gapX;
+		hasGap = true;
+	}
+
+	if (style.columnGap !== undefined) {
+		gapX = parseDimension(style.columnGap) ?? new UDim(0, 0);
+		hasGap = true;
+	}
+
+	if (style.rowGap !== undefined) {
+		gapY = parseDimension(style.rowGap) ?? new UDim(0, 0);
+		hasGap = true;
+	}
+
+	if (hasGap) {
 		layoutProps.CellPadding = new UDim2(gapX, gapY);
 	}
 
@@ -254,11 +297,17 @@ function buildGridLayout(style: CSSProperties): React.Element {
 			: new UDim(0, 100);
 	layoutProps.CellSize = new UDim2(cellX, cellY);
 
-	if (style.justifyContent !== undefined) {
-		layoutProps.HorizontalAlignment = JUSTIFY_MAP[style.justifyContent] ?? Enum.HorizontalAlignment.Left;
+	const pContent = style.placeContent !== undefined && typeIs(style.placeContent, "string") ? style.placeContent.split(" ") : undefined;
+	const resolvedJustifyContent = style.justifyContent ?? (pContent ? (pContent[1] ?? pContent[0]) : undefined);
+
+	const pItems = style.placeItems !== undefined && typeIs(style.placeItems, "string") ? style.placeItems.split(" ") : undefined;
+	const resolvedAlignItems = style.alignItems ?? (pItems ? pItems[0] : undefined);
+
+	if (resolvedJustifyContent !== undefined) {
+		layoutProps.HorizontalAlignment = JUSTIFY_MAP[resolvedJustifyContent] ?? Enum.HorizontalAlignment.Left;
 	}
-	if (style.alignItems !== undefined) {
-		layoutProps.VerticalAlignment = ALIGN_MAP[style.alignItems] ?? Enum.VerticalAlignment.Top;
+	if (resolvedAlignItems !== undefined) {
+		layoutProps.VerticalAlignment = ALIGN_MAP[resolvedAlignItems] ?? Enum.VerticalAlignment.Top;
 	}
 
 	layoutProps.key = "uigridlayout";
@@ -278,19 +327,21 @@ function buildGridLayout(style: CSSProperties): React.Element {
  *   "2px solid red"      → Thickness: 2,  Color: Color3(1, 0, 0)
  *   "3px"                → Thickness: 3,  Color: default (no color set)
  */
-function buildStroke(border: string): React.Element | undefined {
+function buildStroke(border: string, isTextStroke = false): React.Element | undefined {
 	let hasSpecifyingWord = false;
 	const specifyingWords = new Set(["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"]);
 
-	for (const [word] of string.gmatch(border, "%a+")) {
-		if (specifyingWords.has((word as string).lower())) {
-			hasSpecifyingWord = true;
-			break;
+	if (!isTextStroke) {
+		for (const [word] of string.gmatch(border, "%a+")) {
+			if (specifyingWords.has((word as string).lower())) {
+				hasSpecifyingWord = true;
+				break;
+			}
 		}
-	}
 
-	if (!hasSpecifyingWord) {
-		return undefined;
+		if (!hasSpecifyingWord) {
+			return undefined;
+		}
 	}
 
 	const strokeProps: Record<string, unknown> = {};
@@ -315,8 +366,8 @@ function buildStroke(border: string): React.Element | undefined {
 		strokeProps.Color = parsed.color;
 	}
 
-	strokeProps.ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
-	strokeProps.key = "uistroke";
+	strokeProps.ApplyStrokeMode = isTextStroke ? Enum.ApplyStrokeMode.Contextual : Enum.ApplyStrokeMode.Border;
+	strokeProps.key = isTextStroke ? "uitextstroke" : "uistroke";
 	return React.createElement("uistroke", strokeProps);
 }
 
@@ -367,6 +418,64 @@ function buildAbsolutePosition(style: CSSProperties): { Position: UDim2; AnchorP
 }
 
 /**
+ * Computes Roblox AnchorPoint (Vector2) from CSS transform-origin.
+ *
+ * CSS → Roblox mapping:
+ *   "center"        → Vector2(0.5, 0.5)
+ *   "top left"      → Vector2(0, 0)
+ *   "100% 50%"      → Vector2(1, 0.5)
+ */
+function parseTransformOrigin(origin: string): Vector2 {
+	const parts = origin.split(" ").filter((p) => p !== "");
+	let x = 0.5;
+	let y = 0.5;
+
+	const parseVal = (val: string): number => {
+		if (val === "left") return 0;
+		if (val === "right") return 1;
+		if (val === "top") return 0;
+		if (val === "bottom") return 1;
+		if (val === "center") return 0.5;
+		
+		const [numStr] = string.match(val, "^(%-?%d+%.?%d*)%%?$");
+		if (numStr !== undefined) {
+			const num = tonumber(numStr as string);
+			if (num !== undefined) {
+				const [hasPercent] = string.match(val, "%%$");
+				if (hasPercent !== undefined) {
+					return num / 100;
+				}
+				return 0; // Fallback for pixels
+			}
+		}
+		return 0.5;
+	};
+
+	if (parts.size() === 2) {
+		const isYFirst = parts[0] === "top" || parts[0] === "bottom";
+		const isXSecond = parts[1] === "left" || parts[1] === "right";
+		if (isYFirst || isXSecond) {
+			y = parseVal(parts[0]);
+			x = parseVal(parts[1]);
+		} else {
+			x = parseVal(parts[0]);
+			y = parseVal(parts[1]);
+		}
+	} else if (parts.size() === 1) {
+		const part = parts[0];
+		if (part === "top" || part === "bottom") {
+			x = 0.5;
+			y = parseVal(part);
+		} else {
+			x = parseVal(part);
+			y = 0.5;
+		}
+	}
+
+	return new Vector2(x, y);
+}
+
+/**
  * Checks if any constraint property (minWidth, maxWidth, minHeight, maxHeight)
  * contains a percentage value.
  */
@@ -396,7 +505,7 @@ function hasPercentageScale(style: CSSProperties): boolean {
  *   // result.props   → { Size: UDim2(...), BackgroundColor3: Color3(...) }
  *   // result.children → [ <uicorner CornerRadius={UDim(0, 8)} /> ]
  */
-export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
+export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<WebStyleResult> {
 	const props: Record<string, unknown> = {};
 	const children: React.Element[] = [];
 	// Implementation order:
@@ -471,13 +580,23 @@ export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
 	const hasGradient = style.background !== undefined && isGradientString(style.background);
 
 	// 3. opacity → BackgroundTransparency (INVERTED)
-	// if both backgroundColor transparent and opacity specified, opacity takes precedence
+	// Combine with existing background transparency
 	if (style.opacity !== undefined && !hasGradient) {
-		props.BackgroundTransparency = 1 - style.opacity;
+		if (style.backgroundColor === undefined) {
+			// CSS default background-color is 'transparent'. If opacity is applied without 
+			// an explicit background color, the background should remain fully transparent.
+			props.BackgroundTransparency = 1;
+		} else {
+			const currentBgTrans = (props.BackgroundTransparency as number | undefined) ?? 0;
+			props.BackgroundTransparency = 1 - ((1 - currentBgTrans) * style.opacity);
+		}
 	}
 	// 4. borderRadius → inject <uicorner>
 	if (style.borderRadius !== undefined) {
-		const radius = parseDimension(style.borderRadius);
+		const firstRadius = typeIs(style.borderRadius, "string") 
+			? style.borderRadius.split(" ")[0] 
+			: style.borderRadius;
+		const radius = parseDimension(firstRadius);
 		children.push(React.createElement("uicorner", { key: "uicorner", CornerRadius: radius }));
 	}
 	// 5. padding → inject <uipadding>
@@ -486,18 +605,29 @@ export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
 		style.paddingTop !== undefined ||
 		style.paddingRight !== undefined ||
 		style.paddingBottom !== undefined ||
-		style.paddingLeft !== undefined
+		style.paddingLeft !== undefined ||
+		style.paddingInline !== undefined ||
+		style.paddingBlock !== undefined
 	) {
 		// Start from shorthand, then let individual sides override
 		const base = style.padding !== undefined ? parsePadding(style.padding) : parsePadding(0);
 
+		// Logical properties override base padding
+		const padInline = style.paddingInline !== undefined ? parsePadding(style.paddingInline) : undefined;
+		const padBlock = style.paddingBlock !== undefined ? parsePadding(style.paddingBlock) : undefined;
+
+		const baseTop = padBlock?.top ?? base.top;
+		const baseBottom = padBlock?.bottom ?? base.bottom;
+		const baseLeft = padInline?.left ?? base.left;
+		const baseRight = padInline?.right ?? base.right;
+
 		children.push(
 			React.createElement("uipadding", {
 				key: "uipadding",
-				PaddingTop: style.paddingTop !== undefined ? parseDimension(style.paddingTop) : base.top,
-				PaddingRight: style.paddingRight !== undefined ? parseDimension(style.paddingRight) : base.right,
-				PaddingBottom: style.paddingBottom !== undefined ? parseDimension(style.paddingBottom) : base.bottom,
-				PaddingLeft: style.paddingLeft !== undefined ? parseDimension(style.paddingLeft) : base.left,
+				PaddingTop: style.paddingTop !== undefined ? parseDimension(style.paddingTop) : baseTop,
+				PaddingRight: style.paddingRight !== undefined ? parseDimension(style.paddingRight) : baseRight,
+				PaddingBottom: style.paddingBottom !== undefined ? parseDimension(style.paddingBottom) : baseBottom,
+				PaddingLeft: style.paddingLeft !== undefined ? parseDimension(style.paddingLeft) : baseLeft,
 			}),
 		);
 	}
@@ -513,11 +643,43 @@ export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
 	if (style.visibility !== undefined) {
 		props.Visible = style.visibility !== "hidden";
 	}
-	// 7. border → inject <uistroke>
-	if (style.border !== undefined) {
-		const stroke = buildStroke(style.border);
+	// 7. border / outline → inject <uistroke>
+	const activeBorder = style.border ?? style.outline;
+	if (activeBorder !== undefined) {
+		const stroke = buildStroke(activeBorder);
 		if (stroke !== undefined) {
 			children.push(stroke);
+		}
+	}
+	// textStroke → inject <uistroke> with Contextual mode
+	if (style.textStroke !== undefined) {
+		const stroke = buildStroke(style.textStroke, true);
+		if (stroke !== undefined) {
+			children.push(stroke);
+		}
+	}
+	
+	// backgroundImage → inject <imagelabel> underlay
+	if (style.backgroundImage !== undefined) {
+		const [url] = string.match(style.backgroundImage, "url%([\"']?(.-)[\"']?%)");
+		if (url !== undefined) {
+			const cleanUrl = url as string;
+			let bgScale: Enum.ScaleType = Enum.ScaleType.Stretch; // default
+			if (style.backgroundSize === "cover") bgScale = Enum.ScaleType.Crop;
+			else if (style.backgroundSize === "contain") bgScale = Enum.ScaleType.Fit;
+
+			children.push(
+				React.createElement("imagelabel", {
+					key: "uibackgroundimage",
+					Image: cleanUrl,
+					ZIndex: -1,
+					Size: UDim2.fromScale(1, 1),
+					AnchorPoint: new Vector2(0.5, 0.5),
+					Position: UDim2.fromScale(0.5, 0.5),
+					BackgroundTransparency: 1,
+					ScaleType: bgScale,
+				}),
+			);
 		}
 	}
 	// 8. aspectRatio → inject <uiaspectratioconstraint>
@@ -535,12 +697,16 @@ export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
 		props.Position = abs.Position;
 		props.AnchorPoint = abs.AnchorPoint;
 	}
+	// transformOrigin → overrides AnchorPoint
+	if (style.transformOrigin !== undefined) {
+		props.AnchorPoint = parseTransformOrigin(style.transformOrigin);
+	}
 	// 10. zIndex → ZIndex
 	if (style.zIndex !== undefined) {
 		props.ZIndex = style.zIndex;
 	}
-	if (style.layoutOrder !== undefined) {
-		props.LayoutOrder = style.layoutOrder;
+	if (style.order !== undefined || style.layoutOrder !== undefined) {
+		props.LayoutOrder = style.order ?? style.layoutOrder;
 	}
 	if (style.rotation !== undefined) {
 		props.Rotation = style.rotation;
@@ -656,6 +822,14 @@ export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
 		props.Interactable = false;
 		props.Active = false;
 	}
+	// userSelect → TextSelectable
+	if (style.userSelect !== undefined) {
+		if (style.userSelect === "text" || style.userSelect === "auto") {
+			props.TextSelectable = true;
+		} else if (style.userSelect === "none") {
+			props.TextSelectable = false;
+		}
+	}
 
 	// 15. boxShadow → inject <imagelabel>
 	if (style.boxShadow !== undefined && style.boxShadow !== "none") {
@@ -683,8 +857,28 @@ export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
 	}
 
 	// 16. flexGrow / flexShrink / alignSelf → inject <uiflexitem>
-	const grow = style.flexGrow ?? 0;
-	const shrink = style.flexShrink ?? 0;
+	let grow = style.flexGrow ?? 0;
+	let shrink = style.flexShrink ?? 0;
+	
+	if (style.flex !== undefined) {
+		if (style.flex === "auto") {
+			grow = 1;
+			shrink = 1;
+		} else if (style.flex === "none") {
+			grow = 0;
+			shrink = 0;
+		} else if (typeIs(style.flex, "number")) {
+			grow = style.flex;
+			shrink = style.flex;
+		} else if (typeIs(style.flex, "string")) {
+			const parsed = tonumber(style.flex);
+			if (parsed !== undefined) {
+				grow = parsed;
+				shrink = parsed;
+			}
+		}
+	}
+
 	const hasFlexItem = grow > 0 || shrink > 0 || (style.alignSelf !== undefined && style.alignSelf !== "auto");
 
 	if (hasFlexItem) {
@@ -711,6 +905,56 @@ export function webStyle(style: CSSProperties): DeepReadonly<WebStyleResult> {
 			}
 		}
 		children.push(React.createElement("uiflexitem", flexProps));
+	}
+
+	// 17. textShadow → inject duplicate <textlabel> with black <uigradient>
+	if (style.textShadow !== undefined && hostText !== undefined) {
+		const parts = style.textShadow.split(" ").filter((p) => p !== "");
+		const dimParts: string[] = [];
+		const colorParts: string[] = [];
+		for (const p of parts) {
+			if (p.match("^%-?%d")[0]) {
+				dimParts.push(p);
+			} else {
+				colorParts.push(p);
+			}
+		}
+
+		const xStr = dimParts[0] ?? "0";
+		const yStr = dimParts[1] ?? xStr;
+		const xOffset = parseDimension(xStr)?.Offset ?? 0;
+		const yOffset = parseDimension(yStr)?.Offset ?? 0;
+
+		const colorStr = colorParts.join(" ");
+		const shadowColor = colorStr !== "" ? parseColor(colorStr) : parseColor("rgba(0,0,0,0.5)");
+
+		children.push(
+			React.createElement(
+				"textlabel",
+				{
+					key: "textShadow",
+					Text: hostText,
+					Size: new UDim2(1, 0, 1, 0),
+					Position: new UDim2(0, xOffset, 0, yOffset),
+					BackgroundTransparency: 1,
+					TextTransparency: shadowColor.transparency,
+					TextColor3: shadowColor.color,
+					ZIndex: -1,
+					TextSize: props.TextSize,
+					FontFace: props.FontFace,
+					TextXAlignment: props.TextXAlignment,
+					TextYAlignment: props.TextYAlignment,
+					TextWrapped: props.TextWrapped,
+					LineHeight: props.LineHeight,
+					TextTruncate: props.TextTruncate,
+					RichText: props.RichText,
+				},
+				React.createElement("uigradient", {
+					key: "shadowGradient",
+					Color: new ColorSequence(new Color3(0, 0, 0)),
+				})
+			)
+		);
 	}
 
 	return makeWebStyleResult(props, children);

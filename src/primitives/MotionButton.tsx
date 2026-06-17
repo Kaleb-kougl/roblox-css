@@ -17,7 +17,18 @@ function buttonParser(style: CSSProperties) {
 	// Previously this duplicated that logic with a different default font (SourceSansPro
 	// vs BuilderSans), causing an inconsistency.
 	const parsed = webStyle(style);
-	return parsed.props as Record<string, unknown>;
+	const result = parsed.props as Record<string, unknown>;
+	// Pass through Roblox-native properties (uppercase keys like Position, TextTransparency)
+	// that webStyle doesn't handle, matching the default parser behavior.
+	for (const [k, v] of pairs(style as unknown as Map<string, unknown>)) {
+		if (typeIs(k, "string") && k !== "_parsed" && result[k] === undefined) {
+			const firstChar = k.sub(1, 1);
+			if (firstChar >= "A" && firstChar <= "Z") {
+				result[k] = v;
+			}
+		}
+	}
+	return result;
 }
 
 /**

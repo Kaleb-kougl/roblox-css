@@ -8,7 +8,18 @@ export type MotionTextProps = React.PropsWithChildren<React.ComponentProps<"text
 } & MotionProps & { readonly _motionTextProps?: unique symbol };
 
 function textParser(style: CSSProperties) {
-	return webStyle(style).props as Record<string, unknown>;
+	const result = webStyle(style).props as Record<string, unknown>;
+	// Pass through Roblox-native properties (uppercase keys like Position, TextTransparency)
+	// that webStyle doesn't handle, matching the default parser behavior.
+	for (const [k, v] of pairs(style as unknown as Map<string, unknown>)) {
+		if (typeIs(k, "string") && k !== "_parsed" && result[k] === undefined) {
+			const firstChar = k.sub(1, 1);
+			if (firstChar >= "A" && firstChar <= "Z") {
+				result[k] = v;
+			}
+		}
+	}
+	return result;
 }
 
 /**

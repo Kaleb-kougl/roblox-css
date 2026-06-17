@@ -20,6 +20,7 @@ export { Image } from "./primitives/Image";
 export { Input } from "./primitives/Input";
 export { ScrollBox } from "./primitives/ScrollBox";
 export { InlineText } from "./primitives/InlineText";
+export { Div, Span, P, H1, H2, H3 } from "./primitives/HtmlElements";
 export { parseInlineImages, containsRichTextTags } from "./utils/parseInlineImages";
 export type { InlineSegment, TextSegment, ImageSegment } from "./utils/parseInlineImages";
 export { MotionBox } from "./primitives/MotionBox";

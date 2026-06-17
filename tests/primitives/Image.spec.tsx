@@ -40,6 +40,20 @@ describe("Image primitives", () => {
 			return Image.render(props, ref);
 		};
 
+		it("should apply opacity math to ImageTransparency", () => {
+			const element = renderImage({
+				style: { opacity: 0.5 },
+			});
+			expect(element.props.ImageTransparency).toBe(0.5);
+		});
+
+		it("should apply opacity math to existing ImageTransparency in style", () => {
+			const element = renderImage({
+				style: { opacity: 0.5, ImageTransparency: 0.5 } as any,
+			});
+			expect(element.props.ImageTransparency).toBe(0.75);
+		});
+
 		it("should render an imagelabel element without style or src", () => {
 			const element = renderImage({ BackgroundColor3: new Color3(1, 0, 0) });
 			

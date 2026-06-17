@@ -57,6 +57,14 @@ local Image = forwardRef(function(props, ref)
 		local parsed = webStyle(style)
 		parsedStyleProps = parsed.props
 		parsedStyleChildren = parsed.children
+		if style.opacity ~= nil then
+			local _condition = (parsedStyleProps.ImageTransparency)
+			if _condition == nil then
+				_condition = 0
+			end
+			local currentImageTrans = _condition
+			parsedStyleProps.ImageTransparency = 1 - ((1 - currentImageTrans) * style.opacity)
+		end
 	end
 	-- 5. Render the native imagelabel with merged properties and children
 	local _attributes = {

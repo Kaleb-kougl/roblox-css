@@ -67,6 +67,11 @@ export const Image = forwardRef<ImageLabel, ImageProps>((props, ref) => {
 		const parsed = webStyle(style);
 		parsedStyleProps = parsed.props as Record<string, unknown>;
 		parsedStyleChildren = parsed.children as React.Element[];
+
+		if (style.opacity !== undefined) {
+			const currentImageTrans = (parsedStyleProps.ImageTransparency as number | undefined) ?? 0;
+			parsedStyleProps.ImageTransparency = 1 - ((1 - currentImageTrans) * style.opacity);
+		}
 	}
 
 	// 5. Render the native imagelabel with merged properties and children

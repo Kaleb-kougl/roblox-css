@@ -74,9 +74,6 @@ local Text = forwardRef(function(props, ref)
 	local parsedStyleChildren = {}
 	-- 4. If a style object is provided, compile it and extract typography mappings
 	if style then
-		local parsed = webStyle(style)
-		parsedStyleProps = parsed.props
-		parsedStyleChildren = parsed.children
 		-- Specialized string manipulation for wordBreak
 		if style.wordBreak ~= nil then
 			if style.wordBreak == "break-all" then
@@ -116,6 +113,18 @@ local Text = forwardRef(function(props, ref)
 					explicitProps.Text = `<s>{explicitProps.Text}</s>`
 				end
 			end
+		end
+		local _text = explicitProps.Text
+		local parsed = webStyle(style, if type(_text) == "string" then explicitProps.Text else nil)
+		parsedStyleProps = parsed.props
+		parsedStyleChildren = parsed.children
+		if style.opacity ~= nil then
+			local _condition = (parsedStyleProps.TextTransparency)
+			if _condition == nil then
+				_condition = 0
+			end
+			local currentTextTrans = _condition
+			parsedStyleProps.TextTransparency = 1 - ((1 - currentTextTrans) * style.opacity)
 		end
 	end
 	-- 5. Render the native textlabel with merged properties and children

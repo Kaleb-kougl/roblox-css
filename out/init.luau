@@ -34,6 +34,13 @@ exports.Image = TS.import(script, script, "primitives", "Image").Image
 exports.Input = TS.import(script, script, "primitives", "Input").Input
 exports.ScrollBox = TS.import(script, script, "primitives", "ScrollBox").ScrollBox
 exports.InlineText = TS.import(script, script, "primitives", "InlineText").InlineText
+local _HtmlElements = TS.import(script, script, "primitives", "HtmlElements")
+exports.Div = _HtmlElements.Div
+exports.Span = _HtmlElements.Span
+exports.P = _HtmlElements.P
+exports.H1 = _HtmlElements.H1
+exports.H2 = _HtmlElements.H2
+exports.H3 = _HtmlElements.H3
 -- Inline image parser (for advanced users)
 local _parseInlineImages = TS.import(script, script, "utils", "parseInlineImages")
 exports.parseInlineImages = _parseInlineImages.parseInlineImages

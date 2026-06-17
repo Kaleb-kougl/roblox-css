@@ -32,6 +32,7 @@ export { Image } from "./primitives/Image";
 export { Input } from "./primitives/Input";
 export { ScrollBox } from "./primitives/ScrollBox";
 export { InlineText } from "./primitives/InlineText";
+export { Div, Span, P, H1, H2, H3 } from "./primitives/HtmlElements";
 
 // Inline image parser (for advanced users)
 export { parseInlineImages, containsRichTextTags } from "./utils/parseInlineImages";
