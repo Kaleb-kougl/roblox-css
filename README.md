@@ -68,7 +68,8 @@ Add `roblox-css` to your Rojo project file:
 | Component | HTML Equivalent | Roblox Instance |
 |:---|:---|:---|
 | `<Box>` | `<div>` | `<frame>` |
-| `<Text>` | `<span>` / `<p>` | `<textlabel>` |
+| `<Text>` | `<p>` | `<textlabel>` |
+| `<InlineText>` | `<span>` | `<textlabel>` |
 | `<Button>` | `<button>` | `<textbutton>` |
 | `<Image>` | `<img>` | `<imagelabel>` |
 | `<Input>` | `<input>` | `<textbox>` |
@@ -116,6 +117,38 @@ import { MotionBox, webStyle } from "roblox-css";
 ```
 
 Requires `@rbxts/ripple` peer dependency.
+
+#### Interactivity (Hover States)
+
+To create interactive hover effects, use the `useState` hook along with the `onMouseEnter` and `onMouseLeave` props. `roblox-css` automatically sets `AutoButtonColor: false` on buttons to disable the native Roblox tinting, giving you full control over hover styles.
+
+```tsx
+import React, { useState } from "@rbxts/react";
+import { MotionButton, webStyle } from "roblox-css";
+
+export function HoverButton() {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <MotionButton
+      style={webStyle({ 
+        padding: "12px 24px",
+        borderRadius: "8px",
+        color: "white",
+      })}
+      Text="Hover Me!"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      animate={isHovered ? "hover" : "idle"}
+      variants={{
+        idle: { backgroundColor: "#1a1a2e", width: "150px" },
+        hover: { backgroundColor: "#e94560", width: "160px" },
+      }}
+      transition={new TweenInfo(0.2, Enum.EasingStyle.Quad)}
+    />
+  );
+}
+```
 
 ## Supported CSS Properties
 
@@ -186,7 +219,7 @@ Requires `@rbxts/ripple` peer dependency.
 - **Hex:** `#ff0000`, `#f00`, `#ff000080`
 - **RGB:** `rgb(255, 0, 0)`, `rgba(255, 0, 0, 0.5)`
 - **HSL:** `hsl(0, 100%, 50%)`, `hsla(0, 100%, 50%, 0.5)`
-- **Named:** All 148 CSS named colors (`red`, `cornflowerblue`, `rebeccapurple`, etc.)
+- **Named:** All 148 CSS named colors (`red`, `cornflowerblue`, `rebeccapurple`, etc.). The library also exports a `NAMED_COLORS` dictionary containing all of these mapped values.
 - **Roblox Color3:** Pass `Color3` instances directly
 
 ### Dimension Formats
@@ -239,6 +272,10 @@ CSSProperties → webStyle() → { props, children }
      props spread    constraint children
      on <frame>      (UICorner, UIPadding, ...)
 ```
+
+### Advanced Usage & Internal APIs
+
+For developers extending `roblox-css`, see [docs/ADVANCED_APIS.md](docs/ADVANCED_APIS.md). It covers layout hooks (`ParentSizeContext`), advanced parsers, and motion internals.
 
 ## Running Tests
 
