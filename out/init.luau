@@ -33,6 +33,7 @@ exports.Button = TS.import(script, script, "primitives", "Button").Button
 exports.Image = TS.import(script, script, "primitives", "Image").Image
 exports.Input = TS.import(script, script, "primitives", "Input").Input
 exports.ScrollBox = TS.import(script, script, "primitives", "ScrollBox").ScrollBox
+exports.ScreenContainer = TS.import(script, script, "primitives", "ScreenContainer").ScreenContainer
 exports.InlineText = TS.import(script, script, "primitives", "InlineText").InlineText
 local _HtmlElements = TS.import(script, script, "primitives", "HtmlElements")
 exports.Div = _HtmlElements.Div

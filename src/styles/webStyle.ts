@@ -75,6 +75,49 @@ const ALIGN_MAP = {
 	"flex-end": Enum.VerticalAlignment.Bottom,
 } as Record<string, Enum.VerticalAlignment>;
 
+const SORT_ORDER_MAP = {
+	"layout-order": Enum.SortOrder.LayoutOrder,
+	name: Enum.SortOrder.Name,
+} as Record<string, Enum.SortOrder>;
+
+const FLEX_ALIGNMENT_MAP = {
+	"space-around": Enum.UIFlexAlignment.SpaceAround,
+	"space-between": Enum.UIFlexAlignment.SpaceBetween,
+	"space-evenly": Enum.UIFlexAlignment.SpaceEvenly,
+} as Record<string, Enum.UIFlexAlignment>;
+
+const START_CORNER_MAP = {
+	"top-left": Enum.StartCorner.TopLeft,
+	"top-right": Enum.StartCorner.TopRight,
+	"bottom-left": Enum.StartCorner.BottomLeft,
+	"bottom-right": Enum.StartCorner.BottomRight,
+} as Record<string, Enum.StartCorner>;
+
+const TABLE_MAJOR_AXIS_MAP = {
+	"row-major": Enum.TableMajorAxis.RowMajor,
+	"column-major": Enum.TableMajorAxis.ColumnMajor,
+} as Record<string, Enum.TableMajorAxis>;
+
+const EASING_STYLE_MAP = {
+	linear: Enum.EasingStyle.Linear,
+	sine: Enum.EasingStyle.Sine,
+	back: Enum.EasingStyle.Back,
+	quad: Enum.EasingStyle.Quad,
+	quart: Enum.EasingStyle.Quart,
+	quint: Enum.EasingStyle.Quint,
+	bounce: Enum.EasingStyle.Bounce,
+	elastic: Enum.EasingStyle.Elastic,
+	exponential: Enum.EasingStyle.Exponential,
+	circular: Enum.EasingStyle.Circular,
+	cubic: Enum.EasingStyle.Cubic,
+} as Record<string, Enum.EasingStyle>;
+
+const EASING_DIRECTION_MAP = {
+	in: Enum.EasingDirection.In,
+	out: Enum.EasingDirection.Out,
+	"in-out": Enum.EasingDirection.InOut,
+} as Record<string, Enum.EasingDirection>;
+
 const FONT_WEIGHT_MAP = {
 	normal: Enum.FontWeight.Regular,
 	bold: Enum.FontWeight.Bold,
@@ -100,6 +143,97 @@ const AUTO_SIZE_MAP = {
 	y: Enum.AutomaticSize.Y,
 	xy: Enum.AutomaticSize.XY,
 } as Record<string, Enum.AutomaticSize>;
+
+const SCROLL_BAR_INSET_MAP = {
+	none: Enum.ScrollBarInset.None,
+	scrollbar: Enum.ScrollBarInset.ScrollBar,
+	"scroll-bar": Enum.ScrollBarInset.ScrollBar,
+	always: Enum.ScrollBarInset.Always,
+} as Record<string, Enum.ScrollBarInset>;
+
+const ELASTIC_BEHAVIOR_MAP = {
+	"when-scrollable": Enum.ElasticBehavior.WhenScrollable,
+	always: Enum.ElasticBehavior.Always,
+	never: Enum.ElasticBehavior.Never,
+} as Record<string, Enum.ElasticBehavior>;
+
+const VERTICAL_SCROLL_BAR_POSITION_MAP = {
+	left: Enum.VerticalScrollBarPosition.Left,
+	right: Enum.VerticalScrollBarPosition.Right,
+} as Record<string, Enum.VerticalScrollBarPosition>;
+
+const UI_DRAG_STYLE_MAP = {
+	"translate-plane": Enum.UIDragDetectorDragStyle.TranslatePlane,
+	"translate-line": Enum.UIDragDetectorDragStyle.TranslateLine,
+	rotate: Enum.UIDragDetectorDragStyle.Rotate,
+	scriptable: Enum.UIDragDetectorDragStyle.Scriptable,
+} as Record<string, Enum.UIDragDetectorDragStyle>;
+
+const UI_DRAG_RESPONSE_STYLE_MAP = {
+	offset: Enum.UIDragDetectorResponseStyle.Offset,
+	scale: Enum.UIDragDetectorResponseStyle.Scale,
+	"custom-offset": Enum.UIDragDetectorResponseStyle.CustomOffset,
+	"custom-scale": Enum.UIDragDetectorResponseStyle.CustomScale,
+} as Record<string, Enum.UIDragDetectorResponseStyle>;
+
+const UI_DRAG_BOUNDING_BEHAVIOR_MAP = {
+	automatic: Enum.UIDragDetectorBoundingBehavior.Automatic,
+	"entire-object": Enum.UIDragDetectorBoundingBehavior.EntireObject,
+	"hit-point": Enum.UIDragDetectorBoundingBehavior.HitPoint,
+} as Record<string, Enum.UIDragDetectorBoundingBehavior>;
+
+const UI_DRAG_SPEED_AXIS_MAPPING_MAP = {
+	xy: Enum.UIDragSpeedAxisMapping.XY,
+	xx: Enum.UIDragSpeedAxisMapping.XX,
+	yy: Enum.UIDragSpeedAxisMapping.YY,
+} as Record<string, Enum.UIDragSpeedAxisMapping>;
+
+const DRAG_STYLE_MAP = {
+	"translate-line": Enum.DragDetectorDragStyle.TranslateLine,
+	"translate-plane": Enum.DragDetectorDragStyle.TranslatePlane,
+	"translate-plane-or-line": Enum.DragDetectorDragStyle.TranslatePlaneOrLine,
+	"translate-line-or-plane": Enum.DragDetectorDragStyle.TranslateLineOrPlane,
+	"translate-view-plane": Enum.DragDetectorDragStyle.TranslateViewPlane,
+	"rotate-axis": Enum.DragDetectorDragStyle.RotateAxis,
+	"rotate-trackball": Enum.DragDetectorDragStyle.RotateTrackball,
+	"best-for-device": Enum.DragDetectorDragStyle.BestForDevice,
+	scriptable: Enum.DragDetectorDragStyle.Scriptable,
+} as Record<string, Enum.DragDetectorDragStyle>;
+
+const DRAG_RESPONSE_STYLE_MAP = {
+	geometric: Enum.DragDetectorResponseStyle.Geometric,
+	physical: Enum.DragDetectorResponseStyle.Physical,
+	custom: Enum.DragDetectorResponseStyle.Custom,
+} as Record<string, Enum.DragDetectorResponseStyle>;
+
+const DRAG_PERMISSION_POLICY_MAP = {
+	nobody: Enum.DragDetectorPermissionPolicy.Nobody,
+	everybody: Enum.DragDetectorPermissionPolicy.Everybody,
+	scriptable: Enum.DragDetectorPermissionPolicy.Scriptable,
+} as Record<string, Enum.DragDetectorPermissionPolicy>;
+
+const PROXIMITY_PROMPT_EXCLUSIVITY_MAP = {
+	"one-per-button": Enum.ProximityPromptExclusivity.OnePerButton,
+	"one-globally": Enum.ProximityPromptExclusivity.OneGlobally,
+	"always-show": Enum.ProximityPromptExclusivity.AlwaysShow,
+} as Record<string, Enum.ProximityPromptExclusivity>;
+
+const STROKE_SIZING_MODE_MAP = {
+	fixed: Enum.StrokeSizingMode.FixedSize,
+	scaled: Enum.StrokeSizingMode.ScaledSize,
+} as Record<string, Enum.StrokeSizingMode>;
+
+const BORDER_STROKE_POSITION_MAP = {
+	inner: Enum.BorderStrokePosition.Inner,
+	center: Enum.BorderStrokePosition.Center,
+	outer: Enum.BorderStrokePosition.Outer,
+} as Record<string, Enum.BorderStrokePosition>;
+
+const LINE_JOIN_MODE_MAP = {
+	round: Enum.LineJoinMode.Round,
+	bevel: Enum.LineJoinMode.Bevel,
+	miter: Enum.LineJoinMode.Miter,
+} as Record<string, Enum.LineJoinMode>;
 
 const SHADOW_SIZE_MAP = {
 	sm: new UDim2(1, 10, 1, 10),
@@ -149,6 +283,174 @@ const SHADOW_OPACITY_MAP = {
 export const SHADOW_ASSET_ID = "rbxassetid://6015897843";
 export const SHADOW_SLICE_CENTER = new Rect(47, 47, 450, 450);
 
+type StrokeOptions = {
+	readonly isTextStroke?: boolean;
+	readonly borderOffset?: string | number;
+	readonly borderStrokePosition?: string;
+	readonly lineJoinMode?: string;
+	readonly strokeSizingMode?: string;
+	readonly strokeTransparency?: number;
+	readonly strokeZIndex?: number;
+	readonly strokeGradient?: string;
+	readonly strokeGradientOffset?: string | Vector2;
+	readonly strokeGradientRotation?: number;
+};
+
+function splitOutsideParens(input: string, separator = " "): string[] {
+	const parts: string[] = [];
+	let current = "";
+	let parenLevel = 0;
+
+	for (let i = 1; i <= input.size(); i++) {
+		const char = input.sub(i, i);
+		if (char === "(") parenLevel++;
+		else if (char === ")") parenLevel--;
+
+		const isSeparator = separator === " " ? (char === " " || char === "\t") : char === separator;
+		if (isSeparator && parenLevel === 0) {
+			if (current !== "") {
+				parts.push(current);
+				current = "";
+			}
+			continue;
+		}
+
+		current += char;
+	}
+
+	if (current !== "") {
+		parts.push(current);
+	}
+
+	return parts;
+}
+
+function parseVector2(value: string | Vector2 | undefined): Vector2 | undefined {
+	if (value === undefined) return undefined;
+	if (typeIs(value, "Vector2")) return value;
+
+	const parts = splitOutsideParens(value).filter((part) => part !== "");
+	const x = tonumber(parts[0]);
+	const y = tonumber(parts[1] ?? parts[0]);
+	if (x === undefined || y === undefined) {
+		return undefined;
+	}
+
+	return new Vector2(x, y);
+}
+
+function parseVector3(value: string | Vector3 | undefined): Vector3 | undefined {
+	if (value === undefined) return undefined;
+	if (typeIs(value, "Vector3")) return value;
+
+	const parts = splitOutsideParens(value).filter((part) => part !== "");
+	const x = tonumber(parts[0]);
+	const y = tonumber(parts[1]);
+	const z = tonumber(parts[2]);
+	if (x === undefined || y === undefined || z === undefined) {
+		return undefined;
+	}
+
+	return new Vector3(x, y, z);
+}
+
+function parseUDim2Pair(value: string | undefined, fallbackX = new UDim(0, 0), fallbackY = fallbackX): UDim2 {
+	if (value === undefined || value === "") {
+		return new UDim2(fallbackX, fallbackY);
+	}
+
+	const parts = splitOutsideParens(value).filter((part) => part !== "");
+	const x = parseDimension(parts[0]) ?? fallbackX;
+	const y = parseDimension(parts[1] ?? parts[0]) ?? fallbackY;
+	return new UDim2(x, y);
+}
+
+function parseUDim2Value(value: string | UDim2 | undefined): UDim2 | undefined {
+	if (value === undefined) return undefined;
+	if (typeIs(value, "UDim2")) return value;
+	return parseUDim2Pair(value);
+}
+
+function parseKeyCode(value: string | Enum.KeyCode | undefined): Enum.KeyCode | undefined {
+	if (value === undefined) return undefined;
+	if (!typeIs(value, "string")) return value;
+
+	const keyCodes = Enum.KeyCode as unknown as Record<string, Enum.KeyCode>;
+	return keyCodes[value] ?? keyCodes[value.upper()];
+}
+
+function isDimensionToken(value: string): boolean {
+	const [numeric] = string.match(value, "^%-?[%d%.]+$");
+	const [withUnit] = string.match(value, "^%-?[%d%.]+px$");
+	const [withPercent] = string.match(value, "^%-?[%d%.]+%%$");
+	const [withViewport] = string.match(value, "^%-?[%d%.]+v[hw]$");
+	return numeric !== undefined || withUnit !== undefined || withPercent !== undefined || withViewport !== undefined || value.sub(1, 5) === "calc(";
+}
+
+function applyGradientProps(
+	gradientProps: Record<string, unknown>,
+	offset?: string | Vector2,
+	rotation?: number,
+) {
+	if (offset !== undefined) {
+		const parsedOffset = parseVector2(offset);
+		if (parsedOffset !== undefined) {
+			gradientProps.Offset = parsedOffset;
+		}
+	}
+	if (rotation !== undefined) {
+		gradientProps.Rotation = rotation;
+	}
+}
+
+function buildGradientElement(
+	key: string,
+	input: string,
+	offset?: string | Vector2,
+	rotation?: number,
+): React.Element | undefined {
+	if (!isGradientString(input)) return undefined;
+
+	const gradient = parseGradient(input);
+	if (gradient === undefined) return undefined;
+
+	const gradientProps: Record<string, unknown> = {
+		key,
+		Color: gradient.colorSequence,
+		Rotation: rotation ?? gradient.rotation,
+	};
+	if (gradient.transparencySequence !== undefined) {
+		gradientProps.Transparency = gradient.transparencySequence;
+	}
+	applyGradientProps(gradientProps, offset, rotation);
+
+	return React.createElement("uigradient", gradientProps);
+}
+
+function resolveSortOrder(sortOrder: CSSProperties["sortOrder"]): Enum.SortOrder {
+	if (sortOrder !== undefined && !typeIs(sortOrder, "string")) return sortOrder;
+	return sortOrder !== undefined ? (SORT_ORDER_MAP[sortOrder] ?? Enum.SortOrder.LayoutOrder) : Enum.SortOrder.LayoutOrder;
+}
+
+function resolveFillDirection(
+	direction?: "row" | "column",
+	defaultDirection: Enum.FillDirection = Enum.FillDirection.Vertical,
+): Enum.FillDirection {
+	if (direction === "row") return Enum.FillDirection.Horizontal;
+	if (direction === "column") return Enum.FillDirection.Vertical;
+	return defaultDirection;
+}
+
+function parseLayoutPadding2D(value?: string | number, fallback?: string | number): UDim2 | undefined {
+	const source = value ?? fallback;
+	if (source === undefined) return undefined;
+
+	const parts = typeIs(source, "string") ? source.split(" ") : [source];
+	const x = parseDimension(parts[0]) ?? new UDim(0, 0);
+	const y = parts.size() > 1 ? (parseDimension(parts[1]) ?? x) : x;
+	return new UDim2(x, y);
+}
+
 /**
  * Builds a <uilistlayout> element from CSS flex properties.
  *
@@ -173,11 +475,11 @@ function buildListLayout(style: CSSProperties): React.Element {
 		}
 	}
 
-	const fillDirection = flexDir === "row" ? Enum.FillDirection.Horizontal : Enum.FillDirection.Vertical;
+	const fillDirection = resolveFillDirection(flexDir);
 
 	const layoutProps: Record<string, unknown> = {
 		FillDirection: fillDirection,
-		SortOrder: Enum.SortOrder.LayoutOrder,
+		SortOrder: resolveSortOrder(style.sortOrder),
 	};
 
 	if (fWrap === "wrap") {
@@ -189,11 +491,8 @@ function buildListLayout(style: CSSProperties): React.Element {
 
 	// justifyContent → main-axis alignment
 	if (resolvedJustifyContent !== undefined) {
-		if (resolvedJustifyContent === "space-between" || resolvedJustifyContent === "space-around") {
-			const flexAlign =
-				resolvedJustifyContent === "space-between"
-					? Enum.UIFlexAlignment.SpaceBetween
-					: Enum.UIFlexAlignment.SpaceAround;
+		const flexAlign = FLEX_ALIGNMENT_MAP[resolvedJustifyContent];
+		if (flexAlign !== undefined) {
 			if (flexDir === "row") {
 				layoutProps.HorizontalFlex = flexAlign;
 			} else {
@@ -245,7 +544,7 @@ function buildListLayout(style: CSSProperties): React.Element {
  */
 function buildGridLayout(style: CSSProperties): React.Element {
 	const layoutProps: Record<string, unknown> = {
-		SortOrder: Enum.SortOrder.LayoutOrder,
+		SortOrder: resolveSortOrder(style.sortOrder),
 	};
 
 	let flexDir = style.flexDirection;
@@ -256,9 +555,16 @@ function buildGridLayout(style: CSSProperties): React.Element {
 		}
 	}
 
-	const fillDirection =
-		flexDir === "column" ? Enum.FillDirection.Vertical : Enum.FillDirection.Horizontal; // default is row
+	const fillDirection = resolveFillDirection(flexDir, Enum.FillDirection.Horizontal);
 	layoutProps.FillDirection = fillDirection;
+	if (style.gridMaxCells !== undefined) {
+		layoutProps.FillDirectionMaxCells = style.gridMaxCells;
+	}
+	if (style.gridStartCorner !== undefined) {
+		layoutProps.StartCorner = typeIs(style.gridStartCorner, "string")
+			? (START_CORNER_MAP[style.gridStartCorner] ?? Enum.StartCorner.TopLeft)
+			: style.gridStartCorner;
+	}
 
 	// gap, rowGap, columnGap -> CellPadding
 	let gapX = new UDim(0, 0);
@@ -314,6 +620,67 @@ function buildGridLayout(style: CSSProperties): React.Element {
 	return React.createElement("uigridlayout", layoutProps);
 }
 
+function buildTableLayout(style: CSSProperties): React.Element {
+	const layoutProps: Record<string, unknown> = {
+		key: "uitablelayout",
+		FillDirection: resolveFillDirection(style.tableFillDirection ?? style.flexDirection),
+		SortOrder: resolveSortOrder(style.sortOrder),
+	};
+
+	if (style.tableMajorAxis !== undefined) {
+		layoutProps.MajorAxis = typeIs(style.tableMajorAxis, "string")
+			? (TABLE_MAJOR_AXIS_MAP[style.tableMajorAxis] ?? Enum.TableMajorAxis.RowMajor)
+			: style.tableMajorAxis;
+	}
+	if (style.tableFillEmptySpaceColumns !== undefined) {
+		layoutProps.FillEmptySpaceColumns = style.tableFillEmptySpaceColumns;
+	}
+	if (style.tableFillEmptySpaceRows !== undefined) {
+		layoutProps.FillEmptySpaceRows = style.tableFillEmptySpaceRows;
+	}
+	const padding = parseLayoutPadding2D(style.tablePadding, style.gap);
+	if (padding !== undefined) {
+		layoutProps.Padding = padding;
+	}
+
+	return React.createElement("uitablelayout", layoutProps);
+}
+
+function buildPageLayout(style: CSSProperties): React.Element {
+	const layoutProps: Record<string, unknown> = {
+		key: "uipagelayout",
+		FillDirection: resolveFillDirection(style.pageFillDirection ?? style.flexDirection, Enum.FillDirection.Horizontal),
+		SortOrder: resolveSortOrder(style.sortOrder),
+	};
+
+	const pagePadding = style.pagePadding !== undefined ? parseDimension(style.pagePadding) : undefined;
+	if (pagePadding !== undefined) layoutProps.Padding = pagePadding;
+	if (style.pageAnimated !== undefined) layoutProps.Animated = style.pageAnimated;
+	if (style.pageCircular !== undefined) layoutProps.Circular = style.pageCircular;
+	if (style.pageTweenTime !== undefined) layoutProps.TweenTime = style.pageTweenTime;
+	if (style.pageEasingStyle !== undefined) {
+		layoutProps.EasingStyle = typeIs(style.pageEasingStyle, "string")
+			? (EASING_STYLE_MAP[style.pageEasingStyle] ?? Enum.EasingStyle.Quad)
+			: style.pageEasingStyle;
+	}
+	if (style.pageEasingDirection !== undefined) {
+		layoutProps.EasingDirection = typeIs(style.pageEasingDirection, "string")
+			? (EASING_DIRECTION_MAP[style.pageEasingDirection] ?? Enum.EasingDirection.Out)
+			: style.pageEasingDirection;
+	}
+	if (style.pageGamepadInputEnabled !== undefined) {
+		layoutProps.GamepadInputEnabled = style.pageGamepadInputEnabled;
+	}
+	if (style.pageScrollWheelInputEnabled !== undefined) {
+		layoutProps.ScrollWheelInputEnabled = style.pageScrollWheelInputEnabled;
+	}
+	if (style.pageTouchInputEnabled !== undefined) {
+		layoutProps.TouchInputEnabled = style.pageTouchInputEnabled;
+	}
+
+	return React.createElement("uipagelayout", layoutProps);
+}
+
 /**
  * Builds a <uistroke> element from a CSS border shorthand string.
  *
@@ -327,7 +694,8 @@ function buildGridLayout(style: CSSProperties): React.Element {
  *   "2px solid red"      → Thickness: 2,  Color: Color3(1, 0, 0)
  *   "3px"                → Thickness: 3,  Color: default (no color set)
  */
-function buildStroke(border: string, isTextStroke = false): React.Element | undefined {
+function buildStroke(border: string, options: StrokeOptions = {}): React.Element | undefined {
+	const isTextStroke = options.isTextStroke === true;
 	let hasSpecifyingWord = false;
 	const specifyingWords = new Set(["solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"]);
 
@@ -345,6 +713,7 @@ function buildStroke(border: string, isTextStroke = false): React.Element | unde
 	}
 
 	const strokeProps: Record<string, unknown> = {};
+	let strokeGradient = options.strokeGradient;
 
 	// Extract thickness: find first space-separated token (e.g., "1px", "2")
 	const [thicknessStr, rest] = string.match(border, "^(%S+)%s*(.*)$");
@@ -362,13 +731,242 @@ function buildStroke(border: string, isTextStroke = false): React.Element | unde
 		// Try to strip a leading style keyword (solid, dashed, dotted, double, groove, ridge, inset, outset, none)
 		const [afterStyle] = string.match(remaining, "^%s*%a+%s+(.+)$");
 		const colorStr = afterStyle !== undefined ? (afterStyle as string) : remaining;
-		const parsed = parseColor(colorStr);
-		strokeProps.Color = parsed.color;
+		if (isGradientString(colorStr)) {
+			strokeGradient = colorStr;
+			strokeProps.Color = new Color3(1, 1, 1);
+		} else {
+			const parsed = parseColor(colorStr);
+			strokeProps.Color = parsed.color;
+			if (parsed.transparency > 0) {
+				strokeProps.Transparency = parsed.transparency;
+			}
+		}
 	}
 
 	strokeProps.ApplyStrokeMode = isTextStroke ? Enum.ApplyStrokeMode.Contextual : Enum.ApplyStrokeMode.Border;
+	if (options.borderOffset !== undefined) {
+		const offset = parseDimension(options.borderOffset);
+		if (offset !== undefined) {
+			strokeProps.BorderOffset = offset;
+		}
+	}
+	if (options.borderStrokePosition !== undefined) {
+		strokeProps.BorderStrokePosition = BORDER_STROKE_POSITION_MAP[options.borderStrokePosition] ?? Enum.BorderStrokePosition.Center;
+	}
+	if (options.lineJoinMode !== undefined) {
+		strokeProps.LineJoinMode = LINE_JOIN_MODE_MAP[options.lineJoinMode] ?? Enum.LineJoinMode.Round;
+	}
+	if (options.strokeSizingMode !== undefined) {
+		strokeProps.StrokeSizingMode = STROKE_SIZING_MODE_MAP[options.strokeSizingMode] ?? Enum.StrokeSizingMode.FixedSize;
+	}
+	if (options.strokeTransparency !== undefined) {
+		strokeProps.Transparency = math.clamp(options.strokeTransparency, 0, 1);
+	}
+	if (options.strokeZIndex !== undefined) {
+		strokeProps.ZIndex = options.strokeZIndex;
+	}
 	strokeProps.key = isTextStroke ? "uitextstroke" : "uistroke";
+
+	const gradientElement =
+		strokeGradient !== undefined
+			? buildGradientElement(
+					isTextStroke ? "uitextstroke-gradient" : "uistroke-gradient",
+					strokeGradient,
+					options.strokeGradientOffset,
+					options.strokeGradientRotation,
+				)
+			: undefined;
+
+	if (gradientElement !== undefined) {
+		if (strokeProps.Color === undefined) {
+			strokeProps.Color = new Color3(1, 1, 1);
+		}
+		return React.createElement("uistroke", strokeProps, gradientElement);
+	}
+
 	return React.createElement("uistroke", strokeProps);
+}
+
+function getRadiusParts(radius: string | number | undefined): UDim[] {
+	if (radius === undefined) return [];
+	if (typeIs(radius, "number")) {
+		const parsed = parseDimension(radius);
+		return parsed !== undefined ? [parsed] : [];
+	}
+
+	const firstRadiusSet = splitOutsideParens(radius, "/")[0] ?? radius;
+	const parts = splitOutsideParens(firstRadiusSet).filter((part) => part !== "");
+	const radii: UDim[] = [];
+	for (const part of parts) {
+		const parsed = parseDimension(part);
+		if (parsed !== undefined) {
+			radii.push(parsed);
+		}
+	}
+	return radii;
+}
+
+function expandCornerRadii(radius: string | number | undefined): [UDim, UDim, UDim, UDim] {
+	const parts = getRadiusParts(radius);
+	const zero = new UDim(0, 0);
+
+	if (parts.size() === 0) return [zero, zero, zero, zero];
+	if (parts.size() === 1) return [parts[0], parts[0], parts[0], parts[0]];
+	if (parts.size() === 2) return [parts[0], parts[1], parts[0], parts[1]];
+	if (parts.size() === 3) return [parts[0], parts[1], parts[2], parts[1]];
+	return [parts[0], parts[1], parts[2], parts[3]];
+}
+
+function buildCorner(style: CSSProperties): React.Element | undefined {
+	const hasIndividualCorner =
+		style.borderTopLeftRadius !== undefined ||
+		style.borderTopRightRadius !== undefined ||
+		style.borderBottomRightRadius !== undefined ||
+		style.borderBottomLeftRadius !== undefined;
+
+	if (style.borderRadius === undefined && !hasIndividualCorner) {
+		return undefined;
+	}
+
+	if (!hasIndividualCorner) {
+		const firstRadius = getRadiusParts(style.borderRadius)[0];
+		return React.createElement("uicorner", { key: "uicorner", CornerRadius: firstRadius ?? new UDim(0, 0) });
+	}
+
+	const [topLeft, topRight, bottomRight, bottomLeft] = expandCornerRadii(style.borderRadius);
+	const topLeftOverride = style.borderTopLeftRadius !== undefined ? parseDimension(style.borderTopLeftRadius) : undefined;
+	const topRightOverride = style.borderTopRightRadius !== undefined ? parseDimension(style.borderTopRightRadius) : undefined;
+	const bottomRightOverride = style.borderBottomRightRadius !== undefined ? parseDimension(style.borderBottomRightRadius) : undefined;
+	const bottomLeftOverride = style.borderBottomLeftRadius !== undefined ? parseDimension(style.borderBottomLeftRadius) : undefined;
+
+	return React.createElement("uicorner", {
+		key: "uicorner",
+		TopLeftRadius: topLeftOverride ?? topLeft,
+		TopRightRadius: topRightOverride ?? topRight,
+		BottomRightRadius: bottomRightOverride ?? bottomRight,
+		BottomLeftRadius: bottomLeftOverride ?? bottomLeft,
+	});
+}
+
+type NativeShadowValues = {
+	blurRadius?: UDim;
+	color?: Color3;
+	offset?: UDim2;
+	spread?: UDim2;
+	transparency?: number;
+	zIndex?: number;
+};
+
+function parseBoxShadowString(value: string): NativeShadowValues {
+	const tokens = splitOutsideParens(value).filter((part) => part !== "" && part !== "inset");
+	const dimensions: string[] = [];
+	const colorTokens: string[] = [];
+
+	for (const token of tokens) {
+		if (isDimensionToken(token) && colorTokens.size() === 0) {
+			dimensions.push(token);
+		} else {
+			colorTokens.push(token);
+		}
+	}
+
+	const offsetX = parseDimension(dimensions[0] ?? "0") ?? new UDim(0, 0);
+	const offsetY = parseDimension(dimensions[1] ?? "0") ?? new UDim(0, 0);
+	const blurRadius = dimensions[2] !== undefined ? parseDimension(dimensions[2]) : undefined;
+	const spread = dimensions[3] !== undefined ? parseDimension(dimensions[3]) : undefined;
+	const parsedColor = colorTokens.size() > 0 ? parseColor(colorTokens.join(" ")) : undefined;
+
+	return {
+		blurRadius,
+		color: parsedColor?.color as Color3 | undefined,
+		offset: new UDim2(offsetX, offsetY),
+		spread: spread !== undefined ? new UDim2(spread, spread) : undefined,
+		transparency: parsedColor?.transparency,
+	};
+}
+
+function presetNativeShadow(value: string | undefined): NativeShadowValues {
+	if (value === "sm") {
+		return {
+			blurRadius: new UDim(0, 4),
+			offset: new UDim2(0, 0, 0, 2),
+			spread: new UDim2(0, 1, 0, 1),
+			transparency: 0.7,
+		};
+	}
+	if (value === "md") {
+		return {
+			blurRadius: new UDim(0, 8),
+			offset: new UDim2(0, 0, 0, 4),
+			spread: new UDim2(0, 2, 0, 2),
+			transparency: 0.6,
+		};
+	}
+	if (value === "xl" || value === "2xl") {
+		return {
+			blurRadius: new UDim(0, value === "2xl" ? 24 : 18),
+			offset: new UDim2(0, 0, 0, value === "2xl" ? 15 : 10),
+			spread: new UDim2(0, value === "2xl" ? 8 : 6, 0, value === "2xl" ? 8 : 6),
+			transparency: value === "2xl" ? 0.4 : 0.45,
+		};
+	}
+	return {
+		blurRadius: new UDim(0, 12),
+		offset: new UDim2(0, 0, 0, 6),
+		spread: new UDim2(0, 4, 0, 4),
+		transparency: 0.5,
+	};
+}
+
+function buildNativeShadow(style: CSSProperties): React.Element | undefined {
+	const hasNativeShadowProps =
+		style.shadowBlurRadius !== undefined ||
+		style.shadowColor !== undefined ||
+		style.shadowOffset !== undefined ||
+		style.shadowSpread !== undefined ||
+		style.shadowTransparency !== undefined ||
+		style.shadowZIndex !== undefined;
+
+	if (style.boxShadow === "none" || (style.boxShadow === undefined && !hasNativeShadowProps)) {
+		return undefined;
+	}
+
+	const base =
+		style.boxShadow !== undefined && SHADOW_SIZE_MAP[style.boxShadow] === undefined
+			? parseBoxShadowString(style.boxShadow)
+			: presetNativeShadow(style.boxShadow);
+
+	const props: Record<string, unknown> = {
+		key: "uishadow",
+		Color: base.color ?? new Color3(0, 0, 0),
+		Transparency: base.transparency ?? 0.5,
+		BlurRadius: base.blurRadius ?? new UDim(0, 12),
+		Offset: base.offset ?? new UDim2(0, 0, 0, 6),
+		Spread: base.spread ?? new UDim2(0, 4, 0, 4),
+	};
+
+	if (style.shadowBlurRadius !== undefined) {
+		props.BlurRadius = parseDimension(style.shadowBlurRadius) ?? props.BlurRadius;
+	}
+	if (style.shadowColor !== undefined) {
+		const parsed = parseColor(style.shadowColor);
+		props.Color = parsed.color;
+		props.Transparency = parsed.transparency;
+	}
+	if (style.shadowOffset !== undefined) {
+		props.Offset = parseUDim2Pair(style.shadowOffset, new UDim(0, 0), new UDim(0, 0));
+	}
+	if (style.shadowSpread !== undefined) {
+		props.Spread = parseUDim2Pair(style.shadowSpread, new UDim(0, 0), new UDim(0, 0));
+	}
+	if (style.shadowTransparency !== undefined) {
+		props.Transparency = math.clamp(style.shadowTransparency, 0, 1);
+	}
+	if (style.shadowZIndex !== undefined) {
+		props.ZIndex = style.shadowZIndex;
+	}
+
+	return React.createElement("uishadow", props);
 }
 
 /**
@@ -568,11 +1166,12 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 			const gradientProps: Record<string, unknown> = {
 				key: "uigradient",
 				Color: gradient.colorSequence,
-				Rotation: gradient.rotation,
+				Rotation: style.backgroundGradientRotation ?? gradient.rotation,
 			};
 			if (gradient.transparencySequence !== undefined) {
 				gradientProps.Transparency = gradient.transparencySequence;
 			}
+			applyGradientProps(gradientProps, style.backgroundGradientOffset, style.backgroundGradientRotation);
 			children.push(React.createElement("uigradient", gradientProps));
 		}
 	}
@@ -592,12 +1191,9 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 		}
 	}
 	// 4. borderRadius → inject <uicorner>
-	if (style.borderRadius !== undefined) {
-		const firstRadius = typeIs(style.borderRadius, "string") 
-			? style.borderRadius.split(" ")[0] 
-			: style.borderRadius;
-		const radius = parseDimension(firstRadius);
-		children.push(React.createElement("uicorner", { key: "uicorner", CornerRadius: radius }));
+	const corner = buildCorner(style);
+	if (corner !== undefined) {
+		children.push(corner);
 	}
 	// 5. padding → inject <uipadding>
 	if (
@@ -631,11 +1227,15 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 			}),
 		);
 	}
-	// 6. display: "flex" | "grid" | "none" → inject <uilistlayout> / <uigridlayout> or set Visible
+	// 6. display layout → inject the matching Roblox layout component or set Visible
 	if (style.display === "flex") {
 		children.push(buildListLayout(style));
 	} else if (style.display === "grid") {
 		children.push(buildGridLayout(style));
+	} else if (style.display === "table") {
+		children.push(buildTableLayout(style));
+	} else if (style.display === "page") {
+		children.push(buildPageLayout(style));
 	} else if (style.display === "none") {
 		props.Visible = false;
 	}
@@ -646,14 +1246,33 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 	// 7. border / outline → inject <uistroke>
 	const activeBorder = style.border ?? style.outline;
 	if (activeBorder !== undefined) {
-		const stroke = buildStroke(activeBorder);
+		const stroke = buildStroke(activeBorder, {
+			borderOffset: style.borderOffset,
+			borderStrokePosition: style.borderStrokePosition,
+			lineJoinMode: style.lineJoinMode,
+			strokeSizingMode: style.strokeSizingMode,
+			strokeTransparency: style.strokeTransparency,
+			strokeZIndex: style.strokeZIndex,
+			strokeGradient: style.strokeGradient,
+			strokeGradientOffset: style.strokeGradientOffset,
+			strokeGradientRotation: style.strokeGradientRotation,
+		});
 		if (stroke !== undefined) {
 			children.push(stroke);
 		}
 	}
 	// textStroke → inject <uistroke> with Contextual mode
 	if (style.textStroke !== undefined) {
-		const stroke = buildStroke(style.textStroke, true);
+		const stroke = buildStroke(style.textStroke, {
+			isTextStroke: true,
+			lineJoinMode: style.lineJoinMode,
+			strokeSizingMode: style.strokeSizingMode,
+			strokeTransparency: style.strokeTransparency,
+			strokeZIndex: style.strokeZIndex,
+			strokeGradient: style.strokeGradient,
+			strokeGradientOffset: style.strokeGradientOffset,
+			strokeGradientRotation: style.strokeGradientRotation,
+		});
 		if (stroke !== undefined) {
 			children.push(stroke);
 		}
@@ -688,6 +1307,14 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 			React.createElement("uiaspectratioconstraint", {
 				key: "uiaspectratioconstraint",
 				AspectRatio: style.aspectRatio,
+			}),
+		);
+	}
+	if (style.scale !== undefined) {
+		children.push(
+			React.createElement("uiscale", {
+				key: "uiscale",
+				Scale: style.scale,
 			}),
 		);
 	}
@@ -739,6 +1366,15 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 			}),
 		);
 	}
+	if (style.minTextSize !== undefined || style.maxTextSize !== undefined) {
+		children.push(
+			React.createElement("uitextsizeconstraint", {
+				key: "uitextsizeconstraint",
+				MinTextSize: style.minTextSize ?? 1,
+				MaxTextSize: style.maxTextSize ?? 1000,
+			}),
+		);
+	}
 
 	// 12. Typography (color, fontSize, textAlign, whiteSpace)
 	if (style.color !== undefined) {
@@ -781,8 +1417,23 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 	if (style.textOverflow === "ellipsis") {
 		props.TextTruncate = Enum.TextTruncate.AtEnd;
 	}
+	if (style.textScaled !== undefined) {
+		props.TextScaled = style.textScaled;
+	}
+	if (style.maxVisibleGraphemes !== undefined) {
+		props.MaxVisibleGraphemes = style.maxVisibleGraphemes;
+	}
 	if (style.richText === true) {
 		props.RichText = true;
+	}
+	if (style.textStrokeColor !== undefined) {
+		props.TextStrokeColor3 = parseColor(style.textStrokeColor).color;
+	}
+	if (style.textStrokeTransparency !== undefined) {
+		props.TextStrokeTransparency = style.textStrokeTransparency;
+	}
+	if (style.autoLocalize !== undefined) {
+		props.AutoLocalize = style.autoLocalize;
 	}
 	if (style.fontFamily !== undefined || style.fontWeight !== undefined || style.fontStyle !== undefined) {
 		const familyStr = style.fontFamily ?? "BuilderSans";
@@ -817,6 +1468,146 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 		else if (style.objectFit === "fill") props.ScaleType = Enum.ScaleType.Stretch;
 	}
 
+	// Roblox UI object aliases surfaced by the Creator Hub UI docs.
+	if (style.image !== undefined) props.Image = style.image;
+	if (style.hoverImage !== undefined) props.HoverImage = style.hoverImage;
+	if (style.pressedImage !== undefined) props.PressedImage = style.pressedImage;
+	if (style.imageColor !== undefined) props.ImageColor3 = parseColor(style.imageColor).color;
+	if (style.imageTransparency !== undefined) props.ImageTransparency = style.imageTransparency;
+	if (style.groupColor !== undefined) props.GroupColor3 = parseColor(style.groupColor).color;
+	if (style.groupTransparency !== undefined) props.GroupTransparency = style.groupTransparency;
+
+	if (style.canvasSize !== undefined) {
+		const canvasSize = parseUDim2Value(style.canvasSize);
+		if (canvasSize !== undefined) props.CanvasSize = canvasSize;
+	}
+	if (style.automaticCanvasSize !== undefined) {
+		props.AutomaticCanvasSize = AUTO_SIZE_MAP[style.automaticCanvasSize] ?? Enum.AutomaticSize.None;
+	}
+	if (style.canvasPosition !== undefined) {
+		const canvasPosition = parseVector2(style.canvasPosition);
+		if (canvasPosition !== undefined) props.CanvasPosition = canvasPosition;
+	}
+	if (style.verticalScrollBarInset !== undefined) {
+		props.VerticalScrollBarInset = SCROLL_BAR_INSET_MAP[style.verticalScrollBarInset] ?? Enum.ScrollBarInset.None;
+	}
+	if (style.horizontalScrollBarInset !== undefined) {
+		props.HorizontalScrollBarInset = SCROLL_BAR_INSET_MAP[style.horizontalScrollBarInset] ?? Enum.ScrollBarInset.None;
+	}
+	if (style.verticalScrollBarPosition !== undefined) {
+		props.VerticalScrollBarPosition =
+			VERTICAL_SCROLL_BAR_POSITION_MAP[style.verticalScrollBarPosition] ?? Enum.VerticalScrollBarPosition.Right;
+	}
+	if (style.scrollBarThickness !== undefined) props.ScrollBarThickness = style.scrollBarThickness;
+	if (style.scrollBarImageColor !== undefined) props.ScrollBarImageColor3 = parseColor(style.scrollBarImageColor).color;
+	if (style.scrollBarImageTransparency !== undefined) props.ScrollBarImageTransparency = style.scrollBarImageTransparency;
+	if (style.scrollBarTopImage !== undefined) props.TopImage = style.scrollBarTopImage;
+	if (style.scrollBarMidImage !== undefined) props.MidImage = style.scrollBarMidImage;
+	if (style.scrollBarBottomImage !== undefined) props.BottomImage = style.scrollBarBottomImage;
+	if (style.elasticBehavior !== undefined) {
+		props.ElasticBehavior = ELASTIC_BEHAVIOR_MAP[style.elasticBehavior] ?? Enum.ElasticBehavior.WhenScrollable;
+	}
+
+	if (style.viewportAmbient !== undefined) props.Ambient = parseColor(style.viewportAmbient).color;
+	if (style.viewportLightColor !== undefined) props.LightColor = parseColor(style.viewportLightColor).color;
+	if (style.viewportLightDirection !== undefined) {
+		const lightDirection = parseVector3(style.viewportLightDirection);
+		if (lightDirection !== undefined) props.LightDirection = lightDirection;
+	}
+
+	if (style.video !== undefined) props.Video = style.video;
+	if (style.looped !== undefined) props.Looped = style.looped;
+	if (style.playing !== undefined) props.Playing = style.playing;
+
+	if (style.pathColor !== undefined) props.Color3 = parseColor(style.pathColor).color;
+	if (style.pathThickness !== undefined) props.Thickness = style.pathThickness;
+
+	if (style.promptObjectText !== undefined) props.ObjectText = style.promptObjectText;
+	if (style.promptActionText !== undefined) props.ActionText = style.promptActionText;
+	if (style.promptKeyboardKeyCode !== undefined) {
+		const keyCode = parseKeyCode(style.promptKeyboardKeyCode);
+		if (keyCode !== undefined) props.KeyboardKeyCode = keyCode;
+	}
+	if (style.promptGamepadKeyCode !== undefined) {
+		const keyCode = parseKeyCode(style.promptGamepadKeyCode);
+		if (keyCode !== undefined) props.GamepadKeyCode = keyCode;
+	}
+	if (style.promptMaxActivationDistance !== undefined) {
+		props.MaxActivationDistance = style.promptMaxActivationDistance;
+	}
+	if (style.promptRequiresLineOfSight !== undefined) {
+		props.RequiresLineOfSight = style.promptRequiresLineOfSight;
+	}
+	if (style.promptExclusivity !== undefined) {
+		props.Exclusivity =
+			PROXIMITY_PROMPT_EXCLUSIVITY_MAP[style.promptExclusivity] ?? Enum.ProximityPromptExclusivity.OnePerButton;
+	}
+	if (style.promptHoldDuration !== undefined) props.HoldDuration = style.promptHoldDuration;
+	if (style.promptClickable !== undefined) props.ClickablePrompt = style.promptClickable;
+
+	if (style.uiDragStyle !== undefined) {
+		props.DragStyle = UI_DRAG_STYLE_MAP[style.uiDragStyle] ?? Enum.UIDragDetectorDragStyle.TranslatePlane;
+	}
+	if (style.uiDragResponseStyle !== undefined) {
+		props.ResponseStyle = UI_DRAG_RESPONSE_STYLE_MAP[style.uiDragResponseStyle] ?? Enum.UIDragDetectorResponseStyle.Offset;
+	}
+	if (style.uiDragAxis !== undefined) {
+		const dragAxis = parseVector2(style.uiDragAxis);
+		if (dragAxis !== undefined) props.DragAxis = dragAxis;
+	}
+	if (style.uiDragMinTranslation !== undefined) {
+		const minDragTranslation = parseUDim2Value(style.uiDragMinTranslation);
+		if (minDragTranslation !== undefined) props.MinDragTranslation = minDragTranslation;
+	}
+	if (style.uiDragMaxTranslation !== undefined) {
+		const maxDragTranslation = parseUDim2Value(style.uiDragMaxTranslation);
+		if (maxDragTranslation !== undefined) props.MaxDragTranslation = maxDragTranslation;
+	}
+	if (style.uiDragMinAngle !== undefined) props.MinDragAngle = style.uiDragMinAngle;
+	if (style.uiDragMaxAngle !== undefined) props.MaxDragAngle = style.uiDragMaxAngle;
+	if (style.uiDragBoundingBehavior !== undefined) {
+		props.BoundingBehavior =
+			UI_DRAG_BOUNDING_BEHAVIOR_MAP[style.uiDragBoundingBehavior] ?? Enum.UIDragDetectorBoundingBehavior.Automatic;
+	}
+	if (style.uiDragSpeedAxisMapping !== undefined) {
+		props.UIDragSpeedAxisMapping =
+			UI_DRAG_SPEED_AXIS_MAPPING_MAP[style.uiDragSpeedAxisMapping] ?? Enum.UIDragSpeedAxisMapping.XY;
+	}
+
+	if (style.dragStyle !== undefined) {
+		props.DragStyle = DRAG_STYLE_MAP[style.dragStyle] ?? Enum.DragDetectorDragStyle.TranslatePlane;
+	}
+	if (style.dragResponseStyle !== undefined) {
+		props.ResponseStyle = DRAG_RESPONSE_STYLE_MAP[style.dragResponseStyle] ?? Enum.DragDetectorResponseStyle.Geometric;
+	}
+	if (style.dragAxis !== undefined) {
+		const dragAxis = parseVector3(style.dragAxis);
+		if (dragAxis !== undefined) props.Axis = dragAxis;
+	}
+	if (style.dragOrientation !== undefined) {
+		const orientation = parseVector3(style.dragOrientation);
+		if (orientation !== undefined) props.Orientation = orientation;
+	}
+	if (style.dragMinTranslation !== undefined) {
+		const minDragTranslation = parseVector3(style.dragMinTranslation);
+		if (minDragTranslation !== undefined) props.MinDragTranslation = minDragTranslation;
+	}
+	if (style.dragMaxTranslation !== undefined) {
+		const maxDragTranslation = parseVector3(style.dragMaxTranslation);
+		if (maxDragTranslation !== undefined) props.MaxDragTranslation = maxDragTranslation;
+	}
+	if (style.dragMinAngle !== undefined) props.MinDragAngle = style.dragMinAngle;
+	if (style.dragMaxAngle !== undefined) props.MaxDragAngle = style.dragMaxAngle;
+	if (style.dragPermissionPolicy !== undefined) {
+		props.PermissionPolicy =
+			DRAG_PERMISSION_POLICY_MAP[style.dragPermissionPolicy] ?? Enum.DragDetectorPermissionPolicy.Everybody;
+	}
+	if (style.dragApplyAtCenterOfMass !== undefined) props.ApplyAtCenterOfMass = style.dragApplyAtCenterOfMass;
+	if (style.dragMaxForce !== undefined) props.MaxForce = style.dragMaxForce;
+	if (style.dragMaxTorque !== undefined) props.MaxTorque = style.dragMaxTorque;
+	if (style.dragResponsiveness !== undefined) props.Responsiveness = style.dragResponsiveness;
+	if (style.dragRunLocally !== undefined) props.RunLocally = style.dragRunLocally;
+
 	// 14. pointerEvents → Interactable / Active
 	if (style.pointerEvents === "none") {
 		props.Interactable = false;
@@ -831,29 +1622,60 @@ export function webStyle(style: CSSProperties, hostText?: string): DeepReadonly<
 		}
 	}
 
-	// 15. boxShadow → inject <imagelabel>
+	// 15. boxShadow → inject <imagelabel> fallback or opt-in <uishadow>
 	if (style.boxShadow !== undefined && style.boxShadow !== "none") {
-		const shadowSize = SHADOW_SIZE_MAP[style.boxShadow] ?? new UDim2(1, 20, 1, 20);
-		const shadowTransparency = SHADOW_OPACITY_MAP[style.boxShadow] ?? 0.5;
-		const shadowOffset = SHADOW_OFFSET_MAP[style.boxShadow] ?? 6;
-		const sliceScale = SHADOW_SLICE_SCALE_MAP[style.boxShadow] ?? 0.4;
+		const shadowTokens = splitOutsideParens(style.boxShadow);
+		const looksLikeCssShadow = shadowTokens.some((token) => isDimensionToken(token));
+		const shouldUseNativeShadow =
+			style.boxShadowMode === "uishadow" ||
+			style.shadowBlurRadius !== undefined ||
+			style.shadowColor !== undefined ||
+			style.shadowOffset !== undefined ||
+			style.shadowSpread !== undefined ||
+			style.shadowTransparency !== undefined ||
+			style.shadowZIndex !== undefined ||
+			(style.boxShadowMode !== "image" && looksLikeCssShadow && SHADOW_SIZE_MAP[style.boxShadow] === undefined);
 
-		children.push(
-			React.createElement("imagelabel", {
-				key: "box-shadow",
-				Image: SHADOW_ASSET_ID,
-				ScaleType: Enum.ScaleType.Slice,
-				SliceCenter: SHADOW_SLICE_CENTER,
-				SliceScale: sliceScale,
-				BackgroundTransparency: 1,
-				ImageColor3: new Color3(0, 0, 0),
-				ImageTransparency: shadowTransparency,
-				ZIndex: -1,
-				AnchorPoint: new Vector2(0.5, 0.5),
-				Position: new UDim2(0.5, 0, 0.5, shadowOffset),
-				Size: shadowSize,
-			}),
-		);
+		if (shouldUseNativeShadow) {
+			const shadow = buildNativeShadow(style);
+			if (shadow !== undefined) {
+				children.push(shadow);
+			}
+		} else {
+			const shadowSize = SHADOW_SIZE_MAP[style.boxShadow] ?? new UDim2(1, 20, 1, 20);
+			const shadowTransparency = SHADOW_OPACITY_MAP[style.boxShadow] ?? 0.5;
+			const shadowOffset = SHADOW_OFFSET_MAP[style.boxShadow] ?? 6;
+			const sliceScale = SHADOW_SLICE_SCALE_MAP[style.boxShadow] ?? 0.4;
+
+			children.push(
+				React.createElement("imagelabel", {
+					key: "box-shadow",
+					Image: SHADOW_ASSET_ID,
+					ScaleType: Enum.ScaleType.Slice,
+					SliceCenter: SHADOW_SLICE_CENTER,
+					SliceScale: sliceScale,
+					BackgroundTransparency: 1,
+					ImageColor3: new Color3(0, 0, 0),
+					ImageTransparency: shadowTransparency,
+					ZIndex: -1,
+					AnchorPoint: new Vector2(0.5, 0.5),
+					Position: new UDim2(0.5, 0, 0.5, shadowOffset),
+					Size: shadowSize,
+				}),
+			);
+		}
+	} else if (
+		style.shadowBlurRadius !== undefined ||
+		style.shadowColor !== undefined ||
+		style.shadowOffset !== undefined ||
+		style.shadowSpread !== undefined ||
+		style.shadowTransparency !== undefined ||
+		style.shadowZIndex !== undefined
+	) {
+		const shadow = buildNativeShadow(style);
+		if (shadow !== undefined) {
+			children.push(shadow);
+		}
 	}
 
 	// 16. flexGrow / flexShrink / alignSelf → inject <uiflexitem>

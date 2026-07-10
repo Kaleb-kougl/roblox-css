@@ -31,6 +31,8 @@ export { Button } from "./primitives/Button";
 export { Image } from "./primitives/Image";
 export { Input } from "./primitives/Input";
 export { ScrollBox } from "./primitives/ScrollBox";
+export { ScreenContainer } from "./primitives/ScreenContainer";
+export type { ScreenContainerProps } from "./primitives/ScreenContainer";
 export { InlineText } from "./primitives/InlineText";
 export { Div, Span, P, H1, H2, H3 } from "./primitives/HtmlElements";
 

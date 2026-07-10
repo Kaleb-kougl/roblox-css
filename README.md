@@ -11,7 +11,7 @@ A CSS-to-Roblox UI translation middleware for [roblox-ts](https://roblox-ts.com)
 Building UI in Roblox requires manually wiring up `UDim2` sizes, parenting constraint instances (`UICorner`, `UIPadding`, `UIListLayout`), and juggling imperative property sets. `roblox-css` lets you write this instead:
 
 ```tsx
-import { Box, Text, webStyle } from "roblox-css";
+import { Box, ScreenContainer, Text, webStyle } from "roblox-css";
 
 const card = webStyle({
   width: "200px",
@@ -25,11 +25,13 @@ const card = webStyle({
 });
 
 // In your component:
-<Box style={card}>
-  <Text style={webStyle({ color: "white", fontSize: "18px" })}>
-    Hello, Roblox!
-  </Text>
-</Box>
+<ScreenContainer DisplayOrder={10}>
+  <Box style={card}>
+    <Text style={webStyle({ color: "white", fontSize: "18px" })}>
+      Hello, Roblox!
+    </Text>
+  </Box>
+</ScreenContainer>
 ```
 
 The `webStyle()` function translates CSS properties into Roblox instance properties and child constraint elements. The wrapper components (`Box`, `Text`, `Button`, etc.) spread the result onto native Roblox instances.
@@ -74,6 +76,22 @@ Add `roblox-css` to your Rojo project file:
 | `<Image>` | `<img>` | `<imagelabel>` |
 | `<Input>` | `<input>` | `<textbox>` |
 | `<ScrollBox>` | `<div style="overflow:auto">` | `<scrollingframe>` |
+| `<ScreenContainer>` | document/root UI | `<screengui>` |
+
+### On-Screen UI Containers
+
+Roblox displays on-screen UI through `ScreenGui` containers. Put `ScreenContainer`
+inside `StarterGui` for UI that should clone into each player's `PlayerGui`, or
+render it directly into a player's `PlayerGui` from a client script when you need
+runtime control. Descendant primitives such as `Box`, `Text`, `Button`, and
+`ScrollBox` render as regular `GuiObject` children.
+
+`ScreenContainer` defaults to `ScreenInsets={Enum.ScreenInsets.CoreUISafeInsets}`
+so interactive UI avoids the Roblox top bar and device cutouts. It also defaults
+to `ResetOnSpawn={false}` for React app roots and `DisplayOrder={0}` for
+predictable layering. Override `Enabled`, `DisplayOrder`, `ResetOnSpawn`, or
+`ScreenInsets` when building title screens, modal menus, fullscreen overlays, or
+respawn-specific UI.
 
 ### HTML-Like Aliases
 

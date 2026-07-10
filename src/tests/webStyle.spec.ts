@@ -172,6 +172,43 @@ describe("webStyle", () => {
 			expect(radius.Offset).toBe(10);
 			expect(radius.Scale).toBe(0);
 		});
+
+		it("should map individual rounded corners to UICorner radius fields", () => {
+			const result = webStyle({
+				borderRadius: "10px",
+				borderTopRightRadius: "20px",
+				borderBottomLeftRadius: "30px",
+			});
+			const child = result.children.find((c) => c.type === "UICorner");
+			expect(child).toBeDefined();
+			expect((child!.props.TopLeftRadius as UDim).Offset).toBe(10);
+			expect((child!.props.TopRightRadius as UDim).Offset).toBe(20);
+			expect((child!.props.BottomRightRadius as UDim).Offset).toBe(10);
+			expect((child!.props.BottomLeftRadius as UDim).Offset).toBe(30);
+		});
+
+		it("should expand four-value borderRadius when individual corner fields are used", () => {
+			const result = webStyle({
+				borderRadius: "1px 2px 3px 4px",
+				borderTopLeftRadius: "5px",
+			});
+			const child = result.children.find((c) => c.type === "UICorner");
+			expect(child).toBeDefined();
+			expect((child!.props.TopLeftRadius as UDim).Offset).toBe(5);
+			expect((child!.props.TopRightRadius as UDim).Offset).toBe(2);
+			expect((child!.props.BottomRightRadius as UDim).Offset).toBe(3);
+			expect((child!.props.BottomLeftRadius as UDim).Offset).toBe(4);
+		});
+
+		it("should create UICorner from individual radius fields without borderRadius", () => {
+			const result = webStyle({ borderBottomRightRadius: "12px" });
+			const child = result.children.find((c) => c.type === "UICorner");
+			expect(child).toBeDefined();
+			expect((child!.props.TopLeftRadius as UDim).Offset).toBe(0);
+			expect((child!.props.TopRightRadius as UDim).Offset).toBe(0);
+			expect((child!.props.BottomRightRadius as UDim).Offset).toBe(12);
+			expect((child!.props.BottomLeftRadius as UDim).Offset).toBe(0);
+		});
 	});
 
 	describe("5. padding → <uipadding>", () => {
@@ -440,7 +477,7 @@ describe("webStyle", () => {
 			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
 		});
 
-		it("should parse rgba() border color (alpha ignored for UIStroke)", () => {
+		it("should parse rgba() border color and map alpha to UIStroke.Transparency", () => {
 			const result = webStyle({ border: "2px solid rgba(0, 128, 255, 0.5)" });
 			const child = result.children.find((c) => c.type === "UIStroke");
 			expect(child).toBeDefined();
@@ -449,7 +486,69 @@ describe("webStyle", () => {
 			expect(color.R).toBeCloseTo(0, 2);
 			expect(color.G).toBeCloseTo(0.50, 2);
 			expect(color.B).toBeCloseTo(1, 2);
+			expect(child!.props.Transparency).toBeCloseTo(0.5, 5);
 			expect(child!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Border);
+		});
+
+		it("should map native UIStroke controls", () => {
+			const result = webStyle({
+				border: "4px solid rgba(255, 0, 0, 0.25)",
+				borderOffset: "2px",
+				borderStrokePosition: "outer",
+				lineJoinMode: "bevel",
+				strokeSizingMode: "scaled",
+				strokeZIndex: 3,
+			});
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			expect(child!.props.Thickness).toBe(4);
+			expect(child!.props.Transparency).toBeCloseTo(0.75, 5);
+			expect((child!.props.BorderOffset as UDim).Offset).toBe(2);
+			expect(child!.props.BorderStrokePosition).toBe(Enum.BorderStrokePosition.Outer);
+			expect(child!.props.LineJoinMode).toBe(Enum.LineJoinMode.Bevel);
+			expect(child!.props.StrokeSizingMode).toBe(Enum.StrokeSizingMode.ScaledSize);
+			expect(child!.props.ZIndex).toBe(3);
+		});
+
+		it("should let strokeTransparency override color alpha", () => {
+			const result = webStyle({
+				border: "2px solid rgba(255, 0, 0, 0.25)",
+				strokeTransparency: 0.2,
+			});
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			expect(child!.props.Transparency).toBeCloseTo(0.2, 5);
+		});
+
+		it("should inject a child UIGradient for strokeGradient", () => {
+			const result = webStyle({
+				border: "2px solid white",
+				strokeGradient: "linear-gradient(to bottom, red, blue)",
+				strokeGradientOffset: "0.1 0",
+				strokeGradientRotation: 15,
+			});
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			const gradient = child!.props.children as ReactElementStub;
+			expect(gradient).toBeDefined();
+			expect(gradient.type).toBe("UIGradient");
+			expect((gradient.props.Offset as Vector2).X).toBe(0.1);
+			expect(gradient.props.Rotation).toBe(15);
+		});
+
+		it("should accept a gradient directly in the border color position", () => {
+			const result = webStyle({
+				border: "2px solid linear-gradient(to right, red, blue)",
+			});
+			const child = result.children.find((c) => c.type === "UIStroke");
+			expect(child).toBeDefined();
+			const color = child!.props.Color as Color3;
+			const gradient = child!.props.children as ReactElementStub;
+			expect(color.R).toBe(1);
+			expect(color.G).toBe(1);
+			expect(color.B).toBe(1);
+			expect(gradient).toBeDefined();
+			expect(gradient.type).toBe("UIGradient");
 		});
 
 		it("should parse hsl() border color", () => {
@@ -683,6 +782,23 @@ describe("webStyle", () => {
 				expect(stroke).toBeDefined();
 				expect(stroke!.props.ApplyStrokeMode).toBe(Enum.ApplyStrokeMode.Contextual);
 				expect(stroke!.props.Thickness).toBe(2);
+			});
+
+			it("should apply native stroke controls to textStroke", () => {
+				const result = webStyle({
+					textStroke: "3px solid rgba(0, 0, 0, 0.5)",
+					lineJoinMode: "miter",
+					strokeSizingMode: "fixed",
+					strokeTransparency: 0.1,
+					strokeZIndex: 7,
+				});
+				const stroke = result.children.find((c) => c.type === "UIStroke" && c.props.ApplyStrokeMode === Enum.ApplyStrokeMode.Contextual);
+				expect(stroke).toBeDefined();
+				expect(stroke!.props.Thickness).toBe(3);
+				expect(stroke!.props.LineJoinMode).toBe(Enum.LineJoinMode.Miter);
+				expect(stroke!.props.StrokeSizingMode).toBe(Enum.StrokeSizingMode.FixedSize);
+				expect(stroke!.props.Transparency).toBeCloseTo(0.1, 5);
+				expect(stroke!.props.ZIndex).toBe(7);
 			});
 		});
 
@@ -933,6 +1049,71 @@ describe("webStyle", () => {
 			expect(size.Y.Scale).toBe(1);
 			expect(size.Y.Offset).toBe(20);
 			expect(child.props.ImageTransparency).toBeCloseTo(0.5, 5);
+		});
+
+		it("should parse CSS-like boxShadow into native UIShadow when requested", () => {
+			const result = webStyle({
+				boxShadow: "0 6px 12px 2px rgba(0, 0, 0, 0.4)",
+				boxShadowMode: "uishadow",
+				shadowTransparency: 0.25,
+			});
+			const child = result.children.find((c) => c.type === "UIShadow");
+			expect(child).toBeDefined();
+			expect((child!.props.Offset as UDim2).Y.Offset).toBe(6);
+			expect((child!.props.BlurRadius as UDim).Offset).toBe(12);
+			expect((child!.props.Spread as UDim2).X.Offset).toBe(2);
+			expect(child!.props.Transparency).toBe(0.25);
+		});
+
+		it("should use native UIShadow for CSS-like boxShadow by default", () => {
+			const result = webStyle({ boxShadow: "1px 2px 3px 4px #ff0000" });
+			const child = result.children.find((c) => c.type === "UIShadow");
+			expect(child).toBeDefined();
+			expect((child!.props.Offset as UDim2).X.Offset).toBe(1);
+			expect((child!.props.Offset as UDim2).Y.Offset).toBe(2);
+			expect((child!.props.BlurRadius as UDim).Offset).toBe(3);
+			expect((child!.props.Spread as UDim2).X.Offset).toBe(4);
+			const color = child!.props.Color as Color3;
+			expect(color.R).toBe(1);
+			expect(color.G).toBe(0);
+			expect(color.B).toBe(0);
+		});
+
+		it("should keep CSS-like boxShadow on image fallback when requested", () => {
+			const result = webStyle({ boxShadow: "1px 2px 3px 4px #ff0000", boxShadowMode: "image" });
+			expect(result.children.find((c) => c.type === "UIShadow")).toBeUndefined();
+			const child = result.children.find((c) => c.type === "ImageLabel");
+			expect(child).toBeDefined();
+			expect((child!.props.Size as UDim2).X.Offset).toBe(20);
+		});
+
+		it("should build native UIShadow from shadow props without boxShadow", () => {
+			const result = webStyle({
+				shadowBlurRadius: "8px",
+				shadowColor: "rgba(10, 20, 30, 0.25)",
+				shadowOffset: "3px -4px",
+				shadowSpread: "5px 6px",
+				shadowZIndex: 9,
+			});
+			const child = result.children.find((c) => c.type === "UIShadow");
+			expect(child).toBeDefined();
+			expect((child!.props.BlurRadius as UDim).Offset).toBe(8);
+			expect((child!.props.Offset as UDim2).X.Offset).toBe(3);
+			expect((child!.props.Offset as UDim2).Y.Offset).toBe(-4);
+			expect((child!.props.Spread as UDim2).X.Offset).toBe(5);
+			expect((child!.props.Spread as UDim2).Y.Offset).toBe(6);
+			expect(child!.props.Transparency).toBeCloseTo(0.75, 5);
+			expect(child!.props.ZIndex).toBe(9);
+		});
+
+		it("should map preset tokens through native UIShadow when opted in", () => {
+			const result = webStyle({ boxShadow: "2xl", boxShadowMode: "uishadow" });
+			const child = result.children.find((c) => c.type === "UIShadow");
+			expect(child).toBeDefined();
+			expect((child!.props.BlurRadius as UDim).Offset).toBe(24);
+			expect((child!.props.Offset as UDim2).Y.Offset).toBe(15);
+			expect((child!.props.Spread as UDim2).X.Offset).toBe(8);
+			expect(child!.props.Transparency).toBeCloseTo(0.4, 5);
 		});
 
 		it("should use custom SHADOW_ASSET_ID when overridden", () => {
@@ -1403,6 +1584,19 @@ describe("webStyle", () => {
 			expect(gradient!.props.Transparency).toBeDefined();
 		});
 
+		it("should map UIGradient offset and explicit rotation overrides", () => {
+			const result = webStyle({
+				background: "linear-gradient(to right, red, blue)",
+				backgroundGradientOffset: "0.25 -0.5",
+				backgroundGradientRotation: 45,
+			});
+			const gradient = result.children.find((c) => c.type === "UIGradient");
+			expect(gradient).toBeDefined();
+			expect((gradient!.props.Offset as Vector2).X).toBe(0.25);
+			expect((gradient!.props.Offset as Vector2).Y).toBe(-0.5);
+			expect(gradient!.props.Rotation).toBe(45);
+		});
+
 		it("should NOT include transparency when all colors are fully opaque", () => {
 			const result = webStyle({ background: "linear-gradient(to right, #ff0000, #0000ff)" });
 			const gradient = result.children.find((c) => c.type === "UIGradient");
@@ -1676,6 +1870,272 @@ describe("webStyle", () => {
 			const shadowChild = result.children.find(c => c.type === "textlabel");
 			
 			expect(shadowChild).toBeUndefined();
+		});
+	});
+
+	describe("Creator Hub UI object mappings", () => {
+		it("maps documented image label and image button properties", () => {
+			const result = webStyle({
+				image: "rbxassetid://1",
+				hoverImage: "rbxassetid://2",
+				pressedImage: "rbxassetid://3",
+				imageColor: "#336699",
+				imageTransparency: 0.25,
+			});
+
+			expect(result.props.Image).toBe("rbxassetid://1");
+			expect(result.props.HoverImage).toBe("rbxassetid://2");
+			expect(result.props.PressedImage).toBe("rbxassetid://3");
+			expect(result.props.ImageTransparency).toBe(0.25);
+			expect(result.props.ImageColor3).toBeDefined();
+		});
+
+		it("maps documented scrolling frame canvas, inset, scrollbar, and elasticity properties", () => {
+			const result = webStyle({
+				canvasSize: "100% 420px",
+				automaticCanvasSize: "y",
+				canvasPosition: "4 12",
+				verticalScrollBarInset: "scrollbar",
+				horizontalScrollBarInset: "always",
+				verticalScrollBarPosition: "left",
+				scrollBarThickness: 10,
+				scrollBarImageColor: "white",
+				scrollBarImageTransparency: 0.4,
+				scrollBarTopImage: "rbxassetid://top",
+				scrollBarMidImage: "rbxassetid://mid",
+				scrollBarBottomImage: "rbxassetid://bottom",
+				elasticBehavior: "never",
+			});
+
+			const canvasSize = result.props.CanvasSize as UDim2;
+			const canvasPosition = result.props.CanvasPosition as Vector2;
+			expect(canvasSize.X.Scale).toBe(1);
+			expect(canvasSize.Y.Offset).toBe(420);
+			expect(result.props.AutomaticCanvasSize).toBe(Enum.AutomaticSize.Y);
+			expect(canvasPosition.X).toBe(4);
+			expect(canvasPosition.Y).toBe(12);
+			expect(result.props.VerticalScrollBarInset).toBe(Enum.ScrollBarInset.ScrollBar);
+			expect(result.props.HorizontalScrollBarInset).toBe(Enum.ScrollBarInset.Always);
+			expect(result.props.VerticalScrollBarPosition).toBe(Enum.VerticalScrollBarPosition.Left);
+			expect(result.props.ScrollBarThickness).toBe(10);
+			expect(result.props.ScrollBarImageColor3).toBeDefined();
+			expect(result.props.ScrollBarImageTransparency).toBe(0.4);
+			expect(result.props.TopImage).toBe("rbxassetid://top");
+			expect(result.props.MidImage).toBe("rbxassetid://mid");
+			expect(result.props.BottomImage).toBe("rbxassetid://bottom");
+			expect(result.props.ElasticBehavior).toBe(Enum.ElasticBehavior.Never);
+		});
+
+		it("maps documented viewport, video, and 2D path visual properties", () => {
+			const result = webStyle({
+				viewportAmbient: "rgb(200, 200, 200)",
+				viewportLightColor: "rgb(140, 140, 140)",
+				viewportLightDirection: "-1 -1 -1",
+				video: "rbxassetid://5608384572",
+				looped: true,
+				playing: true,
+				pathColor: "#ff0032",
+				pathThickness: 10,
+			});
+
+			const lightDirection = result.props.LightDirection as Vector3;
+			expect(result.props.Ambient).toBeDefined();
+			expect(result.props.LightColor).toBeDefined();
+			expect(lightDirection.X).toBe(-1);
+			expect(lightDirection.Y).toBe(-1);
+			expect(lightDirection.Z).toBe(-1);
+			expect(result.props.Video).toBe("rbxassetid://5608384572");
+			expect(result.props.Looped).toBe(true);
+			expect(result.props.Playing).toBe(true);
+			expect(result.props.Color3).toBeDefined();
+			expect(result.props.Thickness).toBe(10);
+		});
+
+		it("maps documented proximity prompt properties", () => {
+			const result = webStyle({
+				promptObjectText: "Door",
+				promptActionText: "Open",
+				promptKeyboardKeyCode: "E",
+				promptGamepadKeyCode: "ButtonR1",
+				promptMaxActivationDistance: 12,
+				promptRequiresLineOfSight: false,
+				promptExclusivity: "always-show",
+				promptHoldDuration: 0.5,
+				promptClickable: true,
+			});
+
+			expect(result.props.ObjectText).toBe("Door");
+			expect(result.props.ActionText).toBe("Open");
+			expect(result.props.KeyboardKeyCode).toBe(Enum.KeyCode.E);
+			expect(result.props.GamepadKeyCode).toBe(Enum.KeyCode.ButtonR1);
+			expect(result.props.MaxActivationDistance).toBe(12);
+			expect(result.props.RequiresLineOfSight).toBe(false);
+			expect(result.props.Exclusivity).toBe(Enum.ProximityPromptExclusivity.AlwaysShow);
+			expect(result.props.HoldDuration).toBe(0.5);
+			expect(result.props.ClickablePrompt).toBe(true);
+		});
+
+		it("maps documented UI drag detector properties", () => {
+			const result = webStyle({
+				uiDragStyle: "translate-line",
+				uiDragResponseStyle: "custom-scale",
+				uiDragAxis: "0 1",
+				uiDragMinTranslation: "0px 0px",
+				uiDragMaxTranslation: "100% 12px",
+				uiDragMinAngle: -45,
+				uiDragMaxAngle: 45,
+				uiDragBoundingBehavior: "hit-point",
+				uiDragSpeedAxisMapping: "xx",
+			});
+
+			const dragAxis = result.props.DragAxis as Vector2;
+			const maxTranslation = result.props.MaxDragTranslation as UDim2;
+			expect(result.props.DragStyle).toBe(Enum.UIDragDetectorDragStyle.TranslateLine);
+			expect(result.props.ResponseStyle).toBe(Enum.UIDragDetectorResponseStyle.CustomScale);
+			expect(dragAxis.X).toBe(0);
+			expect(dragAxis.Y).toBe(1);
+			expect(maxTranslation.X.Scale).toBe(1);
+			expect(maxTranslation.Y.Offset).toBe(12);
+			expect(result.props.MinDragAngle).toBe(-45);
+			expect(result.props.MaxDragAngle).toBe(45);
+			expect(result.props.BoundingBehavior).toBe(Enum.UIDragDetectorBoundingBehavior.HitPoint);
+			expect(result.props.UIDragSpeedAxisMapping).toBe(Enum.UIDragSpeedAxisMapping.XX);
+		});
+
+		it("maps documented list and grid layout ordering controls", () => {
+			const list = webStyle({
+				display: "flex",
+				flexDirection: "row",
+				justifyContent: "space-evenly",
+				sortOrder: "name",
+			});
+			const listLayout = list.children.find((c) => c.type === "UIListLayout");
+			expect(listLayout).toBeDefined();
+			expect(listLayout!.props.FillDirection).toBe(Enum.FillDirection.Horizontal);
+			expect(listLayout!.props.HorizontalFlex).toBe(Enum.UIFlexAlignment.SpaceEvenly);
+			expect(listLayout!.props.SortOrder).toBe(Enum.SortOrder.Name);
+
+			const grid = webStyle({
+				display: "grid",
+				gridMaxCells: 3,
+				gridStartCorner: "bottom-right",
+				sortOrder: "name",
+			});
+			const gridLayout = grid.children.find((c) => c.type === "UIGridLayout");
+			expect(gridLayout).toBeDefined();
+			expect(gridLayout!.props.FillDirectionMaxCells).toBe(3);
+			expect(gridLayout!.props.StartCorner).toBe(Enum.StartCorner.BottomRight);
+			expect(gridLayout!.props.SortOrder).toBe(Enum.SortOrder.Name);
+		});
+
+		it("maps documented table and page layout properties", () => {
+			const tableResult = webStyle({
+				display: "table",
+				tableMajorAxis: "column-major",
+				tableFillEmptySpaceColumns: true,
+				tableFillEmptySpaceRows: true,
+				tablePadding: "4px 8px",
+			});
+			const tableLayout = tableResult.children.find((c) => c.type === "UITableLayout");
+			expect(tableLayout).toBeDefined();
+			expect(tableLayout!.props.FillDirection).toBe(Enum.FillDirection.Vertical);
+			expect(tableLayout!.props.MajorAxis).toBe(Enum.TableMajorAxis.ColumnMajor);
+			expect(tableLayout!.props.FillEmptySpaceColumns).toBe(true);
+			expect(tableLayout!.props.FillEmptySpaceRows).toBe(true);
+			const tablePadding = tableLayout!.props.Padding as UDim2;
+			expect(tablePadding.X.Offset).toBe(4);
+			expect(tablePadding.Y.Offset).toBe(8);
+
+			const page = webStyle({
+				display: "page",
+				pageFillDirection: "row",
+				pagePadding: "12px",
+				pageAnimated: true,
+				pageCircular: true,
+				pageTweenTime: 0.35,
+				pageEasingStyle: "cubic",
+				pageEasingDirection: "in-out",
+				pageGamepadInputEnabled: false,
+				pageScrollWheelInputEnabled: false,
+				pageTouchInputEnabled: true,
+			});
+			const pageLayout = page.children.find((c) => c.type === "UIPageLayout");
+			expect(pageLayout).toBeDefined();
+			expect(pageLayout!.props.FillDirection).toBe(Enum.FillDirection.Horizontal);
+			expect((pageLayout!.props.Padding as UDim).Offset).toBe(12);
+			expect(pageLayout!.props.Animated).toBe(true);
+			expect(pageLayout!.props.Circular).toBe(true);
+			expect(pageLayout!.props.TweenTime).toBe(0.35);
+			expect(pageLayout!.props.EasingStyle).toBe(Enum.EasingStyle.Cubic);
+			expect(pageLayout!.props.EasingDirection).toBe(Enum.EasingDirection.InOut);
+			expect(pageLayout!.props.GamepadInputEnabled).toBe(false);
+			expect(pageLayout!.props.ScrollWheelInputEnabled).toBe(false);
+			expect(pageLayout!.props.TouchInputEnabled).toBe(true);
+		});
+
+		it("maps documented size, text animation, and CanvasGroup properties", () => {
+			const result = webStyle({
+				scale: 1.5,
+				textScaled: true,
+				minTextSize: 9,
+				maxTextSize: 48,
+				maxVisibleGraphemes: 12,
+				textStrokeColor: "#00ff00",
+				textStrokeTransparency: 0.25,
+				autoLocalize: false,
+				groupColor: "#336699",
+				groupTransparency: 0.4,
+			});
+
+			const scale = result.children.find((c) => c.type === "UIScale");
+			const textConstraint = result.children.find((c) => c.type === "UITextSizeConstraint");
+			expect(scale).toBeDefined();
+			expect(scale!.props.Scale).toBe(1.5);
+			expect(textConstraint).toBeDefined();
+			expect(textConstraint!.props.MinTextSize).toBe(9);
+			expect(textConstraint!.props.MaxTextSize).toBe(48);
+			expect(result.props.TextScaled).toBe(true);
+			expect(result.props.MaxVisibleGraphemes).toBe(12);
+			expect(result.props.TextStrokeColor3).toBeDefined();
+			expect(result.props.TextStrokeTransparency).toBe(0.25);
+			expect(result.props.AutoLocalize).toBe(false);
+			expect(result.props.GroupColor3).toBeDefined();
+			expect(result.props.GroupTransparency).toBe(0.4);
+		});
+
+		it("maps documented 3D drag detector properties", () => {
+			const result = webStyle({
+				dragStyle: "translate-view-plane",
+				dragResponseStyle: "physical",
+				dragAxis: "0 1 0",
+				dragOrientation: "0 90 0",
+				dragMinTranslation: "0 0 0",
+				dragMaxTranslation: "10 0 10",
+				dragMinAngle: 0,
+				dragMaxAngle: 90,
+				dragPermissionPolicy: "scriptable",
+				dragApplyAtCenterOfMass: true,
+				dragMaxForce: 100000,
+				dragMaxTorque: 5000,
+				dragResponsiveness: 20,
+				dragRunLocally: true,
+			});
+
+			const axis = result.props.Axis as Vector3;
+			const orientation = result.props.Orientation as Vector3;
+			const maxTranslation = result.props.MaxDragTranslation as Vector3;
+			expect(result.props.DragStyle).toBe(Enum.DragDetectorDragStyle.TranslateViewPlane);
+			expect(result.props.ResponseStyle).toBe(Enum.DragDetectorResponseStyle.Physical);
+			expect(axis.Y).toBe(1);
+			expect(orientation.Y).toBe(90);
+			expect(maxTranslation.X).toBe(10);
+			expect(maxTranslation.Z).toBe(10);
+			expect(result.props.PermissionPolicy).toBe(Enum.DragDetectorPermissionPolicy.Scriptable);
+			expect(result.props.ApplyAtCenterOfMass).toBe(true);
+			expect(result.props.MaxForce).toBe(100000);
+			expect(result.props.MaxTorque).toBe(5000);
+			expect(result.props.Responsiveness).toBe(20);
+			expect(result.props.RunLocally).toBe(true);
 		});
 	});
 });

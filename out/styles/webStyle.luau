@@ -76,6 +76,43 @@ local ALIGN_MAP = {
 	center = Enum.VerticalAlignment.Center,
 	["flex-end"] = Enum.VerticalAlignment.Bottom,
 }
+local SORT_ORDER_MAP = {
+	["layout-order"] = Enum.SortOrder.LayoutOrder,
+	name = Enum.SortOrder.Name,
+}
+local FLEX_ALIGNMENT_MAP = {
+	["space-around"] = Enum.UIFlexAlignment.SpaceAround,
+	["space-between"] = Enum.UIFlexAlignment.SpaceBetween,
+	["space-evenly"] = Enum.UIFlexAlignment.SpaceEvenly,
+}
+local START_CORNER_MAP = {
+	["top-left"] = Enum.StartCorner.TopLeft,
+	["top-right"] = Enum.StartCorner.TopRight,
+	["bottom-left"] = Enum.StartCorner.BottomLeft,
+	["bottom-right"] = Enum.StartCorner.BottomRight,
+}
+local TABLE_MAJOR_AXIS_MAP = {
+	["row-major"] = Enum.TableMajorAxis.RowMajor,
+	["column-major"] = Enum.TableMajorAxis.ColumnMajor,
+}
+local EASING_STYLE_MAP = {
+	linear = Enum.EasingStyle.Linear,
+	sine = Enum.EasingStyle.Sine,
+	back = Enum.EasingStyle.Back,
+	quad = Enum.EasingStyle.Quad,
+	quart = Enum.EasingStyle.Quart,
+	quint = Enum.EasingStyle.Quint,
+	bounce = Enum.EasingStyle.Bounce,
+	elastic = Enum.EasingStyle.Elastic,
+	exponential = Enum.EasingStyle.Exponential,
+	circular = Enum.EasingStyle.Circular,
+	cubic = Enum.EasingStyle.Cubic,
+}
+local EASING_DIRECTION_MAP = {
+	["in"] = Enum.EasingDirection.In,
+	out = Enum.EasingDirection.Out,
+	["in-out"] = Enum.EasingDirection.InOut,
+}
 local FONT_WEIGHT_MAP = {
 	normal = Enum.FontWeight.Regular,
 	bold = Enum.FontWeight.Bold,
@@ -96,6 +133,83 @@ local AUTO_SIZE_MAP = {
 	x = Enum.AutomaticSize.X,
 	y = Enum.AutomaticSize.Y,
 	xy = Enum.AutomaticSize.XY,
+}
+local SCROLL_BAR_INSET_MAP = {
+	none = Enum.ScrollBarInset.None,
+	scrollbar = Enum.ScrollBarInset.ScrollBar,
+	["scroll-bar"] = Enum.ScrollBarInset.ScrollBar,
+	always = Enum.ScrollBarInset.Always,
+}
+local ELASTIC_BEHAVIOR_MAP = {
+	["when-scrollable"] = Enum.ElasticBehavior.WhenScrollable,
+	always = Enum.ElasticBehavior.Always,
+	never = Enum.ElasticBehavior.Never,
+}
+local VERTICAL_SCROLL_BAR_POSITION_MAP = {
+	left = Enum.VerticalScrollBarPosition.Left,
+	right = Enum.VerticalScrollBarPosition.Right,
+}
+local UI_DRAG_STYLE_MAP = {
+	["translate-plane"] = Enum.UIDragDetectorDragStyle.TranslatePlane,
+	["translate-line"] = Enum.UIDragDetectorDragStyle.TranslateLine,
+	rotate = Enum.UIDragDetectorDragStyle.Rotate,
+	scriptable = Enum.UIDragDetectorDragStyle.Scriptable,
+}
+local UI_DRAG_RESPONSE_STYLE_MAP = {
+	offset = Enum.UIDragDetectorResponseStyle.Offset,
+	scale = Enum.UIDragDetectorResponseStyle.Scale,
+	["custom-offset"] = Enum.UIDragDetectorResponseStyle.CustomOffset,
+	["custom-scale"] = Enum.UIDragDetectorResponseStyle.CustomScale,
+}
+local UI_DRAG_BOUNDING_BEHAVIOR_MAP = {
+	automatic = Enum.UIDragDetectorBoundingBehavior.Automatic,
+	["entire-object"] = Enum.UIDragDetectorBoundingBehavior.EntireObject,
+	["hit-point"] = Enum.UIDragDetectorBoundingBehavior.HitPoint,
+}
+local UI_DRAG_SPEED_AXIS_MAPPING_MAP = {
+	xy = Enum.UIDragSpeedAxisMapping.XY,
+	xx = Enum.UIDragSpeedAxisMapping.XX,
+	yy = Enum.UIDragSpeedAxisMapping.YY,
+}
+local DRAG_STYLE_MAP = {
+	["translate-line"] = Enum.DragDetectorDragStyle.TranslateLine,
+	["translate-plane"] = Enum.DragDetectorDragStyle.TranslatePlane,
+	["translate-plane-or-line"] = Enum.DragDetectorDragStyle.TranslatePlaneOrLine,
+	["translate-line-or-plane"] = Enum.DragDetectorDragStyle.TranslateLineOrPlane,
+	["translate-view-plane"] = Enum.DragDetectorDragStyle.TranslateViewPlane,
+	["rotate-axis"] = Enum.DragDetectorDragStyle.RotateAxis,
+	["rotate-trackball"] = Enum.DragDetectorDragStyle.RotateTrackball,
+	["best-for-device"] = Enum.DragDetectorDragStyle.BestForDevice,
+	scriptable = Enum.DragDetectorDragStyle.Scriptable,
+}
+local DRAG_RESPONSE_STYLE_MAP = {
+	geometric = Enum.DragDetectorResponseStyle.Geometric,
+	physical = Enum.DragDetectorResponseStyle.Physical,
+	custom = Enum.DragDetectorResponseStyle.Custom,
+}
+local DRAG_PERMISSION_POLICY_MAP = {
+	nobody = Enum.DragDetectorPermissionPolicy.Nobody,
+	everybody = Enum.DragDetectorPermissionPolicy.Everybody,
+	scriptable = Enum.DragDetectorPermissionPolicy.Scriptable,
+}
+local PROXIMITY_PROMPT_EXCLUSIVITY_MAP = {
+	["one-per-button"] = Enum.ProximityPromptExclusivity.OnePerButton,
+	["one-globally"] = Enum.ProximityPromptExclusivity.OneGlobally,
+	["always-show"] = Enum.ProximityPromptExclusivity.AlwaysShow,
+}
+local STROKE_SIZING_MODE_MAP = {
+	fixed = Enum.StrokeSizingMode.FixedSize,
+	scaled = Enum.StrokeSizingMode.ScaledSize,
+}
+local BORDER_STROKE_POSITION_MAP = {
+	inner = Enum.BorderStrokePosition.Inner,
+	center = Enum.BorderStrokePosition.Center,
+	outer = Enum.BorderStrokePosition.Outer,
+}
+local LINE_JOIN_MODE_MAP = {
+	round = Enum.LineJoinMode.Round,
+	bevel = Enum.LineJoinMode.Bevel,
+	miter = Enum.LineJoinMode.Miter,
 }
 local SHADOW_SIZE_MAP = {
 	sm = UDim2.new(1, 10, 1, 10),
@@ -142,6 +256,243 @@ local SHADOW_OPACITY_MAP = {
 ]]
 local SHADOW_ASSET_ID = "rbxassetid://6015897843"
 local SHADOW_SLICE_CENTER = Rect.new(47, 47, 450, 450)
+local function splitOutsideParens(input, separator)
+	if separator == nil then
+		separator = " "
+	end
+	local parts = {}
+	local current = ""
+	local parenLevel = 0
+	for i = 1, #input do
+		local _input = input
+		local _i = i
+		local _i_1 = i
+		local char = string.sub(_input, _i, _i_1)
+		if char == "(" then
+			parenLevel += 1
+		elseif char == ")" then
+			parenLevel -= 1
+		end
+		local isSeparator = if separator == " " then (char == " " or char == "\t") else char == separator
+		if isSeparator and parenLevel == 0 then
+			if current ~= "" then
+				local _current = current
+				table.insert(parts, _current)
+				current = ""
+			end
+			continue
+		end
+		current ..= char
+	end
+	if current ~= "" then
+		local _current = current
+		table.insert(parts, _current)
+	end
+	return parts
+end
+local function parseVector2(value)
+	if value == nil then
+		return nil
+	end
+	local _value = value
+	if typeof(_value) == "Vector2" then
+		return value
+	end
+	local _exp = splitOutsideParens(value)
+	-- ▼ ReadonlyArray.filter ▼
+	local _newValue = {}
+	local _callback = function(part)
+		return part ~= ""
+	end
+	local _length = 0
+	for _k, _v in _exp do
+		if _callback(_v, _k - 1, _exp) == true then
+			_length += 1
+			_newValue[_length] = _v
+		end
+	end
+	-- ▲ ReadonlyArray.filter ▲
+	local parts = _newValue
+	local x = tonumber(parts[1])
+	local _condition = parts[2]
+	if _condition == nil then
+		_condition = parts[1]
+	end
+	local y = tonumber(_condition)
+	if x == nil or y == nil then
+		return nil
+	end
+	return Vector2.new(x, y)
+end
+local function parseVector3(value)
+	if value == nil then
+		return nil
+	end
+	local _value = value
+	if typeof(_value) == "Vector3" then
+		return value
+	end
+	local _exp = splitOutsideParens(value)
+	-- ▼ ReadonlyArray.filter ▼
+	local _newValue = {}
+	local _callback = function(part)
+		return part ~= ""
+	end
+	local _length = 0
+	for _k, _v in _exp do
+		if _callback(_v, _k - 1, _exp) == true then
+			_length += 1
+			_newValue[_length] = _v
+		end
+	end
+	-- ▲ ReadonlyArray.filter ▲
+	local parts = _newValue
+	local x = tonumber(parts[1])
+	local y = tonumber(parts[2])
+	local z = tonumber(parts[3])
+	if x == nil or y == nil or z == nil then
+		return nil
+	end
+	return Vector3.new(x, y, z)
+end
+local function parseUDim2Pair(value, fallbackX, fallbackY)
+	if fallbackX == nil then
+		fallbackX = UDim.new(0, 0)
+	end
+	if fallbackY == nil then
+		fallbackY = fallbackX
+	end
+	if value == nil or value == "" then
+		return UDim2.new(fallbackX, fallbackY)
+	end
+	local _exp = splitOutsideParens(value)
+	-- ▼ ReadonlyArray.filter ▼
+	local _newValue = {}
+	local _callback = function(part)
+		return part ~= ""
+	end
+	local _length = 0
+	for _k, _v in _exp do
+		if _callback(_v, _k - 1, _exp) == true then
+			_length += 1
+			_newValue[_length] = _v
+		end
+	end
+	-- ▲ ReadonlyArray.filter ▲
+	local parts = _newValue
+	local x = parseDimension(parts[1]) or fallbackX
+	local _condition = parts[2]
+	if _condition == nil then
+		_condition = parts[1]
+	end
+	local _condition_1 = parseDimension(_condition)
+	if _condition_1 == nil then
+		_condition_1 = fallbackY
+	end
+	local y = _condition_1
+	return UDim2.new(x, y)
+end
+local function parseUDim2Value(value)
+	if value == nil then
+		return nil
+	end
+	local _value = value
+	if typeof(_value) == "UDim2" then
+		return value
+	end
+	return parseUDim2Pair(value)
+end
+local function parseKeyCode(value)
+	if value == nil then
+		return nil
+	end
+	local _value = value
+	if not (type(_value) == "string") then
+		return value
+	end
+	local keyCodes = Enum.KeyCode
+	return keyCodes[value] or keyCodes[string.upper(value)]
+end
+local function isDimensionToken(value)
+	local numeric = string.match(value, "^%-?[%d%.]+$")
+	local withUnit = string.match(value, "^%-?[%d%.]+px$")
+	local withPercent = string.match(value, "^%-?[%d%.]+%%$")
+	local withViewport = string.match(value, "^%-?[%d%.]+v[hw]$")
+	return numeric ~= nil or withUnit ~= nil or withPercent ~= nil or withViewport ~= nil or string.sub(value, 1, 5) == "calc("
+end
+local function applyGradientProps(gradientProps, offset, rotation)
+	if offset ~= nil then
+		local parsedOffset = parseVector2(offset)
+		if parsedOffset ~= nil then
+			gradientProps.Offset = parsedOffset
+		end
+	end
+	if rotation ~= nil then
+		gradientProps.Rotation = rotation
+	end
+end
+local function buildGradientElement(key, input, offset, rotation)
+	if not isGradientString(input) then
+		return nil
+	end
+	local gradient = parseGradient(input)
+	if gradient == nil then
+		return nil
+	end
+	local _object = {
+		key = key,
+		Color = gradient.colorSequence,
+	}
+	local _left = "Rotation"
+	local _condition = rotation
+	if _condition == nil then
+		_condition = gradient.rotation
+	end
+	_object[_left] = _condition
+	local gradientProps = _object
+	if gradient.transparencySequence ~= nil then
+		gradientProps.Transparency = gradient.transparencySequence
+	end
+	applyGradientProps(gradientProps, offset, rotation)
+	return React.createElement("uigradient", gradientProps)
+end
+local function resolveSortOrder(sortOrder)
+	local _condition = sortOrder ~= nil
+	if _condition then
+		local _sortOrder = sortOrder
+		_condition = not (type(_sortOrder) == "string")
+	end
+	if _condition then
+		return sortOrder
+	end
+	return if sortOrder ~= nil then (SORT_ORDER_MAP[sortOrder] or Enum.SortOrder.LayoutOrder) else Enum.SortOrder.LayoutOrder
+end
+local function resolveFillDirection(direction, defaultDirection)
+	if defaultDirection == nil then
+		defaultDirection = Enum.FillDirection.Vertical
+	end
+	if direction == "row" then
+		return Enum.FillDirection.Horizontal
+	end
+	if direction == "column" then
+		return Enum.FillDirection.Vertical
+	end
+	return defaultDirection
+end
+local function parseLayoutPadding2D(value, fallback)
+	local _condition = value
+	if _condition == nil then
+		_condition = fallback
+	end
+	local source = _condition
+	if source == nil then
+		return nil
+	end
+	local parts = if type(source) == "string" then string.split(source, " ") else { source }
+	local x = parseDimension(parts[1]) or UDim.new(0, 0)
+	local y = if #parts > 1 then (parseDimension(parts[2]) or x) else x
+	return UDim2.new(x, y)
+end
 --[[
 	*
 	 * Builds a <uilistlayout> element from CSS flex properties.
@@ -171,10 +522,10 @@ local function buildListLayout(style)
 			end
 		end
 	end
-	local fillDirection = if flexDir == "row" then Enum.FillDirection.Horizontal else Enum.FillDirection.Vertical
+	local fillDirection = resolveFillDirection(flexDir)
 	local layoutProps = {
 		FillDirection = fillDirection,
-		SortOrder = Enum.SortOrder.LayoutOrder,
+		SortOrder = resolveSortOrder(style.sortOrder),
 	}
 	if fWrap == "wrap" then
 		layoutProps.Wraps = true
@@ -202,8 +553,8 @@ local function buildListLayout(style)
 	local resolvedJustifyContent = _condition_1
 	-- justifyContent → main-axis alignment
 	if resolvedJustifyContent ~= nil then
-		if resolvedJustifyContent == "space-between" or resolvedJustifyContent == "space-around" then
-			local flexAlign = if resolvedJustifyContent == "space-between" then Enum.UIFlexAlignment.SpaceBetween else Enum.UIFlexAlignment.SpaceAround
+		local flexAlign = FLEX_ALIGNMENT_MAP[resolvedJustifyContent]
+		if flexAlign ~= nil then
 			if flexDir == "row" then
 				layoutProps.HorizontalFlex = flexAlign
 			else
@@ -257,7 +608,7 @@ end
 ]]
 local function buildGridLayout(style)
 	local layoutProps = {
-		SortOrder = Enum.SortOrder.LayoutOrder,
+		SortOrder = resolveSortOrder(style.sortOrder),
 	}
 	local flexDir = style.flexDirection
 	if style.flexFlow ~= nil then
@@ -269,8 +620,15 @@ local function buildGridLayout(style)
 			end
 		end
 	end
-	local fillDirection = if flexDir == "column" then Enum.FillDirection.Vertical else Enum.FillDirection.Horizontal
+	local fillDirection = resolveFillDirection(flexDir, Enum.FillDirection.Horizontal)
 	layoutProps.FillDirection = fillDirection
+	if style.gridMaxCells ~= nil then
+		layoutProps.FillDirectionMaxCells = style.gridMaxCells
+	end
+	if style.gridStartCorner ~= nil then
+		local _gridStartCorner = style.gridStartCorner
+		layoutProps.StartCorner = if type(_gridStartCorner) == "string" then (START_CORNER_MAP[style.gridStartCorner] or Enum.StartCorner.TopLeft) else style.gridStartCorner
+	end
 	-- gap, rowGap, columnGap -> CellPadding
 	local gapX = UDim.new(0, 0)
 	local gapY = UDim.new(0, 0)
@@ -334,6 +692,66 @@ local function buildGridLayout(style)
 	layoutProps.key = "uigridlayout"
 	return React.createElement("uigridlayout", layoutProps)
 end
+local function buildTableLayout(style)
+	local layoutProps = {
+		key = "uitablelayout",
+		FillDirection = resolveFillDirection(style.tableFillDirection or style.flexDirection),
+		SortOrder = resolveSortOrder(style.sortOrder),
+	}
+	if style.tableMajorAxis ~= nil then
+		local _tableMajorAxis = style.tableMajorAxis
+		layoutProps.MajorAxis = if type(_tableMajorAxis) == "string" then (TABLE_MAJOR_AXIS_MAP[style.tableMajorAxis] or Enum.TableMajorAxis.RowMajor) else style.tableMajorAxis
+	end
+	if style.tableFillEmptySpaceColumns ~= nil then
+		layoutProps.FillEmptySpaceColumns = style.tableFillEmptySpaceColumns
+	end
+	if style.tableFillEmptySpaceRows ~= nil then
+		layoutProps.FillEmptySpaceRows = style.tableFillEmptySpaceRows
+	end
+	local padding = parseLayoutPadding2D(style.tablePadding, style.gap)
+	if padding ~= nil then
+		layoutProps.Padding = padding
+	end
+	return React.createElement("uitablelayout", layoutProps)
+end
+local function buildPageLayout(style)
+	local layoutProps = {
+		key = "uipagelayout",
+		FillDirection = resolveFillDirection(style.pageFillDirection or style.flexDirection, Enum.FillDirection.Horizontal),
+		SortOrder = resolveSortOrder(style.sortOrder),
+	}
+	local pagePadding = if style.pagePadding ~= nil then parseDimension(style.pagePadding) else nil
+	if pagePadding ~= nil then
+		layoutProps.Padding = pagePadding
+	end
+	if style.pageAnimated ~= nil then
+		layoutProps.Animated = style.pageAnimated
+	end
+	if style.pageCircular ~= nil then
+		layoutProps.Circular = style.pageCircular
+	end
+	if style.pageTweenTime ~= nil then
+		layoutProps.TweenTime = style.pageTweenTime
+	end
+	if style.pageEasingStyle ~= nil then
+		local _pageEasingStyle = style.pageEasingStyle
+		layoutProps.EasingStyle = if type(_pageEasingStyle) == "string" then (EASING_STYLE_MAP[style.pageEasingStyle] or Enum.EasingStyle.Quad) else style.pageEasingStyle
+	end
+	if style.pageEasingDirection ~= nil then
+		local _pageEasingDirection = style.pageEasingDirection
+		layoutProps.EasingDirection = if type(_pageEasingDirection) == "string" then (EASING_DIRECTION_MAP[style.pageEasingDirection] or Enum.EasingDirection.Out) else style.pageEasingDirection
+	end
+	if style.pageGamepadInputEnabled ~= nil then
+		layoutProps.GamepadInputEnabled = style.pageGamepadInputEnabled
+	end
+	if style.pageScrollWheelInputEnabled ~= nil then
+		layoutProps.ScrollWheelInputEnabled = style.pageScrollWheelInputEnabled
+	end
+	if style.pageTouchInputEnabled ~= nil then
+		layoutProps.TouchInputEnabled = style.pageTouchInputEnabled
+	end
+	return React.createElement("uipagelayout", layoutProps)
+end
 --[[
 	*
 	 * Builds a <uistroke> element from a CSS border shorthand string.
@@ -349,10 +767,11 @@ end
 	 *   "3px"                → Thickness: 3,  Color: default (no color set)
 	 
 ]]
-local function buildStroke(border, isTextStroke)
-	if isTextStroke == nil then
-		isTextStroke = false
+local function buildStroke(border, options)
+	if options == nil then
+		options = {}
 	end
+	local isTextStroke = options.isTextStroke == true
 	local hasSpecifyingWord = false
 	local specifyingWords = {
 		["solid"] = true,
@@ -377,6 +796,7 @@ local function buildStroke(border, isTextStroke)
 		end
 	end
 	local strokeProps = {}
+	local strokeGradient = options.strokeGradient
 	-- Extract thickness: find first space-separated token (e.g., "1px", "2")
 	local thicknessStr, rest = string.match(border, "^(%S+)%s*(.*)$")
 	if thicknessStr ~= nil then
@@ -392,12 +812,275 @@ local function buildStroke(border, isTextStroke)
 		-- Try to strip a leading style keyword (solid, dashed, dotted, double, groove, ridge, inset, outset, none)
 		local afterStyle = string.match(remaining, "^%s*%a+%s+(.+)$")
 		local colorStr = if afterStyle ~= nil then afterStyle else remaining
-		local parsed = parseColor(colorStr)
-		strokeProps.Color = parsed.color
+		if isGradientString(colorStr) then
+			strokeGradient = colorStr
+			strokeProps.Color = Color3.new(1, 1, 1)
+		else
+			local parsed = parseColor(colorStr)
+			strokeProps.Color = parsed.color
+			if parsed.transparency > 0 then
+				strokeProps.Transparency = parsed.transparency
+			end
+		end
 	end
 	strokeProps.ApplyStrokeMode = if isTextStroke then Enum.ApplyStrokeMode.Contextual else Enum.ApplyStrokeMode.Border
+	if options.borderOffset ~= nil then
+		local offset = parseDimension(options.borderOffset)
+		if offset ~= nil then
+			strokeProps.BorderOffset = offset
+		end
+	end
+	if options.borderStrokePosition ~= nil then
+		strokeProps.BorderStrokePosition = BORDER_STROKE_POSITION_MAP[options.borderStrokePosition] or Enum.BorderStrokePosition.Center
+	end
+	if options.lineJoinMode ~= nil then
+		strokeProps.LineJoinMode = LINE_JOIN_MODE_MAP[options.lineJoinMode] or Enum.LineJoinMode.Round
+	end
+	if options.strokeSizingMode ~= nil then
+		strokeProps.StrokeSizingMode = STROKE_SIZING_MODE_MAP[options.strokeSizingMode] or Enum.StrokeSizingMode.FixedSize
+	end
+	if options.strokeTransparency ~= nil then
+		strokeProps.Transparency = math.clamp(options.strokeTransparency, 0, 1)
+	end
+	if options.strokeZIndex ~= nil then
+		strokeProps.ZIndex = options.strokeZIndex
+	end
 	strokeProps.key = if isTextStroke then "uitextstroke" else "uistroke"
+	local gradientElement = if strokeGradient ~= nil then buildGradientElement(if isTextStroke then "uitextstroke-gradient" else "uistroke-gradient", strokeGradient, options.strokeGradientOffset, options.strokeGradientRotation) else nil
+	if gradientElement ~= nil then
+		if strokeProps.Color == nil then
+			strokeProps.Color = Color3.new(1, 1, 1)
+		end
+		return React.createElement("uistroke", strokeProps, gradientElement)
+	end
 	return React.createElement("uistroke", strokeProps)
+end
+local function getRadiusParts(radius)
+	if radius == nil then
+		return {}
+	end
+	local _radius = radius
+	if type(_radius) == "number" then
+		local parsed = parseDimension(radius)
+		return if parsed ~= nil then { parsed } else {}
+	end
+	local _condition = splitOutsideParens(radius, "/")[1]
+	if _condition == nil then
+		_condition = radius
+	end
+	local firstRadiusSet = _condition
+	local _exp = splitOutsideParens(firstRadiusSet)
+	-- ▼ ReadonlyArray.filter ▼
+	local _newValue = {}
+	local _callback = function(part)
+		return part ~= ""
+	end
+	local _length = 0
+	for _k, _v in _exp do
+		if _callback(_v, _k - 1, _exp) == true then
+			_length += 1
+			_newValue[_length] = _v
+		end
+	end
+	-- ▲ ReadonlyArray.filter ▲
+	local parts = _newValue
+	local radii = {}
+	for _, part in parts do
+		local parsed = parseDimension(part)
+		if parsed ~= nil then
+			table.insert(radii, parsed)
+		end
+	end
+	return radii
+end
+local function expandCornerRadii(radius)
+	local parts = getRadiusParts(radius)
+	local zero = UDim.new(0, 0)
+	if #parts == 0 then
+		return { zero, zero, zero, zero }
+	end
+	if #parts == 1 then
+		return { parts[1], parts[1], parts[1], parts[1] }
+	end
+	if #parts == 2 then
+		return { parts[1], parts[2], parts[1], parts[2] }
+	end
+	if #parts == 3 then
+		return { parts[1], parts[2], parts[3], parts[2] }
+	end
+	return { parts[1], parts[2], parts[3], parts[4] }
+end
+local function buildCorner(style)
+	local hasIndividualCorner = style.borderTopLeftRadius ~= nil or style.borderTopRightRadius ~= nil or style.borderBottomRightRadius ~= nil or style.borderBottomLeftRadius ~= nil
+	if style.borderRadius == nil and not hasIndividualCorner then
+		return nil
+	end
+	if not hasIndividualCorner then
+		local firstRadius = getRadiusParts(style.borderRadius)[1]
+		return React.createElement("uicorner", {
+			key = "uicorner",
+			CornerRadius = firstRadius or UDim.new(0, 0),
+		})
+	end
+	local _binding = expandCornerRadii(style.borderRadius)
+	local topLeft = _binding[1]
+	local topRight = _binding[2]
+	local bottomRight = _binding[3]
+	local bottomLeft = _binding[4]
+	local topLeftOverride = if style.borderTopLeftRadius ~= nil then parseDimension(style.borderTopLeftRadius) else nil
+	local topRightOverride = if style.borderTopRightRadius ~= nil then parseDimension(style.borderTopRightRadius) else nil
+	local bottomRightOverride = if style.borderBottomRightRadius ~= nil then parseDimension(style.borderBottomRightRadius) else nil
+	local bottomLeftOverride = if style.borderBottomLeftRadius ~= nil then parseDimension(style.borderBottomLeftRadius) else nil
+	return React.createElement("uicorner", {
+		key = "uicorner",
+		TopLeftRadius = topLeftOverride or topLeft,
+		TopRightRadius = topRightOverride or topRight,
+		BottomRightRadius = bottomRightOverride or bottomRight,
+		BottomLeftRadius = bottomLeftOverride or bottomLeft,
+	})
+end
+local function parseBoxShadowString(value)
+	local _exp = splitOutsideParens(value)
+	-- ▼ ReadonlyArray.filter ▼
+	local _newValue = {}
+	local _callback = function(part)
+		return part ~= "" and part ~= "inset"
+	end
+	local _length = 0
+	for _k, _v in _exp do
+		if _callback(_v, _k - 1, _exp) == true then
+			_length += 1
+			_newValue[_length] = _v
+		end
+	end
+	-- ▲ ReadonlyArray.filter ▲
+	local tokens = _newValue
+	local dimensions = {}
+	local colorTokens = {}
+	for _, token in tokens do
+		if isDimensionToken(token) and #colorTokens == 0 then
+			table.insert(dimensions, token)
+		else
+			table.insert(colorTokens, token)
+		end
+	end
+	local _condition = dimensions[1]
+	if _condition == nil then
+		_condition = "0"
+	end
+	local _condition_1 = parseDimension(_condition)
+	if _condition_1 == nil then
+		_condition_1 = UDim.new(0, 0)
+	end
+	local offsetX = _condition_1
+	local _condition_2 = dimensions[2]
+	if _condition_2 == nil then
+		_condition_2 = "0"
+	end
+	local _condition_3 = parseDimension(_condition_2)
+	if _condition_3 == nil then
+		_condition_3 = UDim.new(0, 0)
+	end
+	local offsetY = _condition_3
+	local blurRadius = if dimensions[3] ~= nil then parseDimension(dimensions[3]) else nil
+	local spread = if dimensions[4] ~= nil then parseDimension(dimensions[4]) else nil
+	local parsedColor = if #colorTokens > 0 then parseColor(table.concat(colorTokens, " ")) else nil
+	local _object = {
+		blurRadius = blurRadius,
+	}
+	local _left = "color"
+	local _result = parsedColor
+	if _result ~= nil then
+		_result = _result.color
+	end
+	_object[_left] = _result
+	_object.offset = UDim2.new(offsetX, offsetY)
+	_object.spread = if spread ~= nil then UDim2.new(spread, spread) else nil
+	local _left_1 = "transparency"
+	local _result_1 = parsedColor
+	if _result_1 ~= nil then
+		_result_1 = _result_1.transparency
+	end
+	_object[_left_1] = _result_1
+	return _object
+end
+local function presetNativeShadow(value)
+	if value == "sm" then
+		return {
+			blurRadius = UDim.new(0, 4),
+			offset = UDim2.new(0, 0, 0, 2),
+			spread = UDim2.new(0, 1, 0, 1),
+			transparency = 0.7,
+		}
+	end
+	if value == "md" then
+		return {
+			blurRadius = UDim.new(0, 8),
+			offset = UDim2.new(0, 0, 0, 4),
+			spread = UDim2.new(0, 2, 0, 2),
+			transparency = 0.6,
+		}
+	end
+	if value == "xl" or value == "2xl" then
+		return {
+			blurRadius = UDim.new(0, if value == "2xl" then 24 else 18),
+			offset = UDim2.new(0, 0, 0, if value == "2xl" then 15 else 10),
+			spread = UDim2.new(0, if value == "2xl" then 8 else 6, 0, if value == "2xl" then 8 else 6),
+			transparency = if value == "2xl" then 0.4 else 0.45,
+		}
+	end
+	return {
+		blurRadius = UDim.new(0, 12),
+		offset = UDim2.new(0, 0, 0, 6),
+		spread = UDim2.new(0, 4, 0, 4),
+		transparency = 0.5,
+	}
+end
+local function buildNativeShadow(style)
+	local hasNativeShadowProps = style.shadowBlurRadius ~= nil or style.shadowColor ~= nil or style.shadowOffset ~= nil or style.shadowSpread ~= nil or style.shadowTransparency ~= nil or style.shadowZIndex ~= nil
+	if style.boxShadow == "none" or (style.boxShadow == nil and not hasNativeShadowProps) then
+		return nil
+	end
+	local base = if style.boxShadow ~= nil and SHADOW_SIZE_MAP[style.boxShadow] == nil then parseBoxShadowString(style.boxShadow) else presetNativeShadow(style.boxShadow)
+	local _object = {
+		key = "uishadow",
+		Color = base.color or Color3.new(0, 0, 0),
+	}
+	local _left = "Transparency"
+	local _condition = base.transparency
+	if _condition == nil then
+		_condition = 0.5
+	end
+	_object[_left] = _condition
+	_object.BlurRadius = base.blurRadius or UDim.new(0, 12)
+	_object.Offset = base.offset or UDim2.new(0, 0, 0, 6)
+	_object.Spread = base.spread or UDim2.new(0, 4, 0, 4)
+	local props = _object
+	if style.shadowBlurRadius ~= nil then
+		local _condition_1 = parseDimension(style.shadowBlurRadius)
+		if _condition_1 == nil then
+			_condition_1 = props.BlurRadius
+		end
+		props.BlurRadius = _condition_1
+	end
+	if style.shadowColor ~= nil then
+		local parsed = parseColor(style.shadowColor)
+		props.Color = parsed.color
+		props.Transparency = parsed.transparency
+	end
+	if style.shadowOffset ~= nil then
+		props.Offset = parseUDim2Pair(style.shadowOffset, UDim.new(0, 0), UDim.new(0, 0))
+	end
+	if style.shadowSpread ~= nil then
+		props.Spread = parseUDim2Pair(style.shadowSpread, UDim.new(0, 0), UDim.new(0, 0))
+	end
+	if style.shadowTransparency ~= nil then
+		props.Transparency = math.clamp(style.shadowTransparency, 0, 1)
+	end
+	if style.shadowZIndex ~= nil then
+		props.ZIndex = style.shadowZIndex
+	end
+	return React.createElement("uishadow", props)
 end
 --[[
 	*
@@ -713,14 +1396,21 @@ local function webStyle(style, hostText)
 			-- CSS gradients are opaque by default — per-pixel alpha from rgba()
 			-- colors is already handled by the UIGradient's Transparency sequence.
 			props.BackgroundTransparency = 0
-			local gradientProps = {
+			local _object = {
 				key = "uigradient",
 				Color = gradient.colorSequence,
-				Rotation = gradient.rotation,
 			}
+			local _left = "Rotation"
+			local _condition_2 = style.backgroundGradientRotation
+			if _condition_2 == nil then
+				_condition_2 = gradient.rotation
+			end
+			_object[_left] = _condition_2
+			local gradientProps = _object
 			if gradient.transparencySequence ~= nil then
 				gradientProps.Transparency = gradient.transparencySequence
 			end
+			applyGradientProps(gradientProps, style.backgroundGradientOffset, style.backgroundGradientRotation)
 			local _arg0 = React.createElement("uigradient", gradientProps)
 			table.insert(children, _arg0)
 		end
@@ -743,15 +1433,9 @@ local function webStyle(style, hostText)
 		end
 	end
 	-- 4. borderRadius → inject <uicorner>
-	if style.borderRadius ~= nil then
-		local _borderRadius = style.borderRadius
-		local firstRadius = if type(_borderRadius) == "string" then string.split(style.borderRadius, " ")[1] else style.borderRadius
-		local radius = parseDimension(firstRadius)
-		local _arg0 = React.createElement("uicorner", {
-			key = "uicorner",
-			CornerRadius = radius,
-		})
-		table.insert(children, _arg0)
+	local corner = buildCorner(style)
+	if corner ~= nil then
+		table.insert(children, corner)
 	end
 	-- 5. padding → inject <uipadding>
 	if style.padding ~= nil or style.paddingTop ~= nil or style.paddingRight ~= nil or style.paddingBottom ~= nil or style.paddingLeft ~= nil or style.paddingInline ~= nil or style.paddingBlock ~= nil then
@@ -805,12 +1489,18 @@ local function webStyle(style, hostText)
 		})
 		table.insert(children, _arg0)
 	end
-	-- 6. display: "flex" | "grid" | "none" → inject <uilistlayout> / <uigridlayout> or set Visible
+	-- 6. display layout → inject the matching Roblox layout component or set Visible
 	if style.display == "flex" then
 		local _arg0 = buildListLayout(style)
 		table.insert(children, _arg0)
 	elseif style.display == "grid" then
 		local _arg0 = buildGridLayout(style)
+		table.insert(children, _arg0)
+	elseif style.display == "table" then
+		local _arg0 = buildTableLayout(style)
+		table.insert(children, _arg0)
+	elseif style.display == "page" then
+		local _arg0 = buildPageLayout(style)
 		table.insert(children, _arg0)
 	elseif style.display == "none" then
 		props.Visible = false
@@ -826,14 +1516,33 @@ local function webStyle(style, hostText)
 	end
 	local activeBorder = _condition
 	if activeBorder ~= nil then
-		local stroke = buildStroke(activeBorder)
+		local stroke = buildStroke(activeBorder, {
+			borderOffset = style.borderOffset,
+			borderStrokePosition = style.borderStrokePosition,
+			lineJoinMode = style.lineJoinMode,
+			strokeSizingMode = style.strokeSizingMode,
+			strokeTransparency = style.strokeTransparency,
+			strokeZIndex = style.strokeZIndex,
+			strokeGradient = style.strokeGradient,
+			strokeGradientOffset = style.strokeGradientOffset,
+			strokeGradientRotation = style.strokeGradientRotation,
+		})
 		if stroke ~= nil then
 			table.insert(children, stroke)
 		end
 	end
 	-- textStroke → inject <uistroke> with Contextual mode
 	if style.textStroke ~= nil then
-		local stroke = buildStroke(style.textStroke, true)
+		local stroke = buildStroke(style.textStroke, {
+			isTextStroke = true,
+			lineJoinMode = style.lineJoinMode,
+			strokeSizingMode = style.strokeSizingMode,
+			strokeTransparency = style.strokeTransparency,
+			strokeZIndex = style.strokeZIndex,
+			strokeGradient = style.strokeGradient,
+			strokeGradientOffset = style.strokeGradientOffset,
+			strokeGradientRotation = style.strokeGradientRotation,
+		})
 		if stroke ~= nil then
 			table.insert(children, stroke)
 		end
@@ -867,6 +1576,13 @@ local function webStyle(style, hostText)
 		local _arg0 = React.createElement("uiaspectratioconstraint", {
 			key = "uiaspectratioconstraint",
 			AspectRatio = style.aspectRatio,
+		})
+		table.insert(children, _arg0)
+	end
+	if style.scale ~= nil then
+		local _arg0 = React.createElement("uiscale", {
+			key = "uiscale",
+			Scale = style.scale,
 		})
 		table.insert(children, _arg0)
 	end
@@ -909,6 +1625,25 @@ local function webStyle(style, hostText)
 			MinSize = Vector2.new(minW, minH),
 			MaxSize = Vector2.new(maxW, maxH),
 		})
+		table.insert(children, _arg0)
+	end
+	if style.minTextSize ~= nil or style.maxTextSize ~= nil then
+		local _object = {
+			key = "uitextsizeconstraint",
+		}
+		local _left = "MinTextSize"
+		local _condition_1 = style.minTextSize
+		if _condition_1 == nil then
+			_condition_1 = 1
+		end
+		_object[_left] = _condition_1
+		local _left_1 = "MaxTextSize"
+		local _condition_2 = style.maxTextSize
+		if _condition_2 == nil then
+			_condition_2 = 1000
+		end
+		_object[_left_1] = _condition_2
+		local _arg0 = React.createElement("uitextsizeconstraint", _object)
 		table.insert(children, _arg0)
 	end
 	-- 12. Typography (color, fontSize, textAlign, whiteSpace)
@@ -960,8 +1695,23 @@ local function webStyle(style, hostText)
 	if style.textOverflow == "ellipsis" then
 		props.TextTruncate = Enum.TextTruncate.AtEnd
 	end
+	if style.textScaled ~= nil then
+		props.TextScaled = style.textScaled
+	end
+	if style.maxVisibleGraphemes ~= nil then
+		props.MaxVisibleGraphemes = style.maxVisibleGraphemes
+	end
 	if style.richText == true then
 		props.RichText = true
+	end
+	if style.textStrokeColor ~= nil then
+		props.TextStrokeColor3 = parseColor(style.textStrokeColor).color
+	end
+	if style.textStrokeTransparency ~= nil then
+		props.TextStrokeTransparency = style.textStrokeTransparency
+	end
+	if style.autoLocalize ~= nil then
+		props.AutoLocalize = style.autoLocalize
 	end
 	if style.fontFamily ~= nil or style.fontWeight ~= nil or style.fontStyle ~= nil then
 		local _condition_1 = style.fontFamily
@@ -1003,6 +1753,223 @@ local function webStyle(style, hostText)
 			props.ScaleType = Enum.ScaleType.Stretch
 		end
 	end
+	-- Roblox UI object aliases surfaced by the Creator Hub UI docs.
+	if style.image ~= nil then
+		props.Image = style.image
+	end
+	if style.hoverImage ~= nil then
+		props.HoverImage = style.hoverImage
+	end
+	if style.pressedImage ~= nil then
+		props.PressedImage = style.pressedImage
+	end
+	if style.imageColor ~= nil then
+		props.ImageColor3 = parseColor(style.imageColor).color
+	end
+	if style.imageTransparency ~= nil then
+		props.ImageTransparency = style.imageTransparency
+	end
+	if style.groupColor ~= nil then
+		props.GroupColor3 = parseColor(style.groupColor).color
+	end
+	if style.groupTransparency ~= nil then
+		props.GroupTransparency = style.groupTransparency
+	end
+	if style.canvasSize ~= nil then
+		local canvasSize = parseUDim2Value(style.canvasSize)
+		if canvasSize ~= nil then
+			props.CanvasSize = canvasSize
+		end
+	end
+	if style.automaticCanvasSize ~= nil then
+		props.AutomaticCanvasSize = AUTO_SIZE_MAP[style.automaticCanvasSize] or Enum.AutomaticSize.None
+	end
+	if style.canvasPosition ~= nil then
+		local canvasPosition = parseVector2(style.canvasPosition)
+		if canvasPosition ~= nil then
+			props.CanvasPosition = canvasPosition
+		end
+	end
+	if style.verticalScrollBarInset ~= nil then
+		props.VerticalScrollBarInset = SCROLL_BAR_INSET_MAP[style.verticalScrollBarInset] or Enum.ScrollBarInset.None
+	end
+	if style.horizontalScrollBarInset ~= nil then
+		props.HorizontalScrollBarInset = SCROLL_BAR_INSET_MAP[style.horizontalScrollBarInset] or Enum.ScrollBarInset.None
+	end
+	if style.verticalScrollBarPosition ~= nil then
+		props.VerticalScrollBarPosition = VERTICAL_SCROLL_BAR_POSITION_MAP[style.verticalScrollBarPosition] or Enum.VerticalScrollBarPosition.Right
+	end
+	if style.scrollBarThickness ~= nil then
+		props.ScrollBarThickness = style.scrollBarThickness
+	end
+	if style.scrollBarImageColor ~= nil then
+		props.ScrollBarImageColor3 = parseColor(style.scrollBarImageColor).color
+	end
+	if style.scrollBarImageTransparency ~= nil then
+		props.ScrollBarImageTransparency = style.scrollBarImageTransparency
+	end
+	if style.scrollBarTopImage ~= nil then
+		props.TopImage = style.scrollBarTopImage
+	end
+	if style.scrollBarMidImage ~= nil then
+		props.MidImage = style.scrollBarMidImage
+	end
+	if style.scrollBarBottomImage ~= nil then
+		props.BottomImage = style.scrollBarBottomImage
+	end
+	if style.elasticBehavior ~= nil then
+		props.ElasticBehavior = ELASTIC_BEHAVIOR_MAP[style.elasticBehavior] or Enum.ElasticBehavior.WhenScrollable
+	end
+	if style.viewportAmbient ~= nil then
+		props.Ambient = parseColor(style.viewportAmbient).color
+	end
+	if style.viewportLightColor ~= nil then
+		props.LightColor = parseColor(style.viewportLightColor).color
+	end
+	if style.viewportLightDirection ~= nil then
+		local lightDirection = parseVector3(style.viewportLightDirection)
+		if lightDirection ~= nil then
+			props.LightDirection = lightDirection
+		end
+	end
+	if style.video ~= nil then
+		props.Video = style.video
+	end
+	if style.looped ~= nil then
+		props.Looped = style.looped
+	end
+	if style.playing ~= nil then
+		props.Playing = style.playing
+	end
+	if style.pathColor ~= nil then
+		props.Color3 = parseColor(style.pathColor).color
+	end
+	if style.pathThickness ~= nil then
+		props.Thickness = style.pathThickness
+	end
+	if style.promptObjectText ~= nil then
+		props.ObjectText = style.promptObjectText
+	end
+	if style.promptActionText ~= nil then
+		props.ActionText = style.promptActionText
+	end
+	if style.promptKeyboardKeyCode ~= nil then
+		local keyCode = parseKeyCode(style.promptKeyboardKeyCode)
+		if keyCode ~= nil then
+			props.KeyboardKeyCode = keyCode
+		end
+	end
+	if style.promptGamepadKeyCode ~= nil then
+		local keyCode = parseKeyCode(style.promptGamepadKeyCode)
+		if keyCode ~= nil then
+			props.GamepadKeyCode = keyCode
+		end
+	end
+	if style.promptMaxActivationDistance ~= nil then
+		props.MaxActivationDistance = style.promptMaxActivationDistance
+	end
+	if style.promptRequiresLineOfSight ~= nil then
+		props.RequiresLineOfSight = style.promptRequiresLineOfSight
+	end
+	if style.promptExclusivity ~= nil then
+		props.Exclusivity = PROXIMITY_PROMPT_EXCLUSIVITY_MAP[style.promptExclusivity] or Enum.ProximityPromptExclusivity.OnePerButton
+	end
+	if style.promptHoldDuration ~= nil then
+		props.HoldDuration = style.promptHoldDuration
+	end
+	if style.promptClickable ~= nil then
+		props.ClickablePrompt = style.promptClickable
+	end
+	if style.uiDragStyle ~= nil then
+		props.DragStyle = UI_DRAG_STYLE_MAP[style.uiDragStyle] or Enum.UIDragDetectorDragStyle.TranslatePlane
+	end
+	if style.uiDragResponseStyle ~= nil then
+		props.ResponseStyle = UI_DRAG_RESPONSE_STYLE_MAP[style.uiDragResponseStyle] or Enum.UIDragDetectorResponseStyle.Offset
+	end
+	if style.uiDragAxis ~= nil then
+		local dragAxis = parseVector2(style.uiDragAxis)
+		if dragAxis ~= nil then
+			props.DragAxis = dragAxis
+		end
+	end
+	if style.uiDragMinTranslation ~= nil then
+		local minDragTranslation = parseUDim2Value(style.uiDragMinTranslation)
+		if minDragTranslation ~= nil then
+			props.MinDragTranslation = minDragTranslation
+		end
+	end
+	if style.uiDragMaxTranslation ~= nil then
+		local maxDragTranslation = parseUDim2Value(style.uiDragMaxTranslation)
+		if maxDragTranslation ~= nil then
+			props.MaxDragTranslation = maxDragTranslation
+		end
+	end
+	if style.uiDragMinAngle ~= nil then
+		props.MinDragAngle = style.uiDragMinAngle
+	end
+	if style.uiDragMaxAngle ~= nil then
+		props.MaxDragAngle = style.uiDragMaxAngle
+	end
+	if style.uiDragBoundingBehavior ~= nil then
+		props.BoundingBehavior = UI_DRAG_BOUNDING_BEHAVIOR_MAP[style.uiDragBoundingBehavior] or Enum.UIDragDetectorBoundingBehavior.Automatic
+	end
+	if style.uiDragSpeedAxisMapping ~= nil then
+		props.UIDragSpeedAxisMapping = UI_DRAG_SPEED_AXIS_MAPPING_MAP[style.uiDragSpeedAxisMapping] or Enum.UIDragSpeedAxisMapping.XY
+	end
+	if style.dragStyle ~= nil then
+		props.DragStyle = DRAG_STYLE_MAP[style.dragStyle] or Enum.DragDetectorDragStyle.TranslatePlane
+	end
+	if style.dragResponseStyle ~= nil then
+		props.ResponseStyle = DRAG_RESPONSE_STYLE_MAP[style.dragResponseStyle] or Enum.DragDetectorResponseStyle.Geometric
+	end
+	if style.dragAxis ~= nil then
+		local dragAxis = parseVector3(style.dragAxis)
+		if dragAxis ~= nil then
+			props.Axis = dragAxis
+		end
+	end
+	if style.dragOrientation ~= nil then
+		local orientation = parseVector3(style.dragOrientation)
+		if orientation ~= nil then
+			props.Orientation = orientation
+		end
+	end
+	if style.dragMinTranslation ~= nil then
+		local minDragTranslation = parseVector3(style.dragMinTranslation)
+		if minDragTranslation ~= nil then
+			props.MinDragTranslation = minDragTranslation
+		end
+	end
+	if style.dragMaxTranslation ~= nil then
+		local maxDragTranslation = parseVector3(style.dragMaxTranslation)
+		if maxDragTranslation ~= nil then
+			props.MaxDragTranslation = maxDragTranslation
+		end
+	end
+	if style.dragMinAngle ~= nil then
+		props.MinDragAngle = style.dragMinAngle
+	end
+	if style.dragMaxAngle ~= nil then
+		props.MaxDragAngle = style.dragMaxAngle
+	end
+	if style.dragPermissionPolicy ~= nil then
+		props.PermissionPolicy = DRAG_PERMISSION_POLICY_MAP[style.dragPermissionPolicy] or Enum.DragDetectorPermissionPolicy.Everybody
+	end
+	if style.dragApplyAtCenterOfMass ~= nil then
+		props.ApplyAtCenterOfMass = style.dragApplyAtCenterOfMass
+	end
+	if style.dragMaxForce ~= nil then
+		props.MaxForce = style.dragMaxForce
+	end
+	if style.dragMaxTorque ~= nil then
+		props.MaxTorque = style.dragMaxTorque
+	end
+	if style.dragResponsiveness ~= nil then
+		props.Responsiveness = style.dragResponsiveness
+	end
+	if style.dragRunLocally ~= nil then
+		props.RunLocally = style.dragRunLocally
+	end
 	-- 14. pointerEvents → Interactable / Active
 	if style.pointerEvents == "none" then
 		props.Interactable = false
@@ -1016,39 +1983,66 @@ local function webStyle(style, hostText)
 			props.TextSelectable = false
 		end
 	end
-	-- 15. boxShadow → inject <imagelabel>
+	-- 15. boxShadow → inject <imagelabel> fallback or opt-in <uishadow>
 	if style.boxShadow ~= nil and style.boxShadow ~= "none" then
-		local shadowSize = SHADOW_SIZE_MAP[style.boxShadow] or UDim2.new(1, 20, 1, 20)
-		local _condition_1 = SHADOW_OPACITY_MAP[style.boxShadow]
-		if _condition_1 == nil then
-			_condition_1 = 0.5
+		local shadowTokens = splitOutsideParens(style.boxShadow)
+		-- ▼ ReadonlyArray.some ▼
+		local _result = false
+		local _callback = function(token)
+			return isDimensionToken(token)
 		end
-		local shadowTransparency = _condition_1
-		local _condition_2 = SHADOW_OFFSET_MAP[style.boxShadow]
-		if _condition_2 == nil then
-			_condition_2 = 6
+		for _k, _v in shadowTokens do
+			if _callback(_v, _k - 1, shadowTokens) then
+				_result = true
+				break
+			end
 		end
-		local shadowOffset = _condition_2
-		local _condition_3 = SHADOW_SLICE_SCALE_MAP[style.boxShadow]
-		if _condition_3 == nil then
-			_condition_3 = 0.4
+		-- ▲ ReadonlyArray.some ▲
+		local looksLikeCssShadow = _result
+		local shouldUseNativeShadow = style.boxShadowMode == "uishadow" or style.shadowBlurRadius ~= nil or style.shadowColor ~= nil or style.shadowOffset ~= nil or style.shadowSpread ~= nil or style.shadowTransparency ~= nil or style.shadowZIndex ~= nil or (style.boxShadowMode ~= "image" and looksLikeCssShadow and SHADOW_SIZE_MAP[style.boxShadow] == nil)
+		if shouldUseNativeShadow then
+			local shadow = buildNativeShadow(style)
+			if shadow ~= nil then
+				table.insert(children, shadow)
+			end
+		else
+			local shadowSize = SHADOW_SIZE_MAP[style.boxShadow] or UDim2.new(1, 20, 1, 20)
+			local _condition_1 = SHADOW_OPACITY_MAP[style.boxShadow]
+			if _condition_1 == nil then
+				_condition_1 = 0.5
+			end
+			local shadowTransparency = _condition_1
+			local _condition_2 = SHADOW_OFFSET_MAP[style.boxShadow]
+			if _condition_2 == nil then
+				_condition_2 = 6
+			end
+			local shadowOffset = _condition_2
+			local _condition_3 = SHADOW_SLICE_SCALE_MAP[style.boxShadow]
+			if _condition_3 == nil then
+				_condition_3 = 0.4
+			end
+			local sliceScale = _condition_3
+			local _arg0 = React.createElement("imagelabel", {
+				key = "box-shadow",
+				Image = SHADOW_ASSET_ID,
+				ScaleType = Enum.ScaleType.Slice,
+				SliceCenter = SHADOW_SLICE_CENTER,
+				SliceScale = sliceScale,
+				BackgroundTransparency = 1,
+				ImageColor3 = Color3.new(0, 0, 0),
+				ImageTransparency = shadowTransparency,
+				ZIndex = -1,
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.new(0.5, 0, 0.5, shadowOffset),
+				Size = shadowSize,
+			})
+			table.insert(children, _arg0)
 		end
-		local sliceScale = _condition_3
-		local _arg0 = React.createElement("imagelabel", {
-			key = "box-shadow",
-			Image = SHADOW_ASSET_ID,
-			ScaleType = Enum.ScaleType.Slice,
-			SliceCenter = SHADOW_SLICE_CENTER,
-			SliceScale = sliceScale,
-			BackgroundTransparency = 1,
-			ImageColor3 = Color3.new(0, 0, 0),
-			ImageTransparency = shadowTransparency,
-			ZIndex = -1,
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.new(0.5, 0, 0.5, shadowOffset),
-			Size = shadowSize,
-		})
-		table.insert(children, _arg0)
+	elseif style.shadowBlurRadius ~= nil or style.shadowColor ~= nil or style.shadowOffset ~= nil or style.shadowSpread ~= nil or style.shadowTransparency ~= nil or style.shadowZIndex ~= nil then
+		local shadow = buildNativeShadow(style)
+		if shadow ~= nil then
+			table.insert(children, shadow)
+		end
 	end
 	-- 16. flexGrow / flexShrink / alignSelf → inject <uiflexitem>
 	local _condition_1 = style.flexGrow
