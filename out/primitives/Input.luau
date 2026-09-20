@@ -27,7 +27,7 @@ local TS = _G[script]
 	 
 ]]
 local React = TS.import(script, TS.getModule(script, "@rbxts", "react"))
-local webStyle = TS.import(script, script.Parent.Parent, "styles", "webStyle").webStyle
+local useWebStyle = TS.import(script, script.Parent, "useWebStyle").useWebStyle
 --[[
 	*
 	 * Branded InputProps — the `_inputProps` brand ensures strict nominal typing.
@@ -83,8 +83,9 @@ local Input = React.forwardRef(function(props, ref)
 	end
 	explicitProps.Change = nil
 	local hasChange = onChange ~= nil or (next(userChange)) ~= nil
-	if style then
-		local parsed = webStyle(style)
+	-- Cached across renders while the style values are unchanged — see useWebStyle.
+	local parsed = useWebStyle(style)
+	if parsed ~= nil then
 		local _attributes = {
 			ref = ref,
 		}

@@ -9,7 +9,7 @@
 
 import React, { forwardRef } from "@rbxts/react";
 import { CSSProperties } from "../styles/CSSTypes";
-import { webStyle } from "../styles/webStyle";
+import { useWebStyle } from "./useWebStyle";
 import { DeepReadonly } from "../types";
 
 /**
@@ -62,14 +62,20 @@ export const Image = forwardRef<ImageLabel, ImageProps>((props, ref) => {
 	let parsedStyleProps: Record<string, unknown> = {};
 	let parsedStyleChildren: React.Element[] = [];
 
+	// Cached across renders while the style values are unchanged — see useWebStyle.
+	const parsed = useWebStyle(style);
+
 	// 4. If a style object is provided, compile it
-	if (style) {
-		const parsed = webStyle(style);
+	if (style !== undefined && parsed !== undefined) {
 		parsedStyleProps = parsed.props as Record<string, unknown>;
 		parsedStyleChildren = parsed.children as React.Element[];
 
 		if (style.opacity !== undefined) {
+			// Copy before writing: the parse result is shared across renders, so
+			// mutating it in place would re-apply the opacity multiplication on
+			// every render and fade the image progressively.
 			const currentImageTrans = (parsedStyleProps.ImageTransparency as number | undefined) ?? 0;
+			parsedStyleProps = { ...parsedStyleProps };
 			parsedStyleProps.ImageTransparency = 1 - ((1 - currentImageTrans) * style.opacity);
 		}
 	}

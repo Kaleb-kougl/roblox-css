@@ -52,6 +52,7 @@ export { MotionUIScale } from "./primitives/MotionUIScale";
 export { useVariantResolver, isAnimatable } from "./primitives/useVariantResolver";
 export type { MotionProps } from "./primitives/useVariantResolver";
 export { usePercentageConstraints } from "./primitives/usePercentageConstraints";
+export { useWebStyle } from "./primitives/useWebStyle";
 
 // Logger (for consumers who want to configure logging level)
 export { setLogLevel, LogLevel } from "./logger";

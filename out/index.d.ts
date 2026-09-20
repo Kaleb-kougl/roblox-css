@@ -34,5 +34,6 @@ export { MotionUIScale } from "./primitives/MotionUIScale";
 export { useVariantResolver, isAnimatable } from "./primitives/useVariantResolver";
 export type { MotionProps } from "./primitives/useVariantResolver";
 export { usePercentageConstraints } from "./primitives/usePercentageConstraints";
+export { useWebStyle } from "./primitives/useWebStyle";
 export { setLogLevel, LogLevel } from "./logger";
 export type { DeepReadonly } from "./types";

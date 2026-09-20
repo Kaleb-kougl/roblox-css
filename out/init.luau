@@ -57,6 +57,7 @@ local _useVariantResolver = TS.import(script, script, "primitives", "useVariantR
 exports.useVariantResolver = _useVariantResolver.useVariantResolver
 exports.isAnimatable = _useVariantResolver.isAnimatable
 exports.usePercentageConstraints = TS.import(script, script, "primitives", "usePercentageConstraints").usePercentageConstraints
+exports.useWebStyle = TS.import(script, script, "primitives", "useWebStyle").useWebStyle
 -- Logger (for consumers who want to configure logging level)
 local _logger = TS.import(script, script, "logger")
 exports.setLogLevel = _logger.setLogLevel

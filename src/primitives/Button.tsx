@@ -35,7 +35,7 @@
 
 import React, { forwardRef } from "@rbxts/react";
 import { CSSProperties } from "../styles/CSSTypes";
-import { webStyle } from "../styles/webStyle";
+import { useWebStyle } from "./useWebStyle";
 import { DeepReadonly } from "../types";
 
 /**
@@ -100,9 +100,11 @@ export const Button = forwardRef<TextButton, ButtonProps>((props, ref) => {
 	let parsedStyleProps: Record<string, unknown> = {};
 	let parsedStyleChildren: React.Element[] = [];
 
+	// Cached across renders while the style values are unchanged — see useWebStyle.
+	const parsed = useWebStyle(style);
+
 	// 4. If a style object is provided, compile it and extract typography mappings
-	if (style) {
-		const parsed = webStyle(style);
+	if (style !== undefined && parsed !== undefined) {
 		parsedStyleProps = parsed.props as Record<string, unknown>;
 		parsedStyleChildren = parsed.children as React.Element[];
 

@@ -26,7 +26,7 @@
 
 import React, { forwardRef } from "@rbxts/react";
 import { CSSProperties } from "../styles/CSSTypes";
-import { webStyle } from "../styles/webStyle";
+import { useWebStyle } from "./useWebStyle";
 import { DeepReadonly } from "../types";
 
 /**
@@ -79,7 +79,8 @@ export const Text = forwardRef<TextLabel, TextProps>((props, ref) => {
 	let parsedStyleProps: Record<string, unknown> = {};
 	let parsedStyleChildren: React.Element[] = [];
 
-	// 4. If a style object is provided, compile it and extract typography mappings
+	// 4. Apply the text-content transforms that must run before parsing,
+	//    since webStyle() measures the final text for textShadow layout.
 	if (style) {
 		// Specialized string manipulation for wordBreak
 		if (style.wordBreak !== undefined) {
@@ -119,13 +120,23 @@ export const Text = forwardRef<TextLabel, TextProps>((props, ref) => {
 				}
 			}
 		}
+	}
 
-		const parsed = webStyle(style, typeIs(explicitProps.Text, "string") ? explicitProps.Text : undefined);
+	// Parsed once per distinct (style, text) pair — see useWebStyle. Called
+	// unconditionally, after the text transforms above, because webStyle needs
+	// the final text and hook order must stay stable when `style` is absent.
+	const parsed = useWebStyle(style, typeIs(explicitProps.Text, "string") ? explicitProps.Text : undefined);
+
+	if (style !== undefined && parsed !== undefined) {
 		parsedStyleProps = parsed.props as Record<string, unknown>;
 		parsedStyleChildren = parsed.children as React.Element[];
 
 		if (style.opacity !== undefined) {
+			// Copy before writing: the parse result is shared across renders, so
+			// mutating it in place would re-apply the opacity multiplication on
+			// every render and fade the text progressively.
 			const currentTextTrans = (parsedStyleProps.TextTransparency as number | undefined) ?? 0;
+			parsedStyleProps = { ...parsedStyleProps };
 			parsedStyleProps.TextTransparency = 1 - ((1 - currentTextTrans) * style.opacity);
 		}
 	}

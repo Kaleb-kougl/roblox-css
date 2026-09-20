@@ -1,6 +1,6 @@
 import React, { forwardRef } from "@rbxts/react";
 import { CSSProperties } from "../styles/CSSTypes";
-import { webStyle } from "../styles/webStyle";
+import { useWebStyle } from "./useWebStyle";
 import { MotionProps, useVariantResolver } from "./useVariantResolver";
 
 export type MotionImageProps = React.PropsWithChildren<React.ComponentProps<"imagelabel">> & {
@@ -48,8 +48,10 @@ export const MotionImage = forwardRef<ImageLabel, MotionImageProps>((props, ref)
 	let parsedStyleProps: Record<string, unknown> = {};
 	let parsedStyleChildren: React.Element[] = [];
 
-	if (style) {
-		const parsed = webStyle(style);
+	// Cached across renders while the style values are unchanged — see useWebStyle.
+	const parsed = useWebStyle(style);
+
+	if (parsed !== undefined) {
 		parsedStyleProps = parsed.props as Record<string, unknown>;
 		parsedStyleChildren = parsed.children as React.Element[];
 	}

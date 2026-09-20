@@ -3,7 +3,7 @@ local TS = _G[script]
 local _react = TS.import(script, TS.getModule(script, "@rbxts", "react"))
 local React = _react
 local forwardRef = _react.forwardRef
-local webStyle = TS.import(script, script.Parent.Parent, "styles", "webStyle").webStyle
+local useWebStyle = TS.import(script, script.Parent, "useWebStyle").useWebStyle
 local useVariantResolver = TS.import(script, script.Parent, "useVariantResolver").useVariantResolver
 --[[
 	*
@@ -40,8 +40,9 @@ local MotionImage = forwardRef(function(props, ref)
 	end
 	local parsedStyleProps = {}
 	local parsedStyleChildren = {}
-	if style then
-		local parsed = webStyle(style)
+	-- Cached across renders while the style values are unchanged — see useWebStyle.
+	local parsed = useWebStyle(style)
+	if parsed ~= nil then
 		parsedStyleProps = parsed.props
 		parsedStyleChildren = parsed.children
 	end

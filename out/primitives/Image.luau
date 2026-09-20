@@ -13,7 +13,7 @@ local TS = _G[script]
 local _react = TS.import(script, TS.getModule(script, "@rbxts", "react"))
 local React = _react
 local forwardRef = _react.forwardRef
-local webStyle = TS.import(script, script.Parent.Parent, "styles", "webStyle").webStyle
+local useWebStyle = TS.import(script, script.Parent, "useWebStyle").useWebStyle
 --[[
 	*
 	 * Branded ImageProps — the `_imageProps` brand ensures strict nominal typing.
@@ -52,17 +52,24 @@ local Image = forwardRef(function(props, ref)
 	end
 	local parsedStyleProps = {}
 	local parsedStyleChildren = {}
+	-- Cached across renders while the style values are unchanged — see useWebStyle.
+	local parsed = useWebStyle(style)
 	-- 4. If a style object is provided, compile it
-	if style then
-		local parsed = webStyle(style)
+	if style ~= nil and parsed ~= nil then
 		parsedStyleProps = parsed.props
 		parsedStyleChildren = parsed.children
 		if style.opacity ~= nil then
+			-- Copy before writing: the parse result is shared across renders, so
+			-- mutating it in place would re-apply the opacity multiplication on
+			-- every render and fade the image progressively.
 			local _condition = (parsedStyleProps.ImageTransparency)
 			if _condition == nil then
 				_condition = 0
 			end
 			local currentImageTrans = _condition
+			local _object_1 = table.clone(parsedStyleProps)
+			setmetatable(_object_1, nil)
+			parsedStyleProps = _object_1
 			parsedStyleProps.ImageTransparency = 1 - ((1 - currentImageTrans) * style.opacity)
 		end
 	end

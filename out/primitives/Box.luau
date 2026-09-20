@@ -18,9 +18,9 @@ local TS = _G[script]
 local _react = TS.import(script, TS.getModule(script, "@rbxts", "react"))
 local React = _react
 local useRef = _react.useRef
-local webStyle = TS.import(script, script.Parent.Parent, "styles", "webStyle").webStyle
 local ParentSizeContext = TS.import(script, script.Parent.Parent, "styles", "ParentSizeContext").ParentSizeContext
 local usePercentageConstraints = TS.import(script, script.Parent, "usePercentageConstraints").usePercentageConstraints
+local useWebStyle = TS.import(script, script.Parent, "useWebStyle").useWebStyle
 local function makeBoxProps(props)
 	return props
 end
@@ -64,8 +64,9 @@ local Box = React.forwardRef(function(props, ref)
 	local absSize = _binding.binding
 	setAbsSize = _binding.set
 	local percentageConstraint = usePercentageConstraints(style)
-	if style then
-		local parsedStyle = webStyle(style)
+	-- Cached across renders while the style values are unchanged — see useWebStyle.
+	local parsedStyle = useWebStyle(style)
+	if parsedStyle ~= nil then
 		local _attributes = {
 			ref = ref,
 		}

@@ -24,7 +24,8 @@
  */
 
 import React from "@rbxts/react";
-import { CSSProperties, webStyle } from "../styles/webStyle";
+import { CSSProperties } from "../styles/webStyle";
+import { useWebStyle } from "./useWebStyle";
 import { DeepReadonly } from "../types";
 
 /**
@@ -97,8 +98,10 @@ export const Input = React.forwardRef<TextBox, InputProps>((props, ref) => {
 
 	const hasChange = onChange !== undefined || next(userChange)[0] !== undefined;
 
-	if (style) {
-		const parsed = webStyle(style);
+	// Cached across renders while the style values are unchanged — see useWebStyle.
+	const parsed = useWebStyle(style);
+
+	if (parsed !== undefined) {
 		return (
 			<textbox ref={ref} {...defaultProps} {...(parsed.props as Record<string, unknown>)} {...explicitProps} {...(hasChange ? { Change: mergedChange } : {})}>
 				{parsed.children}
