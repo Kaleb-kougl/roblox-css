@@ -30,7 +30,7 @@ local TS = _G[script]
 local _react = TS.import(script, TS.getModule(script, "@rbxts", "react"))
 local React = _react
 local forwardRef = _react.forwardRef
-local webStyle = TS.import(script, script.Parent.Parent, "styles", "webStyle").webStyle
+local useWebStyle = TS.import(script, script.Parent, "useWebStyle").useWebStyle
 --[[
 	*
 	 * Branded TextProps — the `_textProps` brand ensures strict nominal typing.
@@ -72,7 +72,8 @@ local Text = forwardRef(function(props, ref)
 	end
 	local parsedStyleProps = {}
 	local parsedStyleChildren = {}
-	-- 4. If a style object is provided, compile it and extract typography mappings
+	-- 4. Apply the text-content transforms that must run before parsing,
+	--    since webStyle() measures the final text for textShadow layout.
 	if style then
 		-- Specialized string manipulation for wordBreak
 		if style.wordBreak ~= nil then
@@ -114,16 +115,27 @@ local Text = forwardRef(function(props, ref)
 				end
 			end
 		end
-		local _text = explicitProps.Text
-		local parsed = webStyle(style, if type(_text) == "string" then explicitProps.Text else nil)
+	end
+	-- Parsed once per distinct (style, text) pair — see useWebStyle. Called
+	-- unconditionally, after the text transforms above, because webStyle needs
+	-- the final text and hook order must stay stable when `style` is absent.
+	local _text = explicitProps.Text
+	local parsed = useWebStyle(style, if type(_text) == "string" then explicitProps.Text else nil)
+	if style ~= nil and parsed ~= nil then
 		parsedStyleProps = parsed.props
 		parsedStyleChildren = parsed.children
 		if style.opacity ~= nil then
+			-- Copy before writing: the parse result is shared across renders, so
+			-- mutating it in place would re-apply the opacity multiplication on
+			-- every render and fade the text progressively.
 			local _condition = (parsedStyleProps.TextTransparency)
 			if _condition == nil then
 				_condition = 0
 			end
 			local currentTextTrans = _condition
+			local _object_1 = table.clone(parsedStyleProps)
+			setmetatable(_object_1, nil)
+			parsedStyleProps = _object_1
 			parsedStyleProps.TextTransparency = 1 - ((1 - currentTextTrans) * style.opacity)
 		end
 	end

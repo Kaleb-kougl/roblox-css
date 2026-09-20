@@ -1,5 +1,6 @@
 import React, { forwardRef } from "@rbxts/react";
-import { CSSProperties, webStyle } from "../styles/webStyle";
+import { CSSProperties } from "../styles/webStyle";
+import { useWebStyle } from "./useWebStyle";
 import { MotionProps, useVariantResolver } from "./useVariantResolver";
 
 export type MotionBoxProps = React.PropsWithChildren<React.ComponentProps<"frame">> & {
@@ -44,8 +45,10 @@ export const MotionBox = forwardRef<Frame, MotionBoxProps>((props, ref) => {
 	let parsedStyleProps: Record<string, unknown> = {};
 	let parsedStyleChildren: React.Element[] = [];
 
-	if (style) {
-		const parsed = webStyle(style);
+	// Cached across renders while the style values are unchanged — see useWebStyle.
+	const parsed = useWebStyle(style);
+
+	if (parsed !== undefined) {
 		parsedStyleProps = parsed.props as Record<string, unknown>;
 		parsedStyleChildren = parsed.children as React.Element[];
 	}

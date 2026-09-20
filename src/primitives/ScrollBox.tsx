@@ -17,7 +17,8 @@
  */
 
 import React from "@rbxts/react";
-import { CSSProperties, webStyle } from "../styles/webStyle";
+import { CSSProperties } from "../styles/webStyle";
+import { useWebStyle } from "./useWebStyle";
 
 export type ScrollBoxProps = React.PropsWithChildren<React.ComponentProps<"scrollingframe">> & {
 	style?: CSSProperties;
@@ -40,9 +41,10 @@ export const ScrollBox = React.forwardRef<ScrollingFrame, ScrollBoxProps>((props
 	explicitProps.style = undefined;
 	explicitProps.children = undefined;
 
-	if (style) {
-		const parsedStyle = webStyle(style);
+	// Cached across renders while the style values are unchanged — see useWebStyle.
+	const parsedStyle = useWebStyle(style);
 
+	if (parsedStyle !== undefined) {
 		return (
 			<scrollingframe ref={ref} {...defaultProps} {...parsedStyle.props} {...explicitProps}>
 				{parsedStyle.children}

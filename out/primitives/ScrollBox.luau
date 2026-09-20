@@ -20,7 +20,7 @@ local TS = _G[script]
 	 
 ]]
 local React = TS.import(script, TS.getModule(script, "@rbxts", "react"))
-local webStyle = TS.import(script, script.Parent.Parent, "styles", "webStyle").webStyle
+local useWebStyle = TS.import(script, script.Parent, "useWebStyle").useWebStyle
 local ScrollBox = React.forwardRef(function(props, ref)
 	local style = props.style
 	local children = props.children
@@ -37,8 +37,9 @@ local ScrollBox = React.forwardRef(function(props, ref)
 	local explicitProps = _object
 	explicitProps.style = nil
 	explicitProps.children = nil
-	if style then
-		local parsedStyle = webStyle(style)
+	-- Cached across renders while the style values are unchanged — see useWebStyle.
+	local parsedStyle = useWebStyle(style)
+	if parsedStyle ~= nil then
 		local _attributes = {
 			ref = ref,
 		}

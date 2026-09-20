@@ -13,10 +13,11 @@
  */
 
 import React, { useRef } from "@rbxts/react";
-import { CSSProperties, webStyle } from "../styles/webStyle";
+import { CSSProperties } from "../styles/webStyle";
 import { DeepReadonly } from "../types";
 import { ParentSizeContext } from "../styles/ParentSizeContext";
 import { usePercentageConstraints } from "./usePercentageConstraints";
+import { useWebStyle } from "./useWebStyle";
 
 export type BoxProps = React.PropsWithChildren<React.ComponentProps<"frame">> & {
 	style?: CSSProperties;
@@ -59,10 +60,10 @@ export const Box = React.forwardRef<Frame, BoxProps>((props, ref) => {
 	const { binding: absSize, set: setAbsSize } = bindingRef.current;
 
 	const percentageConstraint = usePercentageConstraints(style);
+	// Cached across renders while the style values are unchanged — see useWebStyle.
+	const parsedStyle = useWebStyle(style);
 
-	if (style) {
-		const parsedStyle = webStyle(style);
-
+	if (parsedStyle !== undefined) {
 		return (
 			<ParentSizeContext.Provider value={absSize}>
 				<frame

@@ -39,7 +39,7 @@ local TS = _G[script]
 local _react = TS.import(script, TS.getModule(script, "@rbxts", "react"))
 local React = _react
 local forwardRef = _react.forwardRef
-local webStyle = TS.import(script, script.Parent.Parent, "styles", "webStyle").webStyle
+local useWebStyle = TS.import(script, script.Parent, "useWebStyle").useWebStyle
 --[[
 	*
 	 * Branded ButtonProps — the `_buttonProps` brand ensures strict nominal typing.
@@ -88,9 +88,10 @@ local Button = forwardRef(function(props, ref)
 	end
 	local parsedStyleProps = {}
 	local parsedStyleChildren = {}
+	-- Cached across renders while the style values are unchanged — see useWebStyle.
+	local parsed = useWebStyle(style)
 	-- 4. If a style object is provided, compile it and extract typography mappings
-	if style then
-		local parsed = webStyle(style)
+	if style ~= nil and parsed ~= nil then
 		parsedStyleProps = parsed.props
 		parsedStyleChildren = parsed.children
 		-- wordBreak — inject zero-width spaces or newlines for character-level wrapping
