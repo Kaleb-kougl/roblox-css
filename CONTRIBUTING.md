@@ -37,7 +37,9 @@ Tests execute natively inside Roblox Studio (not via npm):
 3. Open Roblox Studio and connect via the Rojo plugin
 4. Run the `@rbxts/jest` test plugin
 
-All 1,419 assertions should pass.
+All 1,966 assertions should pass — that figure counts the eight duplicated
+spec sources under `src/tests/` twice, which is 1,338 distinct assertions
+across 12 distinct files. See "Running Tests" in the README.
 
 ## Code Style
 

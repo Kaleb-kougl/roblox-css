@@ -47,7 +47,7 @@ flowchart LR
 
 ## Technical Highlights
 
-* **1,419 test assertions** across 24 spec files covering every architectural boundary.
+* **1,338 test assertions** across 12 spec files covering every architectural boundary.
 * **Zero-abstraction-leak guarantee:** 4 branded types (`WebStyleResult`, `ParsedDimension`, `ParsedColor`, `PaddingValues`) make it impossible to bypass the middleware at compile time.
 * **Reactive/static ownership split:** A `hasPercentageScale()` guard cleanly divides static pixel constraints from reactive percentage constraints.
 * **Declarative constraint injection:** All UI constraints (`UICorner`, `UIPadding`, `UIListLayout`, etc.) are returned as React elements with stable keys, making them reconciler-friendly.
@@ -206,7 +206,7 @@ Roblox UI constraints must be child instances of the element they modify. Rather
 
 ## 8. Testing Strategy
 
-The middleware is verified across **24 spec files** with **1,419 assertions** covering every architectural boundary.
+The middleware is verified across **12 spec files** with **1,338 assertions** covering every architectural boundary. A test run reports 1,966 across 20 files, because eight of the spec sources under `src/tests/` are byte-identical duplicates that both compile and run.
 
 ## 9. Scope Boundaries
 

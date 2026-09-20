@@ -303,7 +303,18 @@ Tests run natively inside Roblox Studio using `@rbxts/jest`:
 2. Open `test-runner.project.json` in Roblox Studio via Rojo
 3. Run the Jest test plugin
 
-**Test coverage:** 1,419 assertions across 24 spec files covering every parser, primitive, and motion component.
+**Test coverage:** 1,338 assertions across 12 spec files covering every parser, primitive, and motion component.
+
+The Jest plugin will report a larger number — 1,966 assertions across 20 files.
+Eight of the twenty spec sources under `src/tests/` are byte-identical copies of
+eight others, kept at both `src/tests/<name>.spec.ts` and
+`src/tests/<area>/<name>.spec.ts`. Both copies compile and both run, so a raw
+count reports each of those assertions twice. 1,338 across 12 is what is
+actually distinct.
+
+Note also that the `tests/` directory at the repository root is **not** part of
+the suite: `tsconfig.json` sets `include: ["src"]`, so nothing outside `src/`
+compiles to `out/`, and `test-runner.project.json` mounts `out/tests`.
 
 ## Contributing
 

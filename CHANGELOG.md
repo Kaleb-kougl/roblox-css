@@ -28,4 +28,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable `SHADOW_ASSET_ID` for `boxShadow` rendering
 - `TRANSITIONS` presets (default, pop, breathe, snap, shimmer)
 - `setLogLevel()` / `LogLevel` for controlling middleware log output
-- 1,419 test assertions across 24 spec files
+- 1,338 test assertions across 12 spec files (1,966 across 20 as counted by a
+  test run, which sees the eight duplicated spec sources twice)
